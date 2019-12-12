@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'package:study_buddy/reusableWidgets/actionButton.dart';
 
 class Home extends StatelessWidget {
   final String title;
@@ -10,22 +11,16 @@ class Home extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.teal.shade100,
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              FloatingActionButton(
-                child: Icon(Icons.arrow_forward_ios),
-                backgroundColor: Colors.white54,
-                onPressed: () {
-                  MaterialPageRoute mr =
-                      MaterialPageRoute(builder: (BuildContext context) {
-                    return Login();
-                  });
-                  Navigator.of(context).push(mr);
-                },
-              )
-            ],
-          ),
-        ));
+            child: ActionButton(
+          color: Colors.white54,
+          icon: Icon(Icons.arrow_forward_ios),
+          event: () {
+            MaterialPageRoute route =
+                MaterialPageRoute(builder: (BuildContext context) {
+              return Login();
+            });
+            Navigator.of(context).push(route);
+          },
+        )));
   }
 }
