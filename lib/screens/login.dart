@@ -23,7 +23,7 @@ class Login extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 32),
-                  child: Text("Register",
+                  child: Text("Sign Up",
                       style: TextStyle(fontSize: 30, color: Colors.white)),
                 ),
                 Padding(

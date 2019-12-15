@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:study_buddy/screens/login.dart';
 import 'package:study_buddy/screens/register.dart';
+import 'package:study_buddy/screens/Home.dart';
 
 import 'package:study_buddy/theme/theme.dart';
 
