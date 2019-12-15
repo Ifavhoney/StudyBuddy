@@ -2,7 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:study_buddy/reusableWidgets/actionButton.dart';
 import 'register.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future<Null>.delayed(
+        Duration(
+          seconds: 0,
+        ),
+        () {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -49,7 +65,6 @@ class Login extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.email),
                 title: TextFormField(
-                  autofocus: true,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                       hintText: "example@gmail.com",
@@ -99,7 +114,7 @@ class Login extends StatelessWidget {
                       "Login",
                       style: TextStyle(color: Colors.white),
                     ),
-                    color: Theme.of(context).buttonColor,
+                    color: AppBarTheme.of(context).color,
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         _scaffoldKey.currentState.showSnackBar(snackBar);
