@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:study_buddy/data/data.dart';
+import 'dart:async';
 import 'login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -24,7 +26,6 @@ class _RegisterState extends State<Register> {
 
   final databaseReference = Firestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  int status = -1;
 /*Consider implementing google sign in later */
   @override
   void initState() {
@@ -39,15 +40,73 @@ class _RegisterState extends State<Register> {
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Future<int> checkUserExists() async {
+    final snapshot =
+        await databaseReference.collection("Users").document(User.email).get();
+    if (snapshot.exists) {
+      /*How to get primitive value of a future */
+      return Future.value(1);
+    } else {
+      return Future.value(0);
+    }
+  }
+
+  void createUser() async {
+    final status = await checkUserExists();
+    /*If new user does not exists in the system */
+    if (status != 1) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        duration: Duration(days: 1),
+        content: FullScreenSnackBar(
+          icon: Icons.thumb_up,
+          genericText: "Hi ${User.fName}, Please Verify Your Email",
+          inkButtonText: "<- To Login",
+          function: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ));
+
+      _auth
+          .createUserWithEmailAndPassword(
+              email: User.email, password: User.password)
+          .then((AuthResult result) {
+        result.user.sendEmailVerification();
+      }).catchError((onError) {
+        print("invalid");
+      });
+      databaseReference.collection("Users").document(User.email).setData({
+        'First Name': User.fName,
+        'Last Name': User.lName,
+        'Reason For Joining': User.reason,
+      });
+    } else {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        duration: Duration(days: 1),
+        backgroundColor: Theme.of(context).errorColor,
+        content: FullScreenSnackBar(
+            icon: Icons.thumb_down,
+            genericText:
+                "Hi ${User.fName}, we are unable to register you because...\n" +
+                    "\n-Pre-existing account\n-An unverified account\n-Poor Connection",
+            inkButtonText: "<- Back To Login",
+            function: () {
+              MaterialPageRoute route =
+                  MaterialPageRoute(builder: (context) => Login());
+              Navigator.of(context).push(route);
+            },
+            inkButtonText2: "<- Back to Register",
+            function2: () {
+              MaterialPageRoute route =
+                  MaterialPageRoute(builder: (context) => Register());
+              Navigator.of(context).push(route);
+            }),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    SnackBar snackBarError = SnackBar(
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[Text("Fill all Fields Accordingly")],
-        ),
-        backgroundColor: Theme.of(context).errorColor);
-
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -140,7 +199,9 @@ class _RegisterState extends State<Register> {
                   if (value.isEmpty) {
                     return 'Please enter some text';
                   }
-
+                  if (value.length <= 6) {
+                    return 'Password must be greater than 6 characters';
+                  }
                   setState(() {
                     User.password = value;
                   });
@@ -186,34 +247,7 @@ class _RegisterState extends State<Register> {
                 onPressed: () {
                   if (this._formKey.currentState.validate() &&
                       User.reason != null) {
-                    try {
-                      createUser();
-                    } catch (e) {
-                      print(e.toString());
-                    }
-                    if (status >= 0) {
-                      _scaffoldKey.currentState.showSnackBar(SnackBar(
-                        duration: Duration(seconds: 10),
-                        content: FullScreenSnackBar(
-                          icon: Icons.thumb_up,
-                          genericText:
-                              "Hi ${User.fName}, Please Verify Your Email",
-                          flatButtonText: "To Login",
-                          function: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ));
-                    } else {
-                      _scaffoldKey.currentState.showSnackBar(SnackBar(
-                        backgroundColor: Theme.of(context).errorColor,
-                        content: FullScreenSnackBar(
-                          icon: Icons.thumb_down,
-                          genericText:
-                              "Hi ${User.fName}, you may have a pre-existing account or an unverified account",
-                        ),
-                      ));
-                    }
+                    createUser();
                   } else {
                     print("NOT VALID ${User.reason}");
                   }
@@ -256,39 +290,6 @@ class _RegisterState extends State<Register> {
         ),
       ),
     );
-  }
-
-  void createUser() async {
-    try {
-      if (await _auth.createUserWithEmailAndPassword(
-              email: User.email, password: User.password) ==
-          null) {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("User Already exists"),
-        ));
-      } else {
-        await _auth
-            .createUserWithEmailAndPassword(
-                email: User.email, password: User.password)
-            .then((AuthResult result) {
-          result.user.sendEmailVerification();
-        }).catchError((error) {
-          print("Failed to create user");
-        });
-
-        await databaseReference
-            .collection("Users")
-            .document(User.email)
-            .setData({
-          'First Name': User.fName,
-          'Last Name': User.lName,
-          'Reason For Joining': User.reason,
-        });
-        status = 0;
-      }
-    } catch (e) {
-      print(e.toString());
-    }
   }
 
   bool isValidEmail(String input) {
