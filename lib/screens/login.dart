@@ -9,17 +9,6 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   @override
-  void initState() {
-    super.initState();
-
-    Future<Null>.delayed(
-        Duration(
-          seconds: 0,
-        ),
-        () {});
-  }
-
-  @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
     final _scaffoldKey = GlobalKey<ScaffoldState>();

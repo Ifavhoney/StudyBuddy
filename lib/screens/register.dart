@@ -62,7 +62,9 @@ class _RegisterState extends State<Register> {
           genericText: "Hi ${User.fName}, Please Verify Your Email",
           inkButtonText: "<- To Login",
           function: () {
-            Navigator.of(context).pop();
+            MaterialPageRoute route =
+                MaterialPageRoute(builder: (context) => Login());
+            Navigator.of(context).push(route);
           },
         ),
       ));
