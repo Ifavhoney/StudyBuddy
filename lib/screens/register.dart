@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:study_buddy/data/data.dart';
 import 'dart:async';
 import 'login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:study_buddy/model/BaseAuth.dart';
 
 import 'package:study_buddy/reusableWidgets/ListTileIconField.dart';
 import 'package:study_buddy/reusableWidgets/fullScreenSnackBar.dart';
@@ -25,36 +25,15 @@ class _RegisterState extends State<Register> {
   TextEditingController lastName;
 
   final databaseReference = Firestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+
 /*Consider implementing google sign in later */
-  @override
-  void initState() {
-    super.initState();
-    /*
-    Firestore.instance
-        .collection('books')
-        .document()
-        .setData({'title': 'title', 'author': 'IOS??'});
-        */
-  }
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Future<int> checkUserExists() async {
-    final snapshot =
-        await databaseReference.collection("Users").document(User.email).get();
-    if (snapshot.exists) {
-      /*How to get primitive value of a future */
-      return Future.value(1);
-    } else {
-      return Future.value(0);
-    }
-  }
-
   void createUser() async {
-    final status = await checkUserExists();
+    final status = await Auth().checkUserExists(User.email);
     /*If new user does not exists in the system */
-    if (status != 1) {
+    if (status == false) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         duration: Duration(days: 1),
         content: FullScreenSnackBar(
@@ -69,14 +48,10 @@ class _RegisterState extends State<Register> {
         ),
       ));
 
-      _auth
-          .createUserWithEmailAndPassword(
-              email: User.email, password: User.password)
-          .then((AuthResult result) {
-        result.user.sendEmailVerification();
-      }).catchError((onError) {
-        print("invalid");
-      });
+      Auth()
+          .signUp(User.email, User.password)
+          .catchError((onError) => print("invalid"));
+
       databaseReference.collection("Users").document(User.email).setData({
         'First Name': User.fName,
         'Last Name': User.lName,
@@ -181,7 +156,7 @@ class _RegisterState extends State<Register> {
                 keyboardType: TextInputType.emailAddress,
                 function: (String value) {
                   if (!isValidEmail(value)) {
-                    return "not valid";
+                    return "Invalid Email";
                   } else {
                     setState(() {
                       User.email = value;
@@ -255,38 +230,6 @@ class _RegisterState extends State<Register> {
                   }
                 },
               ),
-
-              /*
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text("Male"),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Text("Female"),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Radio(
-                    value: 0,
-                    groupValue: _groupValue,
-                    onChanged: this.onChanged,
-                  ),
-                  Radio(
-                    value: 1,
-                    groupValue: _groupValue,
-                    onChanged: this.onChanged,
-                  ),
-                ],
-                
-              ),
-              */
             ],
           ),
         ),

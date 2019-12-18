@@ -18,6 +18,6 @@ class MyApp extends StatelessWidget {
         theme: theme,
         // home: Home(title: ''),
         // home: Login());
-        home: Register());
+        home: Login());
   }
 }

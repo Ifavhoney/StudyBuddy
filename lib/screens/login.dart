@@ -2,12 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:study_buddy/reusableWidgets/actionButton.dart';
 import 'register.dart';
 
+import 'package:study_buddy/model/BaseAuth.dart';
+import 'package:study_buddy/model/user.dart';
+
+import 'dart:async';
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void signInUser(String email, String password) async {
+    final status = await Auth().checkUserExists(email);
+    if (status == false) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        duration: Duration(days: 1),
+        backgroundColor: Theme.of(context).errorColor,
+        // content: ,
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -62,10 +80,8 @@ class _LoginState extends State<Login> {
                           borderRadius: BorderRadius.circular(14.0))),
                   controller: email,
                   validator: (String value) {
-                    if (!value.endsWith(".ca") ||
-                        !value.endsWith(".com") ||
-                        !value.contains("@")) {
-                      return 'Invalid';
+                    if (!isValidEmail(value)) {
+                      return 'Invalid Email';
                     }
                     return null;
                   },
@@ -106,7 +122,6 @@ class _LoginState extends State<Login> {
                     color: AppBarTheme.of(context).color,
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        _scaffoldKey.currentState.showSnackBar(snackBar);
                       } else {
                         print("Not Valid");
                       }
@@ -115,5 +130,11 @@ class _LoginState extends State<Login> {
             ],
           )),
     );
+  }
+
+  bool isValidEmail(String input) {
+    final RegExp regex = new RegExp(
+        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+    return regex.hasMatch(input);
   }
 }
