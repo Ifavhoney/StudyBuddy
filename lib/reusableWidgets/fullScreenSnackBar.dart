@@ -6,6 +6,9 @@ class FullScreenSnackBar extends StatelessWidget {
   final String inkButtonText;
   final String inkButtonText2;
   final String genericText;
+  //Expands Text (Made due to differences between login + register)
+  final bool isExpanded;
+
   final Function function;
   final Function function2;
 
@@ -13,6 +16,7 @@ class FullScreenSnackBar extends StatelessWidget {
       {this.icon,
       this.inkButtonText,
       this.inkButtonText2,
+      this.isExpanded,
       this.genericText,
       this.function,
       this.function2});
@@ -29,15 +33,20 @@ class FullScreenSnackBar extends StatelessWidget {
             size: 100,
             color: Colors.white,
           ),
+          SizedBox(
+            height: 10,
+          ),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Container(
-                child: Expanded(
-                  child: Text(
-                    genericText,
-                  ),
-                ),
+                child: isExpanded == true
+                    ? Expanded(
+                        child: Text(
+                          genericText,
+                        ),
+                      )
+                    : Text(genericText),
               ),
             ],
           ),

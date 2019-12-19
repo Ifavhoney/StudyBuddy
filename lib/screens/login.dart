@@ -17,18 +17,14 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   void signInUser(String email, String password) async {
     int lastIndex = email.indexOf("@");
     String compressedEmail = email.substring(0, lastIndex);
 
     //Sign in
     try {
-      final String user = await Auth().signIn(email, password);
-      if (user == null) {
-        print("null/not verified");
-      } else {
-        /*Go to next screen */
-      }
+      await Auth().signIn(email, password);
     } on PlatformException catch (e) {
       switch (e.code) {
         case "ERROR_WRONG_PASSWORD":
@@ -37,6 +33,7 @@ class _LoginState extends State<Login> {
             backgroundColor: Theme.of(context).errorColor,
             content: FullScreenSnackBar(
               icon: Icons.thumb_down,
+              isExpanded: true,
               genericText:
                   "Hi $compressedEmail, we are unable to log you in because...\n" +
                       "\n-Wrong Password",
@@ -57,6 +54,7 @@ class _LoginState extends State<Login> {
             backgroundColor: Theme.of(context).errorColor,
             content: FullScreenSnackBar(
               icon: Icons.thumb_down,
+              isExpanded: true,
               genericText:
                   "Hi $compressedEmail, we are unable to log you in because...\n" +
                       "\n-User does not exist",
@@ -76,12 +74,75 @@ class _LoginState extends State<Login> {
           ));
           return print("ERROR_USER_NOT_FOUND");
           break;
+
+        case "ERROR_NETWORK_REQUEST":
+          _scaffoldKey.currentState.showSnackBar(SnackBar(
+            duration: Duration(days: 1),
+            backgroundColor: Theme.of(context).errorColor,
+            content: FullScreenSnackBar(
+              icon: Icons.signal_wifi_off,
+              isExpanded: true,
+              genericText:
+                  "Hi $compressedEmail, we are unable to log you in because...\n" +
+                      "\n-Poor Connection",
+              inkButtonText: "<- Back To Login",
+              function: () {
+                MaterialPageRoute route =
+                    MaterialPageRoute(builder: (context) => Login());
+                Navigator.of(context).push(route);
+              },
+            ),
+          ));
+          return print("ERROR_NETWORK_REQUEST");
+          break;
+        default:
+          _scaffoldKey.currentState.showSnackBar(SnackBar(
+            duration: Duration(days: 1),
+            backgroundColor: Theme.of(context).errorColor,
+            content: FullScreenSnackBar(
+                icon: Icons.do_not_disturb,
+                genericText:
+                    "Hi $compressedEmail, we are unable to Log you in for unknown reasons...\n" +
+                        "\n-Please contact an Admin @ jnguessa@uoguelph.ca",
+                inkButtonText: "<- Back To Login",
+                function: () {
+                  MaterialPageRoute route =
+                      MaterialPageRoute(builder: (context) => Login());
+                  Navigator.of(context).push(route);
+                },
+                inkButtonText2: "<- Back to Register",
+                function2: () {
+                  MaterialPageRoute route =
+                      MaterialPageRoute(builder: (context) => Register());
+                  Navigator.of(context).push(route);
+                }),
+          ));
       }
+
       return null;
     }
-
-    final emailVerified =
-        await Auth().getCurrentUser().then((user) => user.isEmailVerified);
+    Auth().getCurrentUser().then((firebaseUser) {
+      switch (firebaseUser.isEmailVerified) {
+        case true:
+          /*Go to calendar screen */
+          break;
+        case false:
+          _scaffoldKey.currentState.showSnackBar(SnackBar(
+            duration: Duration(days: 1),
+            content: FullScreenSnackBar(
+              icon: Icons.thumb_up,
+              genericText: "Hi $compressedEmail, Please Verify Your Email ",
+              inkButtonText: "<- To Login",
+              function: () {
+                MaterialPageRoute route =
+                    MaterialPageRoute(builder: (context) => Login());
+                Navigator.of(context).push(route);
+              },
+            ),
+          ));
+          break;
+      }
+    });
   }
 
   User user = new User();

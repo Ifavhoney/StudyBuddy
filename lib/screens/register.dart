@@ -39,7 +39,7 @@ class _RegisterState extends State<Register> {
         duration: Duration(days: 1),
         content: FullScreenSnackBar(
           icon: Icons.thumb_up,
-          genericText: "Hi ${User.fName}, Please Verify Your Email",
+          genericText: "Hi ${User.fName}, Please Verify Your Email ",
           inkButtonText: "<- To Login",
           function: () {
             MaterialPageRoute route =
