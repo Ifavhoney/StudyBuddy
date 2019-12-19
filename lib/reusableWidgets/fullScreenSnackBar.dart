@@ -33,8 +33,10 @@ class FullScreenSnackBar extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Container(
-                child: Text(
-                  genericText,
+                child: Expanded(
+                  child: Text(
+                    genericText,
+                  ),
                 ),
               ),
             ],

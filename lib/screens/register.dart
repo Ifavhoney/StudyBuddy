@@ -58,6 +58,7 @@ class _RegisterState extends State<Register> {
         'First Name': User.fName,
         'Last Name': User.lName,
         'Reason For Joining': User.reason,
+        "Show Get Started": User.showGetStarted.toString()
       });
     } else {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -226,7 +227,7 @@ class _RegisterState extends State<Register> {
                 onPressed: () {
                   if (this._formKey.currentState.validate() &&
                       User.reason != null) {
-                    print(User.email + User.password + User.fName);
+                    User.showGetStarted = true;
                     createUser();
                   } else {
                     print("NOT VALID ${User.reason}");

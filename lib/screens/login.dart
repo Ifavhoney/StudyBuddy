@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:study_buddy/reusableWidgets/actionButton.dart';
@@ -16,51 +17,71 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
   void signInUser(String email, String password) async {
+    int lastIndex = email.indexOf("@");
+    String compressedEmail = email.substring(0, lastIndex);
+
     //Sign in
     try {
       final String user = await Auth().signIn(email, password);
       if (user == null) {
-        print("null");
+        print("null/not verified");
       } else {
-        print(user);
+        /*Go to next screen */
       }
-    } on PlatformException {
-      print("invalid");
-    }
+    } on PlatformException catch (e) {
+      switch (e.code) {
+        case "ERROR_WRONG_PASSWORD":
+          _scaffoldKey.currentState.showSnackBar(SnackBar(
+            duration: Duration(days: 1),
+            backgroundColor: Theme.of(context).errorColor,
+            content: FullScreenSnackBar(
+              icon: Icons.thumb_down,
+              genericText:
+                  "Hi $compressedEmail, we are unable to log you in because...\n" +
+                      "\n-Wrong Password",
+              inkButtonText: "<- Back To Login",
+              function: () {
+                MaterialPageRoute route =
+                    MaterialPageRoute(builder: (context) => Login());
+                Navigator.of(context).push(route);
+              },
+            ),
+          ));
+          return print("ERROR_WRONG_PASSWORD");
+          break;
 
-    final status = await Auth().checkUserExists(email);
+        case "ERROR_USER_NOT_FOUND":
+          _scaffoldKey.currentState.showSnackBar(SnackBar(
+            duration: Duration(days: 1),
+            backgroundColor: Theme.of(context).errorColor,
+            content: FullScreenSnackBar(
+              icon: Icons.thumb_down,
+              genericText:
+                  "Hi $compressedEmail, we are unable to log you in because...\n" +
+                      "\n-User does not exist",
+              inkButtonText: "<- Back To Login",
+              function: () {
+                MaterialPageRoute route =
+                    MaterialPageRoute(builder: (context) => Login());
+                Navigator.of(context).push(route);
+              },
+              inkButtonText2: "<- To Register",
+              function2: () {
+                MaterialPageRoute route =
+                    MaterialPageRoute(builder: (context) => Register());
+                Navigator.of(context).push(route);
+              },
+            ),
+          ));
+          return print("ERROR_USER_NOT_FOUND");
+          break;
+      }
+      return null;
+    }
 
     final emailVerified =
         await Auth().getCurrentUser().then((user) => user.isEmailVerified);
-
-/*
-    if (user == false) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
-        duration: Duration(days: 1),
-        backgroundColor: Theme.of(context).errorColor,
-        content: FullScreenSnackBar(
-            icon: Icons.thumb_down,
-            genericText: "Hi $email, we are unable to log you in because...\n" +
-                "\n-Wrong Password\n-An un-verified/Non-existant account\n-Poor Connection",
-            inkButtonText: "<- Back To Login",
-            function: () {
-              MaterialPageRoute route =
-                  MaterialPageRoute(builder: (context) => Login());
-              Navigator.of(context).push(route);
-            },
-            inkButtonText2: "<- Back to Register",
-            function2: () {
-              MaterialPageRoute route =
-                  MaterialPageRoute(builder: (context) => Register());
-              Navigator.of(context).push(route);
-            }),
-      ));
-    } else {
-      print("Success");
-    }
-    */
   }
 
   User user = new User();
@@ -68,10 +89,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-    final _scaffoldKey = GlobalKey<ScaffoldState>();
-    SnackBar snackBar = SnackBar(
-        content: Text("Processing Data"),
-        backgroundColor: Theme.of(context).snackBarTheme.backgroundColor);
     TextEditingController email;
     TextEditingController password;
 
@@ -169,7 +186,6 @@ class _LoginState extends State<Login> {
                   color: AppBarTheme.of(context).color,
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
-                      print(User.email + User.password);
                       signInUser(User.email, User.password);
                     } else {
                       print("Not Valid");

@@ -4,5 +4,5 @@ class User {
   static String email;
   static String password;
   static String reason;
-  static bool getStarted;
+  static bool showGetStarted;
 }
