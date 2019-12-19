@@ -226,6 +226,7 @@ class _RegisterState extends State<Register> {
                 onPressed: () {
                   if (this._formKey.currentState.validate() &&
                       User.reason != null) {
+                    print(User.email + User.password + User.fName);
                     createUser();
                   } else {
                     print("NOT VALID ${User.reason}");
