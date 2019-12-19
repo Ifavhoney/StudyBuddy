@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -50,6 +51,7 @@ class _RegisterState extends State<Register> {
 
       Auth()
           .signUp(User.email, User.password)
+          .then((user) => Auth().sendEmailVerification())
           .catchError((onError) => print("invalid"));
 
       databaseReference.collection("Users").document(User.email).setData({

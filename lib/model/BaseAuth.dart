@@ -49,7 +49,7 @@ class Auth implements BaseAuth {
   @override
   Future<void> sendEmailVerification() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
-    return user;
+    return user.sendEmailVerification();
   }
 
   @override
