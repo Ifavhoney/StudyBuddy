@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:study_buddy/reusableWidgets/actionButton.dart';
 import 'package:study_buddy/reusableWidgets/fullScreenSnackBar.dart';
 import 'register.dart';
+import 'calendar.dart';
 
 import 'package:study_buddy/model/BaseAuth.dart';
 import 'package:study_buddy/model/user.dart';
@@ -117,14 +118,19 @@ class _LoginState extends State<Login> {
                   Navigator.of(context).push(route);
                 }),
           ));
-      }
 
-      return null;
+          return print("Unknwon reason");
+          break;
+      }
     }
     Auth().getCurrentUser().then((firebaseUser) {
       switch (firebaseUser.isEmailVerified) {
         case true:
           /*Go to calendar screen */
+          MaterialPageRoute route =
+              MaterialPageRoute(builder: (context) => Calendar());
+          Navigator.of(context).push(route);
+
           break;
         case false:
           _scaffoldKey.currentState.showSnackBar(SnackBar(
