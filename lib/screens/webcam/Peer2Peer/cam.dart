@@ -39,8 +39,10 @@ class _CamState extends State<Cam> {
         title: Text("Cam"),
       ),
       backgroundColor: Theme.of(context).backgroundColor,
-      body: Stack(
-        children: <Widget>[_viewRows(), _tooblar()],
+      body: Center(
+        child: Stack(
+          children: <Widget>[_viewRows(), _tooblar()],
+        ),
       ),
     );
   }
@@ -142,35 +144,33 @@ class _CamState extends State<Cam> {
   Widget _expandedViewRow(List<Widget> views) {
     final rowedView = views.map<Widget>(_videoView).toList();
     return Expanded(
-      child: Row(children: rowedView),
+      child: Row(
+        children: rowedView,
+      ),
     );
   }
 
   ///video layout
   Widget _viewRows() {
     final views = _getRenderViews();
-    print("Length is ${views.length}");
     switch (views.length) {
       case 1:
         return Container(
-          child: Column(
-            children: <Widget>[_videoView(views[0])],
-          ),
-        );
+            child: Column(
+          children: <Widget>[_videoView(views[0])],
+        ));
       case 2:
         return Container(
-          child: Column(
-            children: <Widget>[
-              _expandedViewRow([views][0]),
-              _expandedViewRow([views][1])
-            ],
-          ),
-        );
+            child: Column(
+          children: <Widget>[
+            _expandedViewRow([views[0]]),
+            _expandedViewRow([views[1]])
+          ],
+        ));
       case 3:
         return Container(
             child: Column(
           children: <Widget>[
-            //per line
             _expandedViewRow(views.sublist(0, 2)),
             _expandedViewRow(views.sublist(2, 3))
           ],
@@ -184,8 +184,8 @@ class _CamState extends State<Cam> {
           ],
         ));
       default:
-        return Container();
     }
+    return Container();
   }
 
   ///tooblar represents our icon
