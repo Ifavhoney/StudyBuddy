@@ -1,73 +1,81 @@
 import 'package:flutter/material.dart';
 
 class Data {
-  static String _option1 = "School";
-  static Icon _icon1 = Icon(Icons.school);
-  static String _option2 = "Career";
-  static Icon _icon2 = Icon(Icons.work);
-  static String _option3 = "Fitness";
-  static Icon _icon3 = Icon(Icons.fitness_center);
+  /*Webcam ID */
+  static const APP_ID = '2b4ad9fd02844f8f872f8681290dae39';
 
-  static String _option4 = "Chores";
-  static Icon _icon4 = Icon(Icons.list);
+/*Begin Register.dart */
+  static List<DropdownMenuItem> items() {
+    String _option1 = "School";
+    Icon _icon1 = Icon(Icons.school);
+    String _option2 = "Career";
+    Icon _icon2 = Icon(Icons.work);
+    String _option3 = "Fitness";
+    Icon _icon3 = Icon(Icons.fitness_center);
 
-  static String _option5 = "N/A";
-  static List<DropdownMenuItem> items = [
-    DropdownMenuItem(
-        value: _option1,
+    String _option4 = "Chores";
+    Icon _icon4 = Icon(Icons.list);
+
+    String _option5 = "N/A";
+
+    List<DropdownMenuItem> results = [
+      DropdownMenuItem(
+          value: _option1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              _icon1,
+              Text(_option1),
+            ],
+          )),
+      DropdownMenuItem(
+        value: _option2,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            _icon1,
-            Text(_option1),
+            _icon2,
+            Text(
+              _option2,
+            ),
           ],
-        )),
-    DropdownMenuItem(
-      value: _option2,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          _icon2,
-          Text(
-            _option2,
-          ),
-        ],
+        ),
       ),
-    ),
-    DropdownMenuItem(
-      value: _option3,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          _icon3,
-          Text(
-            _option3,
-          ),
-        ],
+      DropdownMenuItem(
+        value: _option3,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            _icon3,
+            Text(
+              _option3,
+            ),
+          ],
+        ),
       ),
-    ),
-    DropdownMenuItem(
-      value: _option4,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          _icon4,
-          Text(
-            _option4,
-          ),
-        ],
+      DropdownMenuItem(
+        value: _option4,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            _icon4,
+            Text(
+              _option4,
+            ),
+          ],
+        ),
       ),
-    ),
-    DropdownMenuItem(
-      value: _option5,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Text(
-            _option5,
-          ),
-        ],
+      DropdownMenuItem(
+        value: _option5,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Text(
+              _option5,
+            ),
+          ],
+        ),
       ),
-    ),
-  ];
+    ];
+    return results;
+  }
 }

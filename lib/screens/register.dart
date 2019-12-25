@@ -194,7 +194,7 @@ class _RegisterState extends State<Register> {
               Container(
                 color: AppBarTheme.of(context).color,
                 child: DropdownButton(
-                  items: Data.items,
+                  items: Data.items(),
                   onChanged: (value) {
                     if (value != "") {
                       setState(() {
