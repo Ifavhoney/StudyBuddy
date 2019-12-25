@@ -123,6 +123,9 @@ class _LoginState extends State<Login> {
           break;
       }
     }
+    /*At this point, the user is has the correct credential
+    Logged in, but can't see content
+    */
     Auth().getCurrentUser().then((firebaseUser) {
       switch (firebaseUser.isEmailVerified) {
         case true:
