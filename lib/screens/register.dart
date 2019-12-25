@@ -6,7 +6,7 @@ import 'package:study_buddy/data/data.dart';
 import 'login.dart';
 import 'package:study_buddy/model/BaseAuth.dart';
 
-import 'package:study_buddy/reusableWidgets/ListTileIconField.dart';
+import 'package:study_buddy/reusableWidgets/listTileIconField.dart';
 import 'package:study_buddy/reusableWidgets/fullScreenSnackBar.dart';
 
 import 'package:study_buddy/model/user.dart';
