@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:intl/intl.dart';
+import 'package:study_buddy/model/calendar/Appointments/awaiting.dart';
 
 class CalendarPortal extends StatefulWidget {
   final String selectedDate;
@@ -13,7 +17,13 @@ class CalendarPortal extends StatefulWidget {
 
 class _CalendarPortalState extends State<CalendarPortal>
     with SingleTickerProviderStateMixin {
+  //Childs in our database
+  String child1 = 'Peer2Strangers';
+  String child2 = 'Appointments';
+  String child3 = 'Awaiting';
+  List<Awaiting> _list;
   DateTime dateTime = DateTime(2020, 1, 1, 0, 0);
+  String time;
 
   TextEditingController _goal = new TextEditingController();
   String errorText;
@@ -21,10 +31,33 @@ class _CalendarPortalState extends State<CalendarPortal>
   AnimationController controller;
   //0-1 indicates wether running or completed
   Animation<double> scaleAnimation;
-  final DatabaseReference = FirebaseDatabase.instance.reference();
+  DatabaseReference _database = FirebaseDatabase.instance.reference();
+
+  //Listens to when changes happen
+  StreamSubscription<Event> _onTodoAddedSubscription;
+  StreamSubscription<Event> _onTodoChangedSubscription;
+  Query _query;
+
   @override
   void initState() {
     super.initState();
+    _database = _database.child(child1).child(child2).child(child3);
+/*
+    _query = _database
+        .reference()
+        .child(child1)
+        .child(child2)
+        .child(child3)
+        .child(widget.selectedDate)
+        .orderByChild("user")
+        .equalTo(widget.user);
+        */
+    /*Occurs when a child is added -> listens to method
+    _onTodoAddedSubscription = _query.onChildAdded.listen(onEntryAdded);
+  */
+    /*Occurs when a child is changed -> Listens to method
+    _onTodoChangedSubscription = _query.onChildChanged.listen(onEntryChanged);
+*/
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     //CurvedAnimation makes Animations smoother (think curve graph as oppose to linear)
@@ -36,6 +69,23 @@ class _CalendarPortalState extends State<CalendarPortal>
     });
     controller.forward();
   }
+
+/*
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _onTodoAddedSubscription.cancel();
+   // _onTodoChangedSubscription.cancel();
+    super.dispose();
+  }
+
+*/
+
+  /*
+  onEntryChanged(Event event){
+    var oldEntry = 
+  }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -90,9 +140,10 @@ class _CalendarPortalState extends State<CalendarPortal>
                                     use24hFormat: true,
                                     initialDateTime: dateTime,
                                     mode: CupertinoDatePickerMode.time,
-                                    onDateTimeChanged: (time) {
+                                    onDateTimeChanged: (currentTime) {
                                       setState(() {
-                                        this.dateTime = time;
+                                        DateFormat _df = DateFormat.Hm();
+                                        this.time = _df.format(currentTime);
                                       });
                                     },
                                   ),
@@ -110,6 +161,11 @@ class _CalendarPortalState extends State<CalendarPortal>
                               style: Theme.of(context).textTheme.button,
                             ),
                             onPressed: () {
+                              addAppointment(
+                                time,
+                                "nuthsaid@gmail.com",
+                                _goal.text,
+                              );
                               //Firebase
                             })
                       ],
@@ -118,5 +174,34 @@ class _CalendarPortalState extends State<CalendarPortal>
         ),
       ),
     );
+  }
+
+  void addAppointment(String time, String users, String goals) {
+    if (goals.isEmpty) {
+      setState(() {
+        errorText = "Text cannot be empty";
+      });
+    } else {
+      if (getData(time).length == 0) {
+        print("EMPTYYYY");
+      }
+      Awaiting awaiting = Awaiting(user: users, goal: goals, hasMatched: false);
+      //  if()
+      _database.child(widget.selectedDate).child(time).set(awaiting.toJson());
+    }
+  }
+
+  String getData(String time) {
+    String value;
+    _database
+        .child(widget.selectedDate)
+        .child("15:00")
+        .once()
+        .then((DataSnapshot snapshot) {
+      value = snapshot.value;
+    });
+    print(value);
+    print("nothinfg");
+    return value;
   }
 }

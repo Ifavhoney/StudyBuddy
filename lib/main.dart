@@ -4,6 +4,7 @@ import 'package:study_buddy/screens/login.dart';
 import 'package:study_buddy/screens/register.dart';
 import 'package:study_buddy/screens/calendarPortal.dart';
 import 'package:study_buddy/theme/theme.dart';
+import 'package:study_buddy/screens/calendar.dart';
 
 void main() => runApp(MyApp());
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       // home: Home(title: ''),
       // home: Login());
 
-      home: CalendarPortal(),
+      home: Calendar(),
     );
   }
 }
