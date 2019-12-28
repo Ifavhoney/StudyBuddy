@@ -1,27 +1,30 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'dart:async';
-import 'Peer2Stranger/cam.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-///Cam Portal
-class CamPortal extends StatefulWidget {
+class CalendarPortal extends StatefulWidget {
+  final String selectedDate;
+  final String user;
+
+  CalendarPortal({this.selectedDate, this.user});
   @override
-  _CamPortalState createState() => _CamPortalState();
+  _CalendarPortalState createState() => _CalendarPortalState();
 }
 
-class _CamPortalState extends State<CamPortal>
+class _CalendarPortalState extends State<CalendarPortal>
     with SingleTickerProviderStateMixin {
-  TextEditingController _channelName = new TextEditingController();
+  DateTime dateTime = DateTime(2020, 1, 1, 0, 0);
+
+  TextEditingController _goal = new TextEditingController();
   String errorText;
   //neccessary to set the duration of our animation
   AnimationController controller;
   //0-1 indicates wether running or completed
   Animation<double> scaleAnimation;
-
+  final DatabaseReference = FirebaseDatabase.instance.reference();
   @override
   void initState() {
     super.initState();
-
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     //CurvedAnimation makes Animations smoother (think curve graph as oppose to linear)
@@ -56,7 +59,7 @@ class _CamPortalState extends State<CamPortal>
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         TextField(
-                          controller: _channelName,
+                          controller: _goal,
                           textAlign: TextAlign.center,
                           decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
@@ -70,55 +73,50 @@ class _CamPortalState extends State<CamPortal>
                               border: UnderlineInputBorder(
                                   borderSide: BorderSide(width: 1)),
                               errorText: this.errorText,
-                              hintText: "Enter Channel Name"),
+                              hintText: "Enter Your Goal"),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(30, 10, 50, 0),
+                          child: Container(
+                            height: 40,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Icon(Icons.access_time),
+                                Expanded(
+                                  child: CupertinoDatePicker(
+                                    minuteInterval: 30,
+                                    use24hFormat: true,
+                                    initialDateTime: dateTime,
+                                    mode: CupertinoDatePickerMode.time,
+                                    onDateTimeChanged: (time) {
+                                      setState(() {
+                                        this.dateTime = time;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                         SizedBox(
-                          height: 30,
+                          height: 10,
                         ),
                         RaisedButton(
                             child: Text(
-                              "Enter Video Call",
+                              "Book",
                               style: Theme.of(context).textTheme.button,
                             ),
-                            onPressed: toWebcam)
+                            onPressed: () {
+                              //Firebase
+                            })
                       ],
                     ))),
           ),
         ),
       ),
-    );
-  }
-
-  Future<void> toWebcam() async {
-    //TO-DO Check if number corresponds to user(s)
-    if (_channelName.text.isEmpty) {
-      setState(() {
-        errorText = "Text cannot be empty";
-      });
-    }
-    //else if incorect . . .
-    else {
-      setState(() {
-        errorText = null;
-      });
-      print(_channelName);
-      //Get permission for Mic and Camera
-      await _getCameraAndMic();
-
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Cam(
-            channelName: _channelName.text,
-          ),
-        ),
-      );
-    }
-  }
-
-  Future<void> _getCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
     );
   }
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'webcam/camPortal.dart';
+import 'package:study_buddy/model/BaseAuth.dart';
+import 'calendarPortal.dart';
 //cupertino_picker
 
 class Calendar extends StatefulWidget {
@@ -8,17 +11,31 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  TextEditingController channelName = new TextEditingController();
   DateTime now;
+  int week = 7;
+  DateFormat dateFormat = DateFormat("E, MMMM d y");
+  List<String> dates = [];
+  String user;
+  bool hasNotBooked = false;
+
+  TextEditingController channelName = new TextEditingController();
   String errorText;
   String hintText = "Enter Channel Name";
   String buttonText;
 
   @override
   void initState() {
-    now = DateTime.now();
-
     super.initState();
+    Auth().getCurrentUser().then((firebaseUser) {
+      this.user = firebaseUser.email.toString();
+    });
+    int i = 0;
+    now = DateTime.now();
+    dates.add(dateFormat.format(now).toString());
+    while (i != week) {
+      dates.add(dateFormat.format(now.add(Duration(days: i + 1))).toString());
+      i += 1;
+    }
   }
 
   @override
@@ -26,6 +43,7 @@ class _CalendarState extends State<Calendar> {
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
+          leading: Container(),
           title: Text("Calendar"),
           actions: <Widget>[
             IconButton(
@@ -41,14 +59,14 @@ class _CalendarState extends State<Calendar> {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
+          padding: const EdgeInsets.fromLTRB(0, 25, 0, 30),
           child: new Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               new Expanded(
                 child: ListView.separated(
-                    itemCount: 7,
-                    itemBuilder: (context, position) {
+                    itemCount: dates.length,
+                    itemBuilder: (context, i) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Material(
@@ -60,7 +78,12 @@ class _CalendarState extends State<Calendar> {
                               color: Colors.teal.shade200,
                               child: InkWell(
                                 onDoubleTap: () {
-                                  print("found!");
+                                  showDialog(
+                                      context: this.context,
+                                      builder: (context) => CalendarPortal(
+                                            selectedDate: dates[i],
+                                            user: this.user,
+                                          ));
                                 },
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +93,7 @@ class _CalendarState extends State<Calendar> {
                                     ),
                                     ListTile(
                                       title: Text(
-                                        "December 25, 2019",
+                                        dates[i],
                                         style: TextStyle(
                                             fontSize: 20, color: Colors.black),
                                       ),
@@ -80,8 +103,7 @@ class _CalendarState extends State<Calendar> {
                                         color: Colors.teal.shade100,
                                         size: 30,
                                       ),
-                                      subtitle: Text(
-                                          "Double Tap to book ? Meeting with FName"),
+                                      subtitle: Text("Double Tap to book"),
                                     ),
                                     Row(
                                       mainAxisAlignment:
