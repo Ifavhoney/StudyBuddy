@@ -162,7 +162,7 @@ class _CalendarPortalState extends State<CalendarPortal>
                             ),
                             onPressed: () {
                               addAppointment(
-                                time,
+                                time == null ? "0:00" : time,
                                 "nuthsaid@gmail.com",
                                 _goal.text,
                               );
@@ -182,26 +182,25 @@ class _CalendarPortalState extends State<CalendarPortal>
         errorText = "Text cannot be empty";
       });
     } else {
-      if (getData(time).length == 0) {
-        print("EMPTYYYY");
-      }
-      Awaiting awaiting = Awaiting(user: users, goal: goals, hasMatched: false);
-      //  if()
-      _database.child(widget.selectedDate).child(time).set(awaiting.toJson());
-    }
-  }
+      //Reads through database & returns one value
+      _database
+          .child(widget.selectedDate)
+          .child(time)
+          .once()
+          .then((DataSnapshot snapshot) {
+        //Meaning nobody has chosen at that time
+        if (snapshot.value == null) {
+          //insert
+          Awaiting awaiting =
+              Awaiting(user: users, goal: goals, hasMatched: false);
 
-  String getData(String time) {
-    String value;
-    _database
-        .child(widget.selectedDate)
-        .child("15:00")
-        .once()
-        .then((DataSnapshot snapshot) {
-      value = snapshot.value;
-    });
-    print(value);
-    print("nothinfg");
-    return value;
+          _database
+              .child(widget.selectedDate)
+              .child(time)
+              .push()
+              .set(awaiting.toJson());
+        }
+      });
+    }
   }
 }
