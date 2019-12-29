@@ -182,6 +182,8 @@ class _CalendarPortalState extends State<CalendarPortal>
         errorText = "Text cannot be empty";
       });
     } else {
+      Awaiting awaiting = Awaiting(user: users, goal: goals, hasMatched: false);
+
       //Reads through database & returns one value
       _database
           .child(widget.selectedDate)
@@ -191,14 +193,19 @@ class _CalendarPortalState extends State<CalendarPortal>
         //Meaning nobody has chosen at that time
         if (snapshot.value == null) {
           //insert
-          Awaiting awaiting =
-              Awaiting(user: users, goal: goals, hasMatched: false);
 
           _database
               .child(widget.selectedDate)
               .child(time)
               .push()
               .set(awaiting.toJson());
+        } else {
+          //Read
+
+          Map<dynamic, dynamic> values = snapshot.value;
+          values.forEach((key, values) {
+            print(values["hasMatched"]);
+          });
         }
       });
     }

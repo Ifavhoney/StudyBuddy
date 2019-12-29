@@ -11,6 +11,7 @@ class Awaiting {
   bool hasMatched;
 
   Awaiting({this.user, this.goal, this.time, this.hasMatched});
+  //Retrieves these informations anytime you read firebase
   Awaiting.fromSnapshot(DataSnapshot snapshot)
       : this.goal = snapshot.value["goal"],
         this.date = snapshot.value["date"],
