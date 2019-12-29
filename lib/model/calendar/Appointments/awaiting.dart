@@ -7,7 +7,8 @@ class Awaiting {
   String user;
   bool hasMatched;
 
-  Awaiting({this.user, this.goal, this.time, this.hasMatched});
+  Awaiting({this.user, this.goal, this.hasMatched});
+
   //Retrieves these informations anytime you read firebase (JSON)
   Awaiting.fromSnapshot(DataSnapshot snapshot)
       : this.goal = snapshot.value["goal"],

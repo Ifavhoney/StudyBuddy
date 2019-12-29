@@ -21,7 +21,6 @@ class _CalendarPortalState extends State<CalendarPortal>
   String child1 = 'Peer2Strangers';
   String child2 = 'Appointments';
   String child3 = 'Awaiting';
-  String child4 = 'Confirmed';
 
   List<Awaiting> _list;
   DateTime dateTime = DateTime(2020, 1, 1, 0, 0);
@@ -34,7 +33,6 @@ class _CalendarPortalState extends State<CalendarPortal>
   //0-1 indicates wether running or completed
   Animation<double> scaleAnimation;
   DatabaseReference _database = FirebaseDatabase.instance.reference();
-  DatabaseReference _database2 = FirebaseDatabase.instance.reference();
 
   //Listens to when changes happen
   StreamSubscription<Event> _onTodoAddedSubscription;
@@ -45,8 +43,6 @@ class _CalendarPortalState extends State<CalendarPortal>
   void initState() {
     super.initState();
     _database = _database.child(child1).child(child2).child(child3);
-    _database2 = _database.child(child1).child(child2).child(child4);
-
 /*
     _query = _database
         .reference()
@@ -192,16 +188,13 @@ class _CalendarPortalState extends State<CalendarPortal>
       //Used to get the key & Value of our Snapshot
       Map<dynamic, dynamic> values;
       //Reads through database, given the date & time
-      getData(time).then((DataSnapshot snapshot) {
+      getAwaitingApppontmentsData(_database, time)
+          .then((DataSnapshot snapshot) {
         newAppointment = Awaiting(user: users, goal: goals, hasMatched: false);
         //Meaning these are the first entry of the day @ that time
         if (snapshot.value == null) {
           //insert
-          _database
-              .child(widget.selectedDate)
-              .child(time)
-              .push()
-              .set(newAppointment.toJson());
+          insertAppointment(_database, time, newAppointment.toJson());
         } else {
           values = snapshot.value;
           //Used to insert false value @ the end
@@ -214,20 +207,13 @@ class _CalendarPortalState extends State<CalendarPortal>
             if (values["hasMatched"] == false) {
               prexistingAppointment = Awaiting(
                   user: values["user"], goal: values["goal"], hasMatched: true);
-              //update
-              _database
-                  .child(widget.selectedDate)
-                  .child(time)
-                  .child(key)
-                  .set(prexistingAppointment.toJson());
+              //update Given key
+              updateAppointmentGivenKey(
+                  _database, time, key, prexistingAppointment.toJson());
 
               newAppointment.hasMatched = true;
               //insert
-              _database
-                  .child(widget.selectedDate)
-                  .child(time)
-                  .push()
-                  .set(newAppointment.toJson());
+              insertAppointment(_database, time, newAppointment.toJson());
             } else if (i == length && newAppointment.hasMatched == false) {
               //insert
               _database
@@ -235,16 +221,6 @@ class _CalendarPortalState extends State<CalendarPortal>
                   .child(time)
                   .push()
                   .set(newAppointment.toJson());
-            } else {
-              if ((i == length && newAppointment.hasMatched == true)) {
-                print("Transfer to confirm");
-                //insert to Confirmed
-                _database2
-                    .child(widget.selectedDate)
-                    .child(time)
-                    .push()
-                    .set(newAppointment.toJson());
-              }
             }
           });
         }
@@ -252,7 +228,26 @@ class _CalendarPortalState extends State<CalendarPortal>
     }
   }
 
-  Future<DataSnapshot> getData(String time) async {
-    return await _database.child(widget.selectedDate).child(time).once();
+  Future<void> updateAppointmentGivenKey(DatabaseReference database,
+      String time, String key, dynamic appointment) async {
+    return await database
+        .child(widget.selectedDate)
+        .child(time)
+        .child(key)
+        .set(appointment);
+  }
+
+  Future<void> insertAppointment(
+      DatabaseReference database, String time, dynamic appointment) async {
+    return await database
+        .child(widget.selectedDate)
+        .child(time)
+        .push()
+        .set(appointment);
+  }
+
+  Future<DataSnapshot> getAwaitingApppontmentsData(
+      DatabaseReference database, String time) async {
+    return await database.child(widget.selectedDate).child(time).once();
   }
 }

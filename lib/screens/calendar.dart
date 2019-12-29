@@ -28,9 +28,6 @@ class _CalendarState extends State<Calendar> {
   @override
   void initState() {
     super.initState();
-    Auth().getCurrentUser().then((firebaseUser) {
-      this.user = firebaseUser.email.toString();
-    });
     int i = 0;
     now = DateTime.now();
     dates.add(dateFormat.format(now).toString());
@@ -38,6 +35,10 @@ class _CalendarState extends State<Calendar> {
       dates.add(dateFormat.format(now.add(Duration(days: i + 1))).toString());
       i += 1;
     }
+    Auth().getCurrentUser().then((firebaseUser) {
+      this.user = firebaseUser.email.toString();
+    });
+    //Read through Awaiting, if it shows false, update the card
   }
 
   @override
