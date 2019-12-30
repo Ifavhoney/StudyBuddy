@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'package:study_buddy/model/calendar/Appointments/awaiting.dart';
+import 'package:study_buddy/model/calendar/Appointments/confirmed.dart';
 import 'package:study_buddy/model/firebase_database_util.dart';
 
 class CalendarPortal extends StatefulWidget {
@@ -21,12 +23,14 @@ class _CalendarPortalState extends State<CalendarPortal>
   String child1 = 'Peer2Strangers';
   String child2 = 'Appointments';
   String child3 = 'Awaiting';
+  String child4 = 'Confirmed';
+
   // instance of util class
   FirebaseDatabaseUtil databaseUtil;
 
   DateTime dateTime = DateTime(2020, 1, 1, 0, 0);
   String time;
-
+  List<String> allUsers = new List<String>();
   TextEditingController _goal = new TextEditingController();
   List<String> errorText = new List<String>();
   int i;
@@ -35,6 +39,7 @@ class _CalendarPortalState extends State<CalendarPortal>
   //0-1 indicates wether running or completed
   Animation<double> scaleAnimation;
   DatabaseReference _database = FirebaseDatabase.instance.reference();
+  DatabaseReference _database2 = FirebaseDatabase.instance.reference();
 
   //Listens to when changes happen
   StreamSubscription<Event> _onTodoAddedSubscription;
@@ -43,6 +48,7 @@ class _CalendarPortalState extends State<CalendarPortal>
   @override
   void initState() {
     _database = _database.child(child1).child(child2).child(child3);
+    _database2 = _database2.child(child1).child(child2).child(child4);
 
     databaseUtil = FirebaseDatabaseUtil();
     databaseUtil.initState();
@@ -78,6 +84,7 @@ class _CalendarPortalState extends State<CalendarPortal>
 
   @override
   Widget build(BuildContext context) {
+    callRandNumber();
     return Center(
       child: Material(
         color: Colors.transparent,
@@ -198,12 +205,21 @@ class _CalendarPortalState extends State<CalendarPortal>
     return end;
   }
 */
+
+  int callRandNumber() {
+    Random rand = Random();
+    var num = rand.nextInt(100000);
+
+    return num;
+  }
+
   void addAppointment(String time, String user, String goals) {
     if (goals.isEmpty) {
       setState(() {
         i = 1;
       });
     } else {
+      Confirmed confirmedAppointment;
       Awaiting newAppointment;
       Awaiting prexistingAppointment;
       //Used to get the key & Value of our Snapshot
@@ -218,7 +234,7 @@ class _CalendarPortalState extends State<CalendarPortal>
         if (snapshot.value == null) {
           //insert
           databaseUtil.insertAppointment(
-              _database, widget.selectedDate, time, newAppointment.toJson());
+              _database, widget.selectedDate, time, newAppointment);
         } else {
           values = snapshot.value;
           //Used to insert false value @ the end
@@ -230,25 +246,31 @@ class _CalendarPortalState extends State<CalendarPortal>
             if (values["hasMatched"] == false) {
               prexistingAppointment = Awaiting(
                   user: values["user"], goal: values["goal"], hasMatched: true);
-
+              print("values is " + values["user"]);
+              this.allUsers.add(values["user"].toString());
               //update Given key
-              databaseUtil.updateAppointmentGivenKey(
-                  _database,
-                  widget.selectedDate,
-                  time,
-                  key,
-                  prexistingAppointment.toJson());
+              databaseUtil.updateAppointmentGivenKey(_database,
+                  widget.selectedDate, time, key, prexistingAppointment);
 
               newAppointment.hasMatched = true;
-
               //insert
-              databaseUtil.insertAppointment(_database, widget.selectedDate,
-                  time, newAppointment.toJson());
+              databaseUtil.insertAppointment(
+                  _database, widget.selectedDate, time, newAppointment);
+              allUsers.add(newAppointment.user);
+
+              confirmedAppointment = Confirmed(
+                  users: this.allUsers,
+                  channelName: callRandNumber(),
+                  time: time);
+              //Inserts to Confirm
+              databaseUtil.insertAppointment(
+                  _database2, widget.selectedDate, time, confirmedAppointment);
             } else if (i == length && newAppointment.hasMatched == false) {
               //insert
-              databaseUtil.insertAppointment(_database, widget.selectedDate,
-                  time, newAppointment.toJson());
+              databaseUtil.insertAppointment(
+                  _database, widget.selectedDate, time, newAppointment);
             }
+            allUsers.clear();
           });
         }
       });

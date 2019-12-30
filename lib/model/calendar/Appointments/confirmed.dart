@@ -3,7 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 class Confirmed {
   String key;
   String time;
-  List<String> users;
+  List<String> users = new List<String>();
   int channelName;
 
   Confirmed({this.users, this.time, this.channelName});
@@ -17,7 +17,7 @@ class Confirmed {
 //Sends Data back to firebase in JSON format
   toJson() {
     return {
-      "users": this.users,
+      "users": this.users[0],
       "time": this.time,
       "channelName": this.channelName
     };

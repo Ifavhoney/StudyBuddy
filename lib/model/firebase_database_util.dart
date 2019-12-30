@@ -56,7 +56,7 @@ class FirebaseDatabaseUtil {
         .child(selectedDate)
         .child(time)
         .child(key)
-        .set(appointment);
+        .set(appointment.toJson());
   }
 
   Future<void> insertAppointment(DatabaseReference database,
@@ -65,7 +65,7 @@ class FirebaseDatabaseUtil {
         .child(selectedDate)
         .child(time)
         .push()
-        .set(appointment);
+        .set(appointment.toJson());
   }
 
   Future<DataSnapshot> getAwaitingApppontmentsData(
@@ -74,6 +74,6 @@ class FirebaseDatabaseUtil {
   }
 
   void dispose() {
-    _messageSubscription.cancel();
+    //_messageSubscription.cancel();
   }
 }
