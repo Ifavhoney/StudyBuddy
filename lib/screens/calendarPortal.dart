@@ -237,6 +237,7 @@ class _CalendarPortalState extends State<CalendarPortal>
               _database, widget.selectedDate, time, newAppointment);
         } else {
           values = snapshot.value;
+          // print(values.toString());
           //Used to insert false value @ the end
           int length = values.length;
           int i = 0;
@@ -244,6 +245,8 @@ class _CalendarPortalState extends State<CalendarPortal>
             i++;
             //TO DO & gmail not the same
             if (values["hasMatched"] == false) {
+              // print(key.toString() + values.toString());
+
               prexistingAppointment = Awaiting(
                   user: values["user"], goal: values["goal"], hasMatched: true);
               print("values is " + values["user"]);

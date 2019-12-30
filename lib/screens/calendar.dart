@@ -105,6 +105,8 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget showCard(DataSnapshot res, int i) {
+    if (res.value.toString().length >= 2) {}
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Material(
@@ -119,7 +121,7 @@ class _CalendarState extends State<Calendar> {
                 showDialog(
                     context: this.context,
                     builder: (context) => CalendarPortal(
-                          selectedDate: dates[i],
+                          selectedDate: res.key,
                           user: this.user,
                         ));
               },
@@ -142,6 +144,10 @@ class _CalendarState extends State<Calendar> {
                     ),
                     subtitle: Text("Double Tap to book"),
                   ),
+
+                  //Display correct content
+                  confirmedData(res)
+                  /*
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
@@ -151,6 +157,7 @@ class _CalendarState extends State<Calendar> {
                       Text("hello"),
                     ],
                   )
+                  */
                 ],
               ),
             ),
@@ -172,5 +179,31 @@ class _CalendarState extends State<Calendar> {
         ),
       ),
     );
+  }
+
+  Widget confirmedData(DataSnapshot res) {
+    //used for keeping track of changes
+    List<String> userData;
+    //Proving we have data @ that exact location or else it'll throw an error
+    if (res.value.toString().length >= 2) {
+      Map<dynamic, dynamic> values;
+      values = res.value;
+
+      //print(values.values);
+      if (values.containsKey("00:00")) {
+        print("true");
+        _database2.child(res.key).child("00:00").once().then((snapshot) {
+          Map<dynamic, dynamic> values;
+          values = snapshot.value;
+          print(values.containsValue("woot@gmail.com"));
+        });
+      }
+    }
+    return Container();
+  }
+
+  Future<DataSnapshot> getUserData(
+      DatabaseReference database, String selectedDate) async {
+    return await database.child(selectedDate).once();
   }
 }
