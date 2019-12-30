@@ -13,28 +13,33 @@ namespace dateScript
         static IFirebaseConfig config = new FirebaseConfig
         {
             AuthSecret = "-----",
-            BasePath = "------"
+            BasePath = "-----"
         };
 
         public static void Main(string[] args)
         {
-            DateTime startDate = new DateTime(2019, 12, 25);
-            DateTime endDate = new DateTime(2020, 12, 25);
+            DateTime startDate = new DateTime(2019, 12, 27);
+            DateTime endDate = new DateTime(2020, 1, 01);
 
             List<DateTime> dateList = new List<DateTime>();      
             IFirebaseClient client;
+            Int32 unixStartTimestamp;
             client = new FireSharp.FirebaseClient(config);
 
             int i = 0;
             while (startDate.AddDays(1) <= endDate)
             {
-
-
-                //Increments by 1
+       
                 startDate = startDate.AddDays(1);
+               //  unixStartTimestamp = (Int32) (startDate.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
-                dateList.Add(startDate);
-                client.Set("Appointments/" + dateList[i].ToString("ddd, MMMM d yyyy"), "");
+               dateList.Add(startDate);
+
+                client.Set("Peer2Strangers/Appointments/Confirmed/" + dateList[i].ToString("yyyy-MM-dd"), "");
+                client.Set("Peer2Strangers/Appointments/Awaiting/" + dateList[i].ToString("yyyy-MM-dd"), "");
+                client.Set("Peer2Strangers/Appointments/Cancelled/" + dateList[i].ToString("yyyy-MM-dd"), "");
+
+
                 i++;
 
             }
