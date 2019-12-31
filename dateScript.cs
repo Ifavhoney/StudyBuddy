@@ -12,14 +12,14 @@ namespace dateScript
     {
         static IFirebaseConfig config = new FirebaseConfig
         {
-            AuthSecret = "-----",
-            BasePath = "-----"
+            AuthSecret = "------------",
+            BasePath = "------"
         };
 
         public static void Main(string[] args)
         {
-            DateTime startDate = new DateTime(2019, 12, 27);
-            DateTime endDate = new DateTime(2020, 1, 01);
+            DateTime startDate = new DateTime(2019, 12, 31);
+            DateTime endDate = new DateTime(2020, 1, 02);
 
             List<DateTime> dateList = new List<DateTime>();      
             IFirebaseClient client;
@@ -35,7 +35,7 @@ namespace dateScript
 
                dateList.Add(startDate);
 
-                client.Set("Peer2Strangers/Appointments/Confirmed/" + dateList[i].ToString("yyyy-MM-dd"), "");
+                client.Set("Peer2Strangers/Appointments/Confirmed", "");
                 client.Set("Peer2Strangers/Appointments/Awaiting/" + dateList[i].ToString("yyyy-MM-dd"), "");
                 client.Set("Peer2Strangers/Appointments/Cancelled/" + dateList[i].ToString("yyyy-MM-dd"), "");
 
