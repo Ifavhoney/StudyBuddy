@@ -26,6 +26,7 @@ class _CalendarState extends State<Calendar> {
   //DateFormat dateFormat = DateFormat("E, MMMM d y");
   DateFormat dateFormat = DateFormat("yyyy-MM-dd");
   DatabaseReference _database2 = FirebaseDatabase.instance.reference();
+  DatabaseReference _database1 = FirebaseDatabase.instance.reference();
 
   List<String> dates = [];
   String user;
@@ -35,7 +36,6 @@ class _CalendarState extends State<Calendar> {
   String errorText;
   String hintText = "Enter Channel Name";
   String buttonText;
-
   FirebaseDatabaseUtil databaseUtil;
   @override
   void initState() {
@@ -55,6 +55,8 @@ class _CalendarState extends State<Calendar> {
 
     databaseUtil = new FirebaseDatabaseUtil();
     databaseUtil.initState();
+    _database1 = _database1.child(child1).child(child2).child(child3);
+
     _database2 = _database2.child(child1).child(child2).child(child4);
 
     //Read through Awaiting, if it shows false, update the card
@@ -90,7 +92,7 @@ class _CalendarState extends State<Calendar> {
         body: Padding(
           padding: const EdgeInsets.fromLTRB(0, 18, 0, 30),
           child: FirebaseAnimatedList(
-              query: _database2.orderByKey().limitToFirst(7),
+              query: _database1.orderByKey().limitToFirst(7).startAt(dates[0]),
               itemBuilder: (BuildContext context, DataSnapshot snapshot,
                   Animation<double> animation, int i) {
                 return Padding(
@@ -104,8 +106,8 @@ class _CalendarState extends State<Calendar> {
         ));
   }
 
-  Widget showCard(DataSnapshot res, int i) {
-    if (res.value.toString().length >= 2) {}
+  Widget showCard(DataSnapshot dateSnapshot, int i) {
+    if (dateSnapshot.value.toString().length >= 2) {}
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -121,7 +123,7 @@ class _CalendarState extends State<Calendar> {
                 showDialog(
                     context: this.context,
                     builder: (context) => CalendarPortal(
-                          selectedDate: res.key,
+                          selectedDate: dateSnapshot.key,
                           user: this.user,
                         ));
               },
@@ -131,9 +133,10 @@ class _CalendarState extends State<Calendar> {
                   SizedBox(
                     width: 10,
                   ),
+                  //WHERE WE ENTER KEY
                   ListTile(
                     title: Text(
-                      res.key,
+                      dateSnapshot.key,
                       style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                     leading: Icon(Icons.calendar_today),
@@ -144,9 +147,45 @@ class _CalendarState extends State<Calendar> {
                     ),
                     subtitle: Text("Double Tap to book"),
                   ),
+                  Flexible(
+                    //Not the same as the usual once query (key)
+                    //VERIFY you are in the correct key or you may face issues
+
+                    child: FirebaseAnimatedList(
+                        shrinkWrap: true,
+                        query: _database2.orderByKey().limitToFirst(7),
+                        itemBuilder: (BuildContext context, DataSnapshot res,
+                            Animation<double> animation, int i) {
+                          return FutureBuilder<DataSnapshot>(
+                            future: _database2.child(res.key).once(),
+                            builder: (BuildContext context, snapshot) {
+                              String channel;
+                              String date;
+                              String time;
+                              List<dynamic> users;
+                              if (snapshot.hasData) {
+                                if (snapshot.data.value["users"]
+                                    .toString()
+                                    .contains("nuthsaid@gmail.com")) {
+                                  channel = snapshot.data.value["channelName"]
+                                      .toString();
+                                  date = snapshot.data.value["date"];
+                                  time = snapshot.data.value["time"];
+                                  users = snapshot.data.value["users"];
+                                } else {}
+                              }
+
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[Text(dateSnapshot.key)],
+                              );
+                            },
+                          );
+                        }),
+                  )
 
                   //Display correct content
-                  confirmedData(res)
                   /*
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -188,18 +227,19 @@ class _CalendarState extends State<Calendar> {
     if (res.value.toString().length >= 2) {
       Map<dynamic, dynamic> values;
       values = res.value;
+      int i = 0;
 
-      //print(values.values);
-      if (values.containsKey("00:00")) {
-        print("true");
-        _database2.child(res.key).child("00:00").once().then((snapshot) {
-          Map<dynamic, dynamic> values;
-          values = snapshot.value;
-          print(values.containsValue("woot@gmail.com"));
-        });
-      }
+/*
+      values.forEach((key, values) {
+        print(values["channelName"]);
+        //If the user exists in value, show those time
+        print(i);
+      });
+*/
+      return Container();
+    } else {
+      return Container();
     }
-    return Container();
   }
 
   Future<DataSnapshot> getUserData(

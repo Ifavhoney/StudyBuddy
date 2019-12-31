@@ -8,6 +8,7 @@ class FirebaseDatabaseUtil {
   String child3 = 'Awaiting';
 
   DatabaseReference _database;
+
   StreamSubscription<Event> _messageSubscription;
   FirebaseDatabase database = new FirebaseDatabase();
 
@@ -57,6 +58,11 @@ class FirebaseDatabaseUtil {
         .child(time)
         .child(key)
         .set(appointment.toJson());
+  }
+
+  Future<void> insertConfirmation(DatabaseReference database,
+      String selectedDate, String time, dynamic appointment) async {
+    return await database.push().set(appointment.toJson());
   }
 
   Future<void> insertAppointment(DatabaseReference database,
