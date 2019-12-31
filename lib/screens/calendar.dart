@@ -128,7 +128,6 @@ class _CalendarState extends State<Calendar> {
                         ));
               },
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
                     width: 10,
@@ -145,14 +144,22 @@ class _CalendarState extends State<Calendar> {
                       color: Colors.teal.shade100,
                       size: 30,
                     ),
-                    subtitle: Text("Double Tap to book"),
+                    subtitle: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Double Tap to book"),
+                      ],
+                    ),
                   ),
                   Flexible(
                     //Not the same as the usual once query (key)
                     //VERIFY you are in the correct key or you may face issues
 
                     child: FirebaseAnimatedList(
-                        shrinkWrap: true,
+                        primary: true,
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: false,
                         query: _database2.orderByKey().limitToFirst(7),
                         itemBuilder: (BuildContext context, DataSnapshot res,
                             Animation<double> animation, int i) {
@@ -164,22 +171,47 @@ class _CalendarState extends State<Calendar> {
                               String time;
                               List<dynamic> users;
                               if (snapshot.hasData) {
+                                //shows where the user has an apppointment
                                 if (snapshot.data.value["users"]
-                                    .toString()
-                                    .contains("nuthsaid@gmail.com")) {
+                                        .toString()
+                                        .contains("nuthsaid@gmail.com") &&
+                                    dateSnapshot.key ==
+                                        snapshot.data.value["date"]) {
                                   channel = snapshot.data.value["channelName"]
                                       .toString();
                                   date = snapshot.data.value["date"];
                                   time = snapshot.data.value["time"];
                                   users = snapshot.data.value["users"];
-                                } else {}
-                              }
+                                } //Shows where the user does not have an appointment
+                                //in relevance to others
 
-                              return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[Text(dateSnapshot.key)],
-                              );
+                                else if (snapshot.data.value["users"]
+                                        .toString()
+                                        .contains("nuthsaid@gmail.com") &&
+                                    dateSnapshot.key !=
+                                        snapshot.data.value["date"]) {
+                                  //  print(dateSnapshot.key);
+                                }
+                              }
+                              return time != null
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      // crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: RaisedButton(
+                                              colorBrightness: Brightness.dark,
+                                              color: Theme.of(context)
+                                                  .buttonColor
+                                                  .withBlue(255),
+                                              onPressed: () {},
+                                              child: Text(time)),
+                                        )
+                                      ],
+                                    )
+                                  : Text("");
                             },
                           );
                         }),
