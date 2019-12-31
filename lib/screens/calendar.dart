@@ -189,9 +189,7 @@ class _CalendarState extends State<Calendar> {
                                         .toString()
                                         .contains("nuthsaid@gmail.com") &&
                                     dateSnapshot.key !=
-                                        snapshot.data.value["date"]) {
-                                  //  print(dateSnapshot.key);
-                                }
+                                        snapshot.data.value["date"]) {}
                               }
                               return time != null
                                   ? Row(

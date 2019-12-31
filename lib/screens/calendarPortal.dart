@@ -38,6 +38,7 @@ class _CalendarPortalState extends State<CalendarPortal>
   AnimationController controller;
   //0-1 indicates wether running or completed
   Animation<double> scaleAnimation;
+
   DatabaseReference _database = FirebaseDatabase.instance.reference();
   DatabaseReference _database2 = FirebaseDatabase.instance.reference();
 
@@ -58,6 +59,7 @@ class _CalendarPortalState extends State<CalendarPortal>
     i = 0;
     errorText.add("");
     errorText.add("Text cannot be empty");
+    errorText.add("Time already exists");
 
     //  errorText.add(time + " cannot be empty");
 
@@ -230,6 +232,7 @@ class _CalendarPortalState extends State<CalendarPortal>
           .getAwaitingApppontmentsData(_database, widget.selectedDate, time)
           .then((DataSnapshot snapshot) {
         newAppointment = Awaiting(user: user, goal: goals, hasMatched: false);
+
         //Meaning these are the first entry of the day @ that time
         if (snapshot.value == null) {
           //insert
@@ -237,42 +240,52 @@ class _CalendarPortalState extends State<CalendarPortal>
               _database, widget.selectedDate, time, newAppointment);
         } else {
           values = snapshot.value;
+
           //print(values.toString());
           //Used to insert false value @ the end
           int length = values.length;
-          int i = 0;
+          int j = 0;
           values.forEach((key, values) {
-            i++;
-            //TO DO & gmail not the same
-            if (values["hasMatched"] == false) {
-              prexistingAppointment = Awaiting(
-                  user: values["user"], goal: values["goal"], hasMatched: true);
-              print("values is " + values["user"]);
-              this.allUsers.add(values["user"].toString());
-              //update Given key
-              databaseUtil.updateAppointmentGivenKey(_database,
-                  widget.selectedDate, time, key, prexistingAppointment);
+            //Do not proceed if it exits in the database
+            if (values["user"] != user) {
+              j++;
+              //TO DO & gmail not the same
+              if (values["hasMatched"] == false) {
+                prexistingAppointment = Awaiting(
+                    user: values["user"],
+                    goal: values["goal"],
+                    hasMatched: true);
+                print("values is " + values["user"]);
+                this.allUsers.add(values["user"].toString());
+                //update Given key
+                databaseUtil.updateAppointmentGivenKey(_database,
+                    widget.selectedDate, time, key, prexistingAppointment);
 
-              newAppointment.hasMatched = true;
-              //insert
-              databaseUtil.insertAppointment(
-                  _database, widget.selectedDate, time, newAppointment);
-              allUsers.add(newAppointment.user);
+                newAppointment.hasMatched = true;
+                //insert
+                databaseUtil.insertAppointment(
+                    _database, widget.selectedDate, time, newAppointment);
+                allUsers.add(newAppointment.user);
 
-              confirmedAppointment = Confirmed(
-                  users: this.allUsers,
-                  date: widget.selectedDate,
-                  channelName: callRandNumber(),
-                  time: time);
-              //Inserts to Confirm
-              databaseUtil.insertConfirmation(
-                  _database2, widget.selectedDate, time, confirmedAppointment);
-            } else if (i == length && newAppointment.hasMatched == false) {
-              //insert
-              databaseUtil.insertAppointment(
-                  _database, widget.selectedDate, time, newAppointment);
+                confirmedAppointment = Confirmed(
+                    users: this.allUsers,
+                    date: widget.selectedDate,
+                    channelName: callRandNumber(),
+                    time: time);
+                //Inserts to Confirm
+                databaseUtil.insertConfirmation(_database2, widget.selectedDate,
+                    time, confirmedAppointment);
+              } else if (j == length && newAppointment.hasMatched == false) {
+                //insert
+                databaseUtil.insertAppointment(
+                    _database, widget.selectedDate, time, newAppointment);
+              }
+              allUsers.clear();
+            } else {
+              setState(() {
+                i = 2;
+              });
             }
-            allUsers.clear();
           });
         }
       });
