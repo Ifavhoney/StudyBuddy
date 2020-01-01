@@ -202,13 +202,7 @@ class _CalendarPortalState extends State<CalendarPortal>
                                 //RESET METHOD FOR VALIDATION
                                 //Using the end time to prevent time conflict
                                 String user = "Bab@gmail.com";
-                                Awaiting newAppointment = Awaiting(
-                                    user: user,
-                                    goal: _goal.text,
-                                    hasMatched: false,
-                                    //    timeConflicts: timeConflicts,
-                                    endTime: _df.format(storeEndTime));
-                                print(endTime.toString());
+
                                 if (_goal.text.isEmpty) {
                                   setState(() {
                                     i = 1;
@@ -305,9 +299,6 @@ class _CalendarPortalState extends State<CalendarPortal>
                                             _goal.text,
                                           );
                                         }
-                                        setState(() {
-                                          i = 0;
-                                        });
                                       });
                                     }
                                   });
