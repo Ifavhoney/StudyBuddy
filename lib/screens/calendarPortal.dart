@@ -9,6 +9,8 @@ import 'package:study_buddy/model/calendar/Appointments/awaiting.dart';
 import 'package:study_buddy/model/calendar/Appointments/confirmed.dart';
 import 'package:study_buddy/model/firebase_database_util.dart';
 
+import 'calendar.dart';
+
 class CalendarPortal extends StatefulWidget {
   final String selectedDate;
   final String user;
@@ -28,12 +30,23 @@ class _CalendarPortalState extends State<CalendarPortal>
   // instance of util class
   FirebaseDatabaseUtil databaseUtil;
 
-  DateTime dateTime = DateTime(2020, 1, 1, 0, 0);
+  DateTime dateTime;
+  DateFormat _df;
+
   String time;
+  String endTime;
+  DateTime selectedTime;
+  DateTime storeEndTime;
+
+  List<String> _timeConflicts = new List<String>();
+
   List<String> allUsers = new List<String>();
   TextEditingController _goal = new TextEditingController();
   List<String> errorText = new List<String>();
   int i;
+  int numHours;
+  int clicked = -1;
+
   //neccessary to set the duration of our animation
   AnimationController controller;
   //0-1 indicates wether running or completed
@@ -41,25 +54,23 @@ class _CalendarPortalState extends State<CalendarPortal>
 
   DatabaseReference _database = FirebaseDatabase.instance.reference();
   DatabaseReference _database2 = FirebaseDatabase.instance.reference();
-
-  //Listens to when changes happen
-  StreamSubscription<Event> _onTodoAddedSubscription;
-  StreamSubscription<Event> _onTodoChangedSubscription;
-
   @override
   void initState() {
+    dateTime = DateTime(2020, 1, 1, 0, 0);
+    _df = DateFormat.Hm();
+
     _database = _database.child(child1).child(child2).child(child3);
     _database2 = _database2.child(child1).child(child2).child(child4);
-
     databaseUtil = FirebaseDatabaseUtil();
     databaseUtil.initState();
 
     //databaseUtil.initState();
-
+    numHours = 1;
     i = 0;
     errorText.add("");
     errorText.add("Text cannot be empty");
-    errorText.add("Time already exists");
+    errorText.add("You have already selected this specific time");
+    errorText.add("Time conflict in your schedule");
 
     //  errorText.add(time + " cannot be empty");
 
@@ -81,6 +92,8 @@ class _CalendarPortalState extends State<CalendarPortal>
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    controller.dispose();
+
     databaseUtil.dispose();
   }
 
@@ -140,8 +153,21 @@ class _CalendarPortalState extends State<CalendarPortal>
                                     mode: CupertinoDatePickerMode.time,
                                     onDateTimeChanged: (currentTime) {
                                       setState(() {
-                                        DateFormat _df = DateFormat.Hm();
                                         this.time = _df.format(currentTime);
+
+                                        this.selectedTime = currentTime;
+                                        this.storeEndTime = currentTime
+                                            .add(Duration(hours: numHours));
+/*
+                                        //Convert to dateFormat
+                                        DateTime parsedTime =
+                                            DateTime.parse(time);
+                                        DateTime parsedEndTime =
+                                            DateTime.parse(endTime); 
+                                            String amountOfTime = parsedEndTime
+                                            .difference(parsedTime)
+                                            .toString();
+*/
                                       });
                                     },
                                   ),
@@ -153,25 +179,97 @@ class _CalendarPortalState extends State<CalendarPortal>
                         SizedBox(
                           height: 10,
                         ),
-                        RaisedButton(
-                            child: Text(
-                              "Book",
-                              style: Theme.of(context).textTheme.button,
-                            ),
-                            onPressed: () {
-                              /*
-                              print(validateAppointment(
+                        GestureDetector(
+                          child: RaisedButton(
+                              child: Text(
+                                "Book",
+                                style: Theme.of(context).textTheme.button,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  i = 0;
+                                });
+                                if (storeEndTime == null ||
+                                    selectedTime == null ||
+                                    time == null) {
+                                  setState(() {
+                                    time = "00:00";
+                                    selectedTime = dateTime;
+                                    storeEndTime =
+                                        dateTime.add(Duration(hours: 1));
+                                  });
+                                }
+                                //RESET METHOD FOR VALIDATION
+                                String user = "Bab@gmail.com";
+                                Awaiting newAppointment = Awaiting(
+                                    user: user,
+                                    goal: _goal.text,
+                                    hasMatched: false,
+                                    //    timeConflicts: timeConflicts,
+                                    endTime: endTime);
+
+                                if (_goal.text.isEmpty) {
+                                  setState(() {
+                                    i = 1;
+                                  });
+                                } else {
+                                  if (i == 0) {
+                                    addAppointment(
                                       time == null ? "00:00" : time,
-                                      "nuthsaid@gmail.com")
-                                  .toString());
-*/
-                              addAppointment(
-                                time == null ? "00:00" : time,
-                                "nuthsaid@gmail.com",
-                                _goal.text,
-                              );
-                              //Firebase
-                            })
+                                      _df.format(storeEndTime),
+                                      _timeConflicts,
+                                      user,
+                                      _goal.text,
+                                    );
+                                  }
+                                  databaseUtil
+                                      .getAwaitingApppontmentsData(
+                                          _database, widget.selectedDate, time)
+                                      .then((DataSnapshot snapshot) {
+                                    //Check if user exists @ time
+                                    if (snapshot.value
+                                        .toString()
+                                        .contains(user)) {
+                                      List<String> splitTime = time.split(":");
+                                      dateTime = DateTime(
+                                          2020,
+                                          1,
+                                          1,
+                                          int.parse(splitTime[0]),
+                                          int.parse(splitTime[1]));
+
+                                      //2
+                                      if (storeEndTime.isBefore(selectedTime)) {
+                                        setState(() {
+                                          i = 3;
+                                        });
+                                      } else if (selectedTime
+                                              .difference(dateTime)
+                                              .inMinutes ==
+                                          0) {
+                                        setState(() {
+                                          i = 2;
+                                        });
+                                        //insert
+                                        Map<dynamic, dynamic> value =
+                                            snapshot.value;
+                                        value.forEach((key, values) {
+                                          print(key);
+                                          if (values["user"] == user) {
+                                            _database
+                                                .child(widget.selectedDate)
+                                                .child(time)
+                                                .child(key)
+                                                .remove();
+                                          }
+                                        });
+                                      }
+                                    }
+                                  });
+                                }
+                                //Firebase
+                              }),
+                        )
                       ],
                     ))),
           ),
@@ -180,34 +278,6 @@ class _CalendarPortalState extends State<CalendarPortal>
     );
   }
 
-  /*
-  int validateAppointment(String time, String user) {
-    Map<dynamic, dynamic> values;
-    //Captures DATASET ONCE,
-    int end = 3298234;
-    databaseUtil
-        .getAwaitingApppontmentsData(_database, widget.selectedDate, time)
-        .then((DataSnapshot snapshot) {
-      values = snapshot.value;
-      if (values != null) {
-        //Prevent duplicate
-        values.forEach((key, values) {
-          print(user + values["user"]);
-          if (values["user"] == user) {
-            print("contains user");
-            setState(() {
-              this.errorText.add(time + " Invalid time");
-              this.i = 2;
-            });
-            return null;
-          }
-        });
-      }
-    });
-    return end;
-  }
-*/
-
   int callRandNumber() {
     Random rand = Random();
     var num = rand.nextInt(100000);
@@ -215,80 +285,81 @@ class _CalendarPortalState extends State<CalendarPortal>
     return num;
   }
 
-  void addAppointment(String time, String user, String goals) {
-    if (goals.isEmpty) {
-      setState(() {
-        i = 1;
-      });
-    } else {
-      Confirmed confirmedAppointment;
-      Awaiting newAppointment;
-      Awaiting prexistingAppointment;
-      //Used to get the key & Value of our Snapshot
-      Map<dynamic, dynamic> values;
+  void addAppointment(String time, String endTime, List<String> timeConflicts,
+      String user, String goals) {
+    Confirmed confirmedAppointment;
+    Awaiting newAppointment;
+    Awaiting prexistingAppointment;
+    //Used to get the key & Value of our Snapshot
+    Map<dynamic, dynamic> values;
 
-      //Reads through database, given the date & time
-      databaseUtil
-          .getAwaitingApppontmentsData(_database, widget.selectedDate, time)
-          .then((DataSnapshot snapshot) {
-        newAppointment = Awaiting(user: user, goal: goals, hasMatched: false);
+    //Reads through database, given the date & time
+    databaseUtil
+        .getAwaitingApppontmentsData(_database, widget.selectedDate, time)
+        .then((DataSnapshot snapshot) {
+      newAppointment = Awaiting(
+          user: user,
+          goal: goals,
+          hasMatched: false,
+          //    timeConflicts: timeConflicts,
+          endTime: endTime);
 
-        //Meaning these are the first entry of the day @ that time
-        if (snapshot.value == null) {
-          //insert
-          databaseUtil.insertAppointment(
-              _database, widget.selectedDate, time, newAppointment);
-        } else {
-          values = snapshot.value;
+      //Meaning these are the first entry of the day @ that time
+      if (snapshot.value == null) {
+        //insert
+        databaseUtil.insertAppointment(
+            _database, widget.selectedDate, time, newAppointment);
+        // Navigator.of(context).pop();
+      } else {
+        values = snapshot.value;
 
-          //print(values.toString());
-          //Used to insert false value @ the end
-          int length = values.length;
-          int j = 0;
-          values.forEach((key, values) {
-            //Do not proceed if it exits in the database
-            if (values["user"] != user) {
-              j++;
-              //TO DO & gmail not the same
-              if (values["hasMatched"] == false) {
-                prexistingAppointment = Awaiting(
-                    user: values["user"],
-                    goal: values["goal"],
-                    hasMatched: true);
-                print("values is " + values["user"]);
-                this.allUsers.add(values["user"].toString());
-                //update Given key
-                databaseUtil.updateAppointmentGivenKey(_database,
-                    widget.selectedDate, time, key, prexistingAppointment);
+        int length = values.length;
+        int j = 0;
+        //ErrorText, do not proceed if the user exists @ that specific time
 
-                newAppointment.hasMatched = true;
-                //insert
-                databaseUtil.insertAppointment(
-                    _database, widget.selectedDate, time, newAppointment);
-                allUsers.add(newAppointment.user);
+        values.forEach((key, values) {
+          j++;
 
-                confirmedAppointment = Confirmed(
-                    users: this.allUsers,
-                    date: widget.selectedDate,
-                    channelName: callRandNumber(),
-                    time: time);
-                //Inserts to Confirm
-                databaseUtil.insertConfirmation(_database2, widget.selectedDate,
-                    time, confirmedAppointment);
-              } else if (j == length && newAppointment.hasMatched == false) {
-                //insert
-                databaseUtil.insertAppointment(
-                    _database, widget.selectedDate, time, newAppointment);
-              }
-              allUsers.clear();
-            } else {
-              setState(() {
-                i = 2;
-              });
-            }
-          });
-        }
-      });
-    }
+          // print("HII" + values["timeConflicts"].toString());
+
+          //Change previous false value to true, and give the new value to true
+          if (values["hasMatched"] == false) {
+            prexistingAppointment = Awaiting(
+                user: values["user"],
+                goal: values["goal"],
+                // timeConflicts: values["timeConflicts"],
+                endTime: values["endTime"],
+                hasMatched: true);
+            this.allUsers.add(values["user"].toString());
+            //update Given key
+            databaseUtil.updateAppointmentGivenKey(_database,
+                widget.selectedDate, time, key, prexistingAppointment);
+
+            newAppointment.hasMatched = true;
+            //insert
+            databaseUtil.insertAppointment(
+                _database, widget.selectedDate, time, newAppointment);
+            allUsers.add(newAppointment.user);
+
+            confirmedAppointment = Confirmed(
+                users: this.allUsers,
+                date: widget.selectedDate,
+                channelName: callRandNumber(),
+                time: time);
+            //Inserts to Confirm
+            databaseUtil.insertConfirmation(
+                _database2, widget.selectedDate, time, confirmedAppointment);
+            //    Navigator.of(context).pop();
+          } else if (j == length && newAppointment.hasMatched == false) {
+            //Get end time
+
+            //insert
+            databaseUtil.insertAppointment(
+                _database, widget.selectedDate, time, newAppointment);
+          }
+          allUsers.clear();
+        });
+      }
+    });
   }
 }

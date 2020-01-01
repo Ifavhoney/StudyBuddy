@@ -14,7 +14,7 @@ class Confirmed {
   Confirmed.fromSnapshot(DataSnapshot snapshot)
       : this.users = snapshot.value["users"],
         this.time = snapshot.value["time"],
-        this.date = snapshot.value["time"],
+        this.date = snapshot.value["date"],
         this.channelName = snapshot.value["channelName"],
         this.key = snapshot.key;
 
