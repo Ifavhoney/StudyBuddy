@@ -112,7 +112,6 @@ class _CalendarState extends State<Calendar> {
               query: _database1.orderByKey().limitToFirst(7).startAt(dates[0]),
               itemBuilder: (BuildContext context, DataSnapshot snapshot,
                   Animation<double> animation, int i) {
-                print(snapshot.key);
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: new Column(
@@ -181,7 +180,7 @@ class _CalendarState extends State<Calendar> {
                         primary: true,
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: false,
-                        query: _database2.orderByKey().limitToFirst(7),
+                        query: _database2.orderByKey(),
                         itemBuilder: (BuildContext context, DataSnapshot res,
                             Animation<double> animation, int i) {
                           return FutureBuilder<DataSnapshot>(
@@ -194,6 +193,7 @@ class _CalendarState extends State<Calendar> {
 
                               //-----
 
+                              //Can be improved using a method
                               if (snapshot.hasData) {
                                 //Only if the time exists in the confirm collection
                                 if (dateSnapshot.key ==

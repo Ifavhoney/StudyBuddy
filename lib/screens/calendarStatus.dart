@@ -38,21 +38,89 @@ class _CalendarStatusState extends State<CalendarStatus> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
+        appBar: AppBar(
+          title: Text("Appointment Status"),
+        ),
         body: Padding(
             padding: const EdgeInsets.fromLTRB(0, 18, 0, 30),
-            child: Column(
+            child: ListView(
               children: <Widget>[
-                Flexible(
-                  child: FirebaseAnimatedList(
-                    query: _database2
-                        .orderByKey()
-                        .limitToFirst(7)
-                        .startAt(currentDate),
-                    shrinkWrap: true,
-                    itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                        Animation<double> animation, int i) {
-                      print(snapshot.key);
-                    },
+                Container(
+                  color: Colors.teal.shade100,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Confirmed Appointment",
+                        style: Theme.of(context)
+                            .textTheme
+                            .display1
+                            .copyWith(fontSize: 20),
+                      ),
+                      FirebaseAnimatedList(
+                        query: _database2.orderByKey(),
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, DataSnapshot res,
+                            Animation<double> animation, int i) {
+                          return FutureBuilder<DataSnapshot>(
+                              future: _database2.child(res.key).once(),
+                              builder: (BuildContext context, snapshot) {
+                                String channel;
+                                String date;
+                                String time;
+                                List<dynamic> users;
+
+                                if (snapshot.hasData) {
+                                  //shows where the user has an apppointment
+                                  if (snapshot.data.value["users"]
+                                      .toString()
+                                      .contains(widget.user)) {
+                                    channel = snapshot.data.value["channelName"]
+                                        .toString();
+                                    date = snapshot.data.value["date"];
+                                    time = snapshot.data.value["time"];
+                                    //while loop
+                                    users = snapshot.data.value["users"];
+                                    print(i);
+                                    return time != null
+                                        ? Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  time,
+                                                ),
+                                                Text(
+                                                  channel,
+                                                ),
+                                                //Shows to wh om
+                                                Text(!users[0]
+                                                            .toString()
+                                                            .contains(
+                                                                widget.user) ==
+                                                        true
+                                                    ? users[0]
+                                                    : users[1]),
+                                              ],
+                                            ),
+                                          )
+                                        : Text("");
+                                  } else {
+                                    return Container();
+                                  }
+
+                                  //Shows where the user does not have an appointment
+
+                                } else {
+                                  print("no data");
+                                  return Text("");
+                                }
+                              });
+                        },
+                      ),
+                    ],
                   ),
                 )
               ],
