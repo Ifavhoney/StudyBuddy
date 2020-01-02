@@ -51,6 +51,9 @@ class _CalendarState extends State<Calendar> {
 
     Auth().getCurrentUser().then((firebaseUser) {
       this.user = firebaseUser.email.toString();
+    }).catchError((error) {
+      print("is null");
+      //Re login
     });
 
     databaseUtil = new FirebaseDatabaseUtil();
@@ -171,10 +174,11 @@ class _CalendarState extends State<Calendar> {
                               String time;
                               List<dynamic> users;
                               if (snapshot.hasData) {
+                                String user = "Bab@gmail.com";
                                 //shows where the user has an apppointment
                                 if (snapshot.data.value["users"]
                                         .toString()
-                                        .contains("nuthsaid@gmail.com") &&
+                                        .contains(user) &&
                                     dateSnapshot.key ==
                                         snapshot.data.value["date"]) {
                                   channel = snapshot.data.value["channelName"]
@@ -187,7 +191,7 @@ class _CalendarState extends State<Calendar> {
 
                                 else if (snapshot.data.value["users"]
                                         .toString()
-                                        .contains("nuthsaid@gmail.com") &&
+                                        .contains(user) &&
                                     dateSnapshot.key !=
                                         snapshot.data.value["date"]) {}
                               }
@@ -216,17 +220,6 @@ class _CalendarState extends State<Calendar> {
                   )
 
                   //Display correct content
-                  /*
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Text("hello"),
-                      Text("hello"),
-                      Text("hello"),
-                      Text("hello"),
-                    ],
-                  )
-                  */
                 ],
               ),
             ),
@@ -257,15 +250,6 @@ class _CalendarState extends State<Calendar> {
     if (res.value.toString().length >= 2) {
       Map<dynamic, dynamic> values;
       values = res.value;
-      int i = 0;
-
-/*
-      values.forEach((key, values) {
-        print(values["channelName"]);
-        //If the user exists in value, show those time
-        print(i);
-      });
-*/
       return Container();
     } else {
       return Container();

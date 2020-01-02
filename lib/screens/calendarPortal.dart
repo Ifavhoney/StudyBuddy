@@ -158,16 +158,6 @@ class _CalendarPortalState extends State<CalendarPortal>
                                         this.selectedTime = currentTime;
                                         this.storeEndTime = currentTime
                                             .add(Duration(hours: numHours));
-/*
-                                        //Convert to dateFormat
-                                        DateTime parsedTime =
-                                            DateTime.parse(time);
-                                        DateTime parsedEndTime =
-                                            DateTime.parse(endTime); 
-                                            String amountOfTime = parsedEndTime
-                                            .difference(parsedTime)
-                                            .toString();
-*/
                                       });
                                     },
                                   ),
@@ -196,115 +186,13 @@ class _CalendarPortalState extends State<CalendarPortal>
                                         dateTime.add(Duration(hours: 1));
                                   });
                                 }
+
                                 setState(() {
                                   i = 0;
                                 });
-                                //RESET METHOD FOR VALIDATION
-                                //Using the end time to prevent time conflict
-                                String user = "Bab@gmail.com";
 
-                                if (_goal.text.isEmpty) {
-                                  setState(() {
-                                    i = 1;
-                                  });
-                                } else {
-                                  databaseUtil
-                                      .getAwaitingApppontmentsData(
-                                          _database, widget.selectedDate, time)
-                                      .then((DataSnapshot snapshot) {
-                                    //Check if user exists @ time
-                                    if (snapshot.value
-                                        .toString()
-                                        .contains(user)) {
-                                      print("the key exists at that location" +
-                                          snapshot.key);
-                                      setState(() {
-                                        i = 2;
-                                      });
-
-                                      _database
-                                          .child(widget.selectedDate)
-                                          .child(time)
-                                          .child(snapshot.key)
-                                          .remove();
-                                    } else {
-                                      _database
-                                          .child(widget.selectedDate)
-                                          .once()
-                                          .then((snapshot) {
-                                        //There is a user somewhere in the database
-                                        if (snapshot.value
-                                            .toString()
-                                            .contains(user)) {
-                                          List<String> splitTime;
-
-                                          Map<dynamic, dynamic> value =
-                                              snapshot.value;
-                                          value.forEach((key, value) {
-                                            //this can be a method on its own
-                                            splitTime =
-                                                key.toString().split(":");
-                                            DateTime _dbTime = DateTime(
-                                                2020,
-                                                1,
-                                                1,
-                                                int.parse(splitTime[0]),
-                                                int.parse(splitTime[1]));
-//
-
-                                            //    print(_dbTime.toString());
-                                            //   print(selectedTime);
-                                            if (selectedTime.isAfter(_dbTime)) {
-                                              //if it's after by 30 minutes
-                                              int diff = selectedTime
-                                                  .difference(_dbTime)
-                                                  .inMinutes;
-                                              if (diff >= 0 && diff <= 60) {
-                                                print("time after");
-                                                setState(() {
-                                                  i = 3;
-                                                });
-                                                print("Incompatible: " +
-                                                    _dbTime.toString());
-                                              }
-                                            }
-                                            if (selectedTime
-                                                .isBefore(_dbTime)) {
-                                              int diff = _dbTime
-                                                  .difference(selectedTime)
-                                                  .inMinutes;
-                                              print(diff);
-                                              if (diff >= 0 && diff <= 60) {
-                                                setState(() {
-                                                  i = 3;
-                                                });
-                                                print("Incompatible: " +
-                                                    _dbTime.toString());
-                                              }
-                                            }
-                                          });
-                                        } else {
-                                          setState(() {
-                                            i = 0;
-                                          });
-                                          print("No user anywhere");
-                                        }
-                                        print("I IS " + i.toString());
-                                        if (i == 0) {
-                                          addAppointment(
-                                            time == null ? "00:00" : time,
-                                            _df.format(storeEndTime),
-                                            _timeConflicts,
-                                            user,
-                                            _goal.text,
-                                          );
-                                        }
-                                      });
-                                    }
-                                  });
-                                }
-
-                                //Firebase
+                                String user = "Babs@gmail.com";
+                                validateAppointment(user, _goal.text, time);
                               }),
                         )
                       ],
@@ -313,6 +201,83 @@ class _CalendarPortalState extends State<CalendarPortal>
         ),
       ),
     );
+  }
+
+  void validateAppointment(String user, String goal, String time) {
+    if (goal.isEmpty) {
+      setState(() {
+        i = 1;
+      });
+    } else {
+      databaseUtil
+          .getAwaitingApppontmentsData(_database, widget.selectedDate, time)
+          .then((DataSnapshot snapshot) {
+        //Check if user exists @ time
+        if (snapshot.value.toString().contains(user)) {
+          print("the key exists at that location" + snapshot.key);
+          setState(() {
+            i = 2;
+          });
+
+          _database
+              .child(widget.selectedDate)
+              .child(time)
+              .child(snapshot.key)
+              .remove();
+        } else {
+          _database.child(widget.selectedDate).once().then((snapshot) {
+            //There is a user somewhere in the database
+            if (snapshot.value.toString().contains(user)) {
+              List<String> splitTime;
+
+              Map<dynamic, dynamic> value = snapshot.value;
+              value.forEach((key, value) {
+                //this can be a method on its own
+                splitTime = key.toString().split(":");
+                DateTime _dbTime = DateTime(2020, 1, 1, int.parse(splitTime[0]),
+                    int.parse(splitTime[1]));
+
+                if (selectedTime.isAfter(_dbTime)) {
+                  int diff = selectedTime.difference(_dbTime).inMinutes;
+                  if (diff >= 0 && diff <= 60) {
+                    print("time after");
+                    setState(() {
+                      i = 3;
+                    });
+                    print("Incompatible: " + _dbTime.toString());
+                  }
+                }
+                if (selectedTime.isBefore(_dbTime)) {
+                  int diff = _dbTime.difference(selectedTime).inMinutes;
+                  print(diff);
+                  if (diff >= 0 && diff <= 60) {
+                    setState(() {
+                      i = 3;
+                    });
+                    print("Incompatible: " + _dbTime.toString());
+                  }
+                }
+              });
+            } else {
+              setState(() {
+                i = 0;
+              });
+              print("No user anywhere");
+            }
+            print("I IS " + i.toString());
+            if (i == 0) {
+              addAppointment(
+                time == null ? "00:00" : time,
+                _df.format(storeEndTime),
+                _timeConflicts,
+                user,
+                _goal.text,
+              );
+            }
+          });
+        }
+      });
+    }
   }
 
   int callRandNumber() {
