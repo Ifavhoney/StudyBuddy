@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:study_buddy/model/BaseAuth.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:study_buddy/model/calendar/Appointments/awaiting.dart';
 import 'package:study_buddy/model/calendar/Appointments/confirmed.dart';
 import 'package:study_buddy/model/firebase_database_util.dart';
-
-import 'calendar.dart';
 
 class CalendarPortal extends StatefulWidget {
   final String selectedDate;
@@ -39,7 +38,7 @@ class _CalendarPortalState extends State<CalendarPortal>
   DateTime storeEndTime;
 
   List<String> _timeConflicts = new List<String>();
-
+  String user;
   List<String> allUsers = new List<String>();
   TextEditingController _goal = new TextEditingController();
   List<String> errorText = new List<String>();
@@ -63,6 +62,12 @@ class _CalendarPortalState extends State<CalendarPortal>
     _database2 = _database2.child(child1).child(child2).child(child4);
     databaseUtil = FirebaseDatabaseUtil();
     databaseUtil.initState();
+    Auth().getCurrentUser().then((firebaseUser) {
+      this.user = firebaseUser.email.toString();
+    }).catchError((error) {
+      this.user = "Blob@gmail.com";
+      //Re login
+    });
 
     //databaseUtil.initState();
     numHours = 1;
@@ -191,7 +196,6 @@ class _CalendarPortalState extends State<CalendarPortal>
                                   i = 0;
                                 });
 
-                                String user = "Babs@gmail.com";
                                 validateAppointment(user, _goal.text, time);
                               }),
                         )
@@ -233,6 +237,8 @@ class _CalendarPortalState extends State<CalendarPortal>
               Map<dynamic, dynamic> value = snapshot.value;
               value.forEach((key, value) {
                 //this can be a method on its own
+
+                //Change String into DateTime function
                 splitTime = key.toString().split(":");
                 DateTime _dbTime = DateTime(2020, 1, 1, int.parse(splitTime[0]),
                     int.parse(splitTime[1]));

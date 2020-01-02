@@ -8,7 +8,7 @@ import 'package:study_buddy/model/BaseAuth.dart';
 import 'calendarPortal.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:study_buddy/model/firebase_database_util.dart';
-
+import 'calendarStatus.dart';
 //cupertino_picker
 
 class Calendar extends StatefulWidget {
@@ -33,6 +33,7 @@ class _CalendarState extends State<Calendar> {
   bool hasNotBooked = false;
 
   TextEditingController channelName = new TextEditingController();
+  String initialText;
   String errorText;
   String hintText = "Enter Channel Name";
   String buttonText;
@@ -40,6 +41,7 @@ class _CalendarState extends State<Calendar> {
   @override
   void initState() {
     super.initState();
+    initialText = "Double tab to book";
 
     int i = 0;
     now = DateTime.now();
@@ -52,7 +54,7 @@ class _CalendarState extends State<Calendar> {
     Auth().getCurrentUser().then((firebaseUser) {
       this.user = firebaseUser.email.toString();
     }).catchError((error) {
-      print("is null");
+      this.user = "Blob@gmail.com";
       //Re login
     });
 
@@ -92,12 +94,25 @@ class _CalendarState extends State<Calendar> {
             )
           ],
         ),
+        floatingActionButton: RaisedButton(
+          child: Text(
+            "View Status",
+            style: Theme.of(context).textTheme.button,
+          ),
+          onPressed: () {
+            MaterialPageRoute route = MaterialPageRoute(builder: (context) {
+              return CalendarStatus(user);
+            });
+            Navigator.of(context).push(route);
+          },
+        ),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(0, 18, 0, 30),
           child: FirebaseAnimatedList(
               query: _database1.orderByKey().limitToFirst(7).startAt(dates[0]),
               itemBuilder: (BuildContext context, DataSnapshot snapshot,
                   Animation<double> animation, int i) {
+                print(snapshot.key);
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: new Column(
@@ -151,7 +166,10 @@ class _CalendarState extends State<Calendar> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("Double Tap to book"),
+                        Text(
+                          initialText,
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
                       ],
                     ),
                   ),
@@ -173,8 +191,13 @@ class _CalendarState extends State<Calendar> {
                               String date;
                               String time;
                               List<dynamic> users;
+
+                              //-----
+
                               if (snapshot.hasData) {
-                                String user = "Bab@gmail.com";
+                                //Only if the time exists in the confirm collection
+                                if (dateSnapshot.key ==
+                                    snapshot.data.value["date"]) {}
                                 //shows where the user has an apppointment
                                 if (snapshot.data.value["users"]
                                         .toString()
@@ -186,14 +209,12 @@ class _CalendarState extends State<Calendar> {
                                   date = snapshot.data.value["date"];
                                   time = snapshot.data.value["time"];
                                   users = snapshot.data.value["users"];
-                                } //Shows where the user does not have an appointment
-                                //in relevance to others
+                                }
+                                //Shows where the user does not have an appointment
 
-                                else if (snapshot.data.value["users"]
-                                        .toString()
-                                        .contains(user) &&
-                                    dateSnapshot.key !=
-                                        snapshot.data.value["date"]) {}
+                                else if (!snapshot.data.value["users"]
+                                    .toString()
+                                    .contains(user)) {}
                               }
                               return time != null
                                   ? Row(
