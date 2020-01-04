@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'package:study_buddy/model/firebase_database_util.dart';
+import 'package:study_buddy/data/data.dart';
 
 class CalendarStatus extends StatefulWidget {
   final String user;
@@ -16,7 +17,8 @@ class _CalendarStatusState extends State<CalendarStatus> {
   String child2 = 'Appointments';
   String child3 = 'Awaiting';
   String child4 = 'Confirmed';
-  List<String> modifiedSet = List<String>();
+  List<String> dates;
+
   String currentDate;
   DateFormat dateFormat;
   // instance of util class
@@ -27,6 +29,7 @@ class _CalendarStatusState extends State<CalendarStatus> {
   @override
   void initState() {
     super.initState();
+    dates = Data.days(7);
     _database1 = _database1.child(child1).child(child2).child(child3);
     _database2 = _database2.child(child1).child(child2).child(child4);
     dateFormat = DateFormat("yyyy-MM-dd");
@@ -56,10 +59,105 @@ class _CalendarStatusState extends State<CalendarStatus> {
                             .display1
                             .copyWith(fontSize: 20),
                       ),
+                      SizedBox(
+                        height: 30,
+                      ),
                       Expanded(
-                        child: ListView(
+                        child: ListView.builder(
+                          itemCount: 7,
                           scrollDirection: Axis.horizontal,
-                          children: <Widget>[],
+                          itemBuilder: (BuildContext context, int i) {
+                            return Container(
+                              color: Colors.teal.shade100,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("Time:\nChannel Name:\nConfirmed With:"),
+                                  Container(
+                                    height: 400,
+                                    width: 400,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          100, 0, 0, 0),
+                                      child: displayDate(dates[i]),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Text(
+                        "Awaiting Appointment",
+                        style: Theme.of(context)
+                            .textTheme
+                            .display1
+                            .copyWith(fontSize: 20),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: 7,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int i) {
+                            return Container(
+                              color: Colors.teal.shade100,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("Time:\nChannel Name:\nConfirmed With:"),
+                                  Container(
+                                    height: 400,
+                                    width: 400,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          100, 0, 0, 0),
+                                      child: displayDate(dates[i]),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Text(
+                        "Cancelled Appointment",
+                        style: Theme.of(context)
+                            .textTheme
+                            .display1
+                            .copyWith(fontSize: 20),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: 7,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int i) {
+                            return Container(
+                              color: Colors.teal.shade100,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("Time:\nChannel Name:\nConfirmed With:"),
+                                  Container(
+                                    height: 400,
+                                    width: 400,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          100, 0, 0, 0),
+                                      child: displayDate(dates[i]),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -95,6 +193,11 @@ class _CalendarStatusState extends State<CalendarStatus> {
                   return time != null
                       ? showcaseStatus(time, channel, users)
                       : Text("");
+                } else if (!snapshot.data.value["users"]
+                        .toString()
+                        .contains(widget.user) &&
+                    !snapshot.data.value["date"].toString().contains(date)) {
+                  return Text("empty");
                 } else {
                   return Container();
                 }
@@ -102,7 +205,6 @@ class _CalendarStatusState extends State<CalendarStatus> {
                 //Shows where the user does not have an appointment
 
               } else {
-                print("no data");
                 return Text("");
               }
             });
@@ -111,23 +213,24 @@ class _CalendarStatusState extends State<CalendarStatus> {
   }
 
   Widget showcaseStatus(String time, String channel, List<dynamic> users) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            time,
-          ),
-          Text(
-            channel,
-          ),
-          //Shows to wh om
-          Text(!users[0].toString().contains(widget.user) == true
-              ? users[0]
-              : users[1]),
-        ],
-      ),
+    return Row(
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              time,
+            ),
+            Text(
+              channel,
+            ),
+            //Shows to whom
+            Text(!users[0].toString().contains(widget.user) == true
+                ? users[0]
+                : users[1]),
+          ],
+        ),
+      ],
     );
   }
 }

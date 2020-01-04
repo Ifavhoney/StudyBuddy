@@ -48,6 +48,7 @@ class _CalendarState extends State<Calendar> {
     int i = 0;
     now = DateTime.now();
     dates.add(dateFormat.format(now).toString());
+    //should be a method in data
     while (i != week) {
       dates.add(dateFormat.format(now.add(Duration(days: i + 1))).toString());
       i += 1;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Data {
   /*Webcam ID */
@@ -77,5 +78,20 @@ class Data {
       ),
     ];
     return results;
+  }
+
+  static List<String> days(int day) {
+    int y = 0;
+    int day = 7;
+    DateTime now = DateTime.now();
+
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+    List<String> dates = [];
+    dates.add(dateFormat.format(now).toString());
+    while (y != day) {
+      dates.add(dateFormat.format(now.add(Duration(days: y + 1))).toString());
+      y += 1;
+    }
+    return dates;
   }
 }
