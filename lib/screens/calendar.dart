@@ -37,12 +37,14 @@ class _CalendarState extends State<Calendar> {
   String errorText;
   String hintText = "Enter Channel Name";
   String buttonText;
+  bool disableButton;
+
   FirebaseDatabaseUtil databaseUtil;
   @override
   void initState() {
+    disableButton = true;
     super.initState();
     initialText = "Double tab to book";
-
     int i = 0;
     now = DateTime.now();
     dates.add(dateFormat.format(now).toString());
@@ -83,14 +85,16 @@ class _CalendarState extends State<Calendar> {
           title: Text("Calendar"),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.videocam),
-              onPressed: () {
-                //Does something
-                showDialog(
-                  context: context,
-                  builder: (_) => CamPortal(),
-                );
-              },
+              icon: disableButton == true ? Icon(null) : Icon(Icons.videocam),
+              onPressed: disableButton == true
+                  ? null
+                  : () {
+                      //Does something
+                      showDialog(
+                        context: context,
+                        builder: (_) => CamPortal(),
+                      );
+                    },
             )
           ],
         ),

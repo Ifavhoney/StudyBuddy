@@ -16,6 +16,7 @@ class _CalendarStatusState extends State<CalendarStatus> {
   String child2 = 'Appointments';
   String child3 = 'Awaiting';
   String child4 = 'Confirmed';
+  List<String> modifiedSet = List<String>();
   String currentDate;
   DateFormat dateFormat;
   // instance of util class
@@ -43,12 +44,10 @@ class _CalendarStatusState extends State<CalendarStatus> {
         ),
         body: Padding(
             padding: const EdgeInsets.fromLTRB(0, 18, 0, 30),
-            child: ListView(
+            child: Column(
               children: <Widget>[
-                Container(
-                  color: Colors.teal.shade100,
+                Flexible(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         "Confirmed Appointment",
@@ -57,73 +56,78 @@ class _CalendarStatusState extends State<CalendarStatus> {
                             .display1
                             .copyWith(fontSize: 20),
                       ),
-                      FirebaseAnimatedList(
-                        query: _database2.orderByKey(),
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext context, DataSnapshot res,
-                            Animation<double> animation, int i) {
-                          return FutureBuilder<DataSnapshot>(
-                              future: _database2.child(res.key).once(),
-                              builder: (BuildContext context, snapshot) {
-                                String channel;
-                                String date;
-                                String time;
-                                List<dynamic> users;
-
-                                if (snapshot.hasData) {
-                                  //shows where the user has an apppointment
-                                  if (snapshot.data.value["users"]
-                                      .toString()
-                                      .contains(widget.user)) {
-                                    channel = snapshot.data.value["channelName"]
-                                        .toString();
-                                    date = snapshot.data.value["date"];
-                                    time = snapshot.data.value["time"];
-                                    //while loop
-                                    users = snapshot.data.value["users"];
-                                    print(i);
-                                    return time != null
-                                        ? Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                  time,
-                                                ),
-                                                Text(
-                                                  channel,
-                                                ),
-                                                //Shows to wh om
-                                                Text(!users[0]
-                                                            .toString()
-                                                            .contains(
-                                                                widget.user) ==
-                                                        true
-                                                    ? users[0]
-                                                    : users[1]),
-                                              ],
-                                            ),
-                                          )
-                                        : Text("");
-                                  } else {
-                                    return Container();
-                                  }
-
-                                  //Shows where the user does not have an appointment
-
-                                } else {
-                                  print("no data");
-                                  return Text("");
-                                }
-                              });
-                        },
+                      Expanded(
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: <Widget>[],
+                        ),
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             )));
+  }
+
+  Widget displayDate(String date) {
+    return FirebaseAnimatedList(
+      query: _database2,
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, DataSnapshot res,
+          Animation<double> animation, int i) {
+        return FutureBuilder<DataSnapshot>(
+            future: _database2.child(res.key).once(),
+            builder: (BuildContext context, snapshot) {
+              String channel;
+              String time;
+              List<dynamic> users;
+
+              if (snapshot.hasData) {
+                //shows where the user has an apppointment
+                if (snapshot.data.value["users"]
+                        .toString()
+                        .contains(widget.user) &&
+                    snapshot.data.value["date"].toString().contains(date)) {
+                  channel = snapshot.data.value["channelName"].toString();
+                  time = snapshot.data.value["time"];
+                  //while loop
+                  users = snapshot.data.value["users"];
+                  return time != null
+                      ? showcaseStatus(time, channel, users)
+                      : Text("");
+                } else {
+                  return Container();
+                }
+
+                //Shows where the user does not have an appointment
+
+              } else {
+                print("no data");
+                return Text("");
+              }
+            });
+      },
+    );
+  }
+
+  Widget showcaseStatus(String time, String channel, List<dynamic> users) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            time,
+          ),
+          Text(
+            channel,
+          ),
+          //Shows to wh om
+          Text(!users[0].toString().contains(widget.user) == true
+              ? users[0]
+              : users[1]),
+        ],
+      ),
+    );
   }
 }
