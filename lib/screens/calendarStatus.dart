@@ -45,134 +45,135 @@ class _CalendarStatusState extends State<CalendarStatus> {
         appBar: AppBar(
           title: Text("Appointment Status"),
         ),
-        body: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 18, 0, 30),
-            child: Column(
-              children: <Widget>[
-                Flexible(
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        "Confirmed Appointment",
-                        style: Theme.of(context)
-                            .textTheme
-                            .display1
-                            .copyWith(fontSize: 20),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: 7,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (BuildContext context, int i) {
-                            return Container(
-                              color: Colors.teal.shade100,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text("Time:\nChannel Name:\nConfirmed With:"),
-                                  Container(
-                                    height: 400,
-                                    width: 400,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          100, 0, 0, 0),
-                                      child: displayDate(dates[i]),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      Text(
-                        "Awaiting Appointment",
-                        style: Theme.of(context)
-                            .textTheme
-                            .display1
-                            .copyWith(fontSize: 20),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: 7,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (BuildContext context, int i) {
-                            return Container(
-                              color: Colors.teal.shade100,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text("Time:\nChannel Name:\nConfirmed With:"),
-                                  Container(
-                                    height: 400,
-                                    width: 400,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          100, 0, 0, 0),
-                                      child: displayDate(dates[i]),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      Text(
-                        "Cancelled Appointment",
-                        style: Theme.of(context)
-                            .textTheme
-                            .display1
-                            .copyWith(fontSize: 20),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: 7,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (BuildContext context, int i) {
-                            return Container(
-                              color: Colors.teal.shade100,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text("Time:\nChannel Name:\nConfirmed With:"),
-                                  Container(
-                                    height: 400,
-                                    width: 400,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          100, 0, 0, 0),
-                                      child: displayDate(dates[i]),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            )));
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Confirmed Appointment",
+                style:
+                    Theme.of(context).textTheme.display1.copyWith(fontSize: 20),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 7,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int i) {
+                  return Container(
+                      color: Colors.teal.shade100,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(dates[i]),
+                          Text("\nTime:\nChannel Name:\nConfirmed With:"),
+                          Container(
+                            height: 400,
+                            width: 400,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(100, 0, 0, 0),
+                              child: confirmationData(dates[i]),
+                            ),
+                          ),
+                        ],
+                      ));
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Awaiting Appointment",
+                style:
+                    Theme.of(context).textTheme.display1.copyWith(fontSize: 20),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 7,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int i) {
+                  return Container(
+                      color: Colors.teal.shade100,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(dates[i]),
+                          Text("\nTime: \nGoal: \nStatus: "),
+                          Container(
+                            height: 400,
+                            width: 400,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(100, 0, 0, 0),
+                              child: awaitingData(dates[i]),
+                            ),
+                          ),
+                        ],
+                      ));
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                "Cancelled Appointment",
+                style:
+                    Theme.of(context).textTheme.display1.copyWith(fontSize: 20),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 7,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int i) {
+                  return Container(
+                      color: Colors.teal.shade100,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(dates[i]),
+                          Text("\nTime:\nChannel Name:\nConfirmed With:"),
+                          Container(
+                            height: 400,
+                            width: 400,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(100, 0, 0, 0),
+                              child: confirmationData(dates[i]),
+                            ),
+                          ),
+                        ],
+                      ));
+                },
+              ),
+            ),
+          ],
+        ));
   }
 
-  Widget displayDate(String date) {
+  Widget awaitingData(String date) {
+    return FirebaseAnimatedList(
+      query: _database1.child(date),
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, DataSnapshot res,
+          Animation<double> animation, int i) {
+        //print(res.key);
+        if (res.value.toString().contains(widget.user) &&
+            res.value.toString().contains("false")) {
+          print("found");
+        }
+        return Container();
+      },
+    );
+  }
+
+  Widget confirmationData(String date) {
     return FirebaseAnimatedList(
       query: _database2,
       shrinkWrap: true,
       itemBuilder: (BuildContext context, DataSnapshot res,
           Animation<double> animation, int i) {
+        //Futurebuiler makes accessing nested loops a reality,
+        //delivering specific data using res.key & is easier to use
         return FutureBuilder<DataSnapshot>(
             future: _database2.child(res.key).once(),
             builder: (BuildContext context, snapshot) {
@@ -188,7 +189,7 @@ class _CalendarStatusState extends State<CalendarStatus> {
                     snapshot.data.value["date"].toString().contains(date)) {
                   channel = snapshot.data.value["channelName"].toString();
                   time = snapshot.data.value["time"];
-                  //while loop
+                  //our data holds a list of users
                   users = snapshot.data.value["users"];
                   return time != null
                       ? showcaseStatus(time, channel, users)
@@ -218,6 +219,7 @@ class _CalendarStatusState extends State<CalendarStatus> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Text(""),
             Text(
               time,
             ),

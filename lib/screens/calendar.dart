@@ -142,6 +142,7 @@ class _CalendarState extends State<Calendar> {
             color: Colors.teal.shade200,
             child: InkWell(
               onDoubleTap: () {
+                print(this.user);
                 showDialog(
                     context: this.context,
                     builder: (context) => CalendarPortal(

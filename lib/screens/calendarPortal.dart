@@ -65,7 +65,7 @@ class _CalendarPortalState extends State<CalendarPortal>
     Auth().getCurrentUser().then((firebaseUser) {
       this.user = firebaseUser.email.toString();
     }).catchError((error) {
-      this.user = "Blob@gmail.com";
+      this.user = widget.user;
       //Re login
     });
 

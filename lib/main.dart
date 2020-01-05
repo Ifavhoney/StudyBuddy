@@ -18,8 +18,8 @@ class MyApp extends StatelessWidget {
       theme: theme,
       // home: Home(title: ''),
       // home: Login());
-
-      home: CalendarStatus("Blob@gmail.com"),
+      home: Calendar(),
+      // home: CalendarStatus("Blob@gmail.com"),
     );
   }
 }
