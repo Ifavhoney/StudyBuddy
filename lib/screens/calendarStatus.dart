@@ -138,9 +138,8 @@ class _CalendarStatusState extends State<CalendarStatus> {
                           height: 400,
                           width: 400,
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(100, 0, 0, 0),
-                            child: confirmationData(dates[i]),
-                          ),
+                              padding: const EdgeInsets.fromLTRB(100, 0, 0, 0),
+                              child: Text("TO BE ADDED")),
                         ),
                       ],
                     ),
