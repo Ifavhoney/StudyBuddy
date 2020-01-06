@@ -207,6 +207,7 @@ class _CalendarPortalState extends State<CalendarPortal>
     );
   }
 
+  //Validates appointment by checking for time conflict and matching if both hasMatched are false
   void validateAppointment(String user, String goal, String time) {
     if (goal.isEmpty) {
       setState(() {

@@ -66,7 +66,8 @@ class _CalendarStatusState extends State<CalendarStatus> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(dates[i]),
-                          Text("\nTime:\nChannel Name:\nConfirmed With:"),
+                          Text(
+                              "\nTime (24hr):\nChannel Name:\nConfirmed With:"),
                           Container(
                             height: 400,
                             width: 400,
@@ -99,7 +100,7 @@ class _CalendarStatusState extends State<CalendarStatus> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(dates[i]),
-                          Text("\nTime: \nGoal: \nStatus: "),
+                          Text("\nTime (24hr): \nGoal: \nStatus: "),
                           Container(
                             height: 400,
                             width: 400,
@@ -127,22 +128,23 @@ class _CalendarStatusState extends State<CalendarStatus> {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int i) {
                   return Container(
-                      color: Colors.teal.shade100,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(dates[i]),
-                          Text("\nTime:\nChannel Name:\nConfirmed With:"),
-                          Container(
-                            height: 400,
-                            width: 400,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(100, 0, 0, 0),
-                              child: confirmationData(dates[i]),
-                            ),
+                    color: Colors.teal.shade100,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(dates[i]),
+                        Text("\nTime (24hr):\nChannel Name:\nConfirmed With:"),
+                        Container(
+                          height: 400,
+                          width: 400,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(100, 0, 0, 0),
+                            child: confirmationData(dates[i]),
                           ),
-                        ],
-                      ));
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
             ),
@@ -156,12 +158,22 @@ class _CalendarStatusState extends State<CalendarStatus> {
       shrinkWrap: true,
       itemBuilder: (BuildContext context, DataSnapshot res,
           Animation<double> animation, int i) {
-        //print(res.key);
+        String endTime;
+        String goal;
+        String status;
         if (res.value.toString().contains(widget.user) &&
-            res.value.toString().contains("false")) {
-          print("found");
+            res.value.toString().contains("hasMatched: false")) {
+          Map<dynamic, dynamic> snapshot = res.value;
+          snapshot.forEach((key, value) {
+            endTime = value["endTime"];
+            goal = value["goal"];
+            status = "Not matched";
+          });
+
+          return awaitingWidget(endTime, goal, status);
+        } else {
+          return Container();
         }
-        return Container();
       },
     );
   }
@@ -179,6 +191,8 @@ class _CalendarStatusState extends State<CalendarStatus> {
             builder: (BuildContext context, snapshot) {
               String channel;
               String time;
+              String endTime;
+
               List<dynamic> users;
 
               if (snapshot.hasData) {
@@ -189,16 +203,12 @@ class _CalendarStatusState extends State<CalendarStatus> {
                     snapshot.data.value["date"].toString().contains(date)) {
                   channel = snapshot.data.value["channelName"].toString();
                   time = snapshot.data.value["time"];
+                  endTime = getEndTime(time);
                   //our data holds a list of users
                   users = snapshot.data.value["users"];
                   return time != null
-                      ? showcaseStatus(time, channel, users)
+                      ? confirmedWidget(time, endTime, channel, users)
                       : Text("");
-                } else if (!snapshot.data.value["users"]
-                        .toString()
-                        .contains(widget.user) &&
-                    !snapshot.data.value["date"].toString().contains(date)) {
-                  return Text("empty");
                 } else {
                   return Container();
                 }
@@ -213,7 +223,24 @@ class _CalendarStatusState extends State<CalendarStatus> {
     );
   }
 
-  Widget showcaseStatus(String time, String channel, List<dynamic> users) {
+  String getEndTime(String time) {
+    List<String> splitTime;
+    String endTime;
+    splitTime = time.toString().split(":");
+
+    int byOneHour = int.parse(splitTime[0]) + 1;
+
+    if (splitTime[0].startsWith("0")) {
+      splitTime[0] = "0" + byOneHour.toString();
+      endTime = splitTime[0] + ":" + splitTime[1];
+    } else {
+      splitTime[0] = byOneHour.toString();
+      endTime = splitTime[0] + ":" + splitTime[1];
+    }
+    return endTime;
+  }
+
+  Widget awaitingWidget(String time, String goal, String status) {
     return Row(
       children: <Widget>[
         Column(
@@ -223,6 +250,26 @@ class _CalendarStatusState extends State<CalendarStatus> {
             Text(
               time,
             ),
+            Text(
+              goal,
+            ),
+            //Shows to whom
+            Text(status),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget confirmedWidget(
+      String time, String endTime, String channel, List<dynamic> users) {
+    return Row(
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(""),
+            Text(time + " - " + endTime),
             Text(
               channel,
             ),
