@@ -57,7 +57,7 @@ class _CalendarState extends State<Calendar> {
     Auth().getCurrentUser().then((firebaseUser) {
       this.user = firebaseUser.email.toString();
     }).catchError((error) {
-      this.user = "A@gmail.com";
+      this.user = "dummy@gmail.com";
       //Re login
     });
 

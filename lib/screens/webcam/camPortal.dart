@@ -156,7 +156,7 @@ class _CamPortalState extends State<CamPortal>
               List<String> splitTime = value["time"].toString().split(":");
               List<String> splitEndTime = endTime.toString().split(":");
               //CHANGEEEEEE
-              DateTime now = DateTime(2020, 1, 1, 00, 0);
+              DateTime now = DateTime(2020, 1, 1, 0, 0);
 
               //At this point we've confirmed the user & the time
               if (isValidTime(now, splitTime, splitEndTime) == true) {
@@ -173,7 +173,10 @@ class _CamPortalState extends State<CamPortal>
                     this._channelName.text = "";
                   });
                 } else {
-                  //go to cam
+                  setState(() {
+                    this.errorText = "success";
+                  });
+                  toWebcam();
                 }
 
                 //Entering too late or too early, but means date is found
