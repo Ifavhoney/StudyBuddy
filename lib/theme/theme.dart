@@ -4,6 +4,7 @@ var appButtonColor = Colors.teal.shade200;
 final ThemeData theme = ThemeData(
   textTheme: TextTheme(
     display1: TextStyle(fontSize: 15),
+    // subtitle: TextStyle(fontSize: ),
     button: TextStyle(
       color: Colors.white,
     ),

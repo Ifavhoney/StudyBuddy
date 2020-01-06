@@ -79,7 +79,7 @@ class _CamPortalState extends State<CamPortal>
                   ),
                 ),
                 child: Padding(
-                    padding: const EdgeInsets.all(30.0),
+                    padding: const EdgeInsets.fromLTRB(30, 30, 30, 10),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -101,14 +101,27 @@ class _CamPortalState extends State<CamPortal>
                               hintText: "Enter Channel Name"),
                         ),
                         SizedBox(
-                          height: 30,
+                          height: 10,
                         ),
                         RaisedButton(
                             child: Text(
                               "Enter Video Call",
                               style: Theme.of(context).textTheme.button,
                             ),
-                            onPressed: () => isValidateAppointment(user))
+                            onPressed: () => isValidateAppointment(user)),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Text(
+                            "Opened 10 minutes \nprior appointment",
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontStyle: FontStyle.italic,
+                                color: Colors.grey),
+                          ),
+                        ),
                       ],
                     ))),
           ),
@@ -132,22 +145,18 @@ class _CamPortalState extends State<CamPortal>
             snapshot.value.toString().contains(dates[0])) {
           Map<dynamic, dynamic> value = snapshot.value;
           value.forEach((key, value) {
+            //Get exact data
             if (value["date"].toString() == dates[0].toString() &&
                 value["users"].toString().contains(user)) {
               //Turn time & endTime into datetime
               String endTime = Data.getEndTime(value["time"]);
               List<String> splitTime = value["time"].toString().split(":");
               List<String> splitEndTime = endTime.toString().split(":");
-
-              DateTime tempTime = DateTime(
-                  2020, 1, 1, int.parse(splitTime[0]), int.parse(splitTime[1]));
-              DateTime tempEndTime = DateTime(
-                  2020, 1, 1, int.parse(endTime[0]), int.parse(endTime[1]));
-
-              print(dates[0].toString());
-              print(tempTime.toString());
-
-              print(tempEndTime.toString());
+              //CHANGEEEEEE
+              DateTime now = DateTime(2020, 1, 1, 2, 0);
+              if (isValidTime(now, splitTime, splitEndTime) == true) {
+                print("Acceptable " + value["time"] + " " + endTime);
+              }
             } else {
               print(dates[0].toString());
               setState(() {
@@ -164,6 +173,23 @@ class _CamPortalState extends State<CamPortal>
         }
       });
       print(isValid);
+    }
+  }
+
+//Uses the current Time to find out  splitTime<now<splitEndTime
+  bool isValidTime(
+      DateTime now, List<String> splitTime, List<String> splitEndTime) {
+    DateTime tempTime =
+        DateTime(2020, 1, 1, int.parse(splitTime[0]), int.parse(splitTime[1]))
+            .subtract(Duration(minutes: 10));
+    DateTime tempEndTime = DateTime(
+        2020, 1, 1, int.parse(splitEndTime[0]), int.parse(splitEndTime[1]));
+
+    if (now.isAfter(tempTime) && now.isBefore(tempEndTime) ||
+        now.isAtSameMomentAs(tempTime)) {
+      return true;
+    } else {
+      return false;
     }
   }
 
