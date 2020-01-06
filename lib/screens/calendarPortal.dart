@@ -215,7 +215,7 @@ class _CalendarPortalState extends State<CalendarPortal>
       });
     } else {
       databaseUtil
-          .getAwaitingApppontmentsData(_database, widget.selectedDate, time)
+          .getAwaitingApppointmentsData(_database, widget.selectedDate, time)
           .then((DataSnapshot snapshot) {
         //Check if user exists @ time
         if (snapshot.value.toString().contains(user)) {
@@ -304,7 +304,7 @@ class _CalendarPortalState extends State<CalendarPortal>
 
     //Reads through database, given the date & time
     databaseUtil
-        .getAwaitingApppontmentsData(_database, widget.selectedDate, time)
+        .getAwaitingApppointmentsData(_database, widget.selectedDate, time)
         .then((DataSnapshot snapshot) {
       newAppointment = Awaiting(
           user: user,

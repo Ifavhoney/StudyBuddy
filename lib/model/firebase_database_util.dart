@@ -74,7 +74,11 @@ class FirebaseDatabaseUtil {
         .set(appointment.toJson());
   }
 
-  Future<DataSnapshot> getAwaitingApppontmentsData(
+  Future<DataSnapshot> getConfirmationData(DatabaseReference database) async {
+    return await database.once();
+  }
+
+  Future<DataSnapshot> getAwaitingApppointmentsData(
       DatabaseReference database, String selectedDate, String time) async {
     return await database.child(selectedDate).child(time).once();
   }

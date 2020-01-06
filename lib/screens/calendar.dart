@@ -57,7 +57,7 @@ class _CalendarState extends State<Calendar> {
     Auth().getCurrentUser().then((firebaseUser) {
       this.user = firebaseUser.email.toString();
     }).catchError((error) {
-      this.user = "D@gmail.com";
+      this.user = "A@gmail.com";
       //Re login
     });
 
@@ -86,16 +86,14 @@ class _CalendarState extends State<Calendar> {
           title: Text("Calendar"),
           actions: <Widget>[
             IconButton(
-              icon: disableButton == true ? Icon(null) : Icon(Icons.videocam),
-              onPressed: disableButton == true
-                  ? null
-                  : () {
-                      //Does something
-                      showDialog(
-                        context: context,
-                        builder: (_) => CamPortal(),
-                      );
-                    },
+              icon: Icon(Icons.videocam),
+              onPressed: () {
+                //Does something
+                showDialog(
+                  context: context,
+                  builder: (_) => CamPortal(user),
+                );
+              },
             )
           ],
         ),
@@ -142,7 +140,6 @@ class _CalendarState extends State<Calendar> {
             color: Colors.teal.shade200,
             child: InkWell(
               onDoubleTap: () {
-                print(this.user);
                 showDialog(
                     context: this.context,
                     builder: (context) => CalendarPortal(

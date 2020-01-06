@@ -1,16 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:study_buddy/model/firebase_database_util.dart';
+import 'package:study_buddy/model/BaseAuth.dart';
+import 'package:study_buddy/data/data.dart';
 import 'dart:async';
 import 'Peer2Stranger/cam.dart';
 
 ///Cam Portal
 class CamPortal extends StatefulWidget {
+  final String user;
+  CamPortal(this.user);
   @override
   _CamPortalState createState() => _CamPortalState();
 }
 
 class _CamPortalState extends State<CamPortal>
     with SingleTickerProviderStateMixin {
+  String child1 = 'Peer2Strangers';
+  String child2 = 'Appointments';
+  String child4 = 'Confirmed';
+  List<String> dates;
+
+  // instance of util class
+  FirebaseDatabaseUtil databaseUtil;
+  DatabaseReference _database2 = FirebaseDatabase.instance.reference();
+  String user;
+
   TextEditingController _channelName = new TextEditingController();
   String errorText;
   //neccessary to set the duration of our animation
@@ -21,6 +37,16 @@ class _CamPortalState extends State<CamPortal>
   @override
   void initState() {
     super.initState();
+    _database2 = _database2.child(child1).child(child2).child(child4);
+    dates = Data.days(7);
+    databaseUtil = FirebaseDatabaseUtil();
+    databaseUtil.initState();
+    Auth().getCurrentUser().then((firebaseUser) {
+      this.user = firebaseUser.email.toString();
+    }).catchError((error) {
+      this.user = widget.user;
+      //Re login
+    });
 
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
@@ -33,6 +59,8 @@ class _CamPortalState extends State<CamPortal>
     });
     controller.forward();
   }
+
+  bool isValid = false;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +108,7 @@ class _CamPortalState extends State<CamPortal>
                               "Enter Video Call",
                               style: Theme.of(context).textTheme.button,
                             ),
-                            onPressed: toWebcam)
+                            onPressed: () => isValidateAppointment(user))
                       ],
                     ))),
           ),
@@ -89,31 +117,74 @@ class _CamPortalState extends State<CamPortal>
     );
   }
 
-  Future<void> toWebcam() async {
+  void isValidateAppointment(String user) {
     //TO-DO Check if number corresponds to user(s)
     if (_channelName.text.isEmpty) {
       setState(() {
         errorText = "Text cannot be empty";
       });
-    }
-    //else if incorect . . .
-    else {
-      setState(() {
-        errorText = null;
-      });
-      print(_channelName);
-      //Get permission for Mic and Camera
-      await _getCameraAndMic();
+    } else {
+      databaseUtil
+          .getConfirmationData(_database2)
+          .then((DataSnapshot snapshot) {
+        //if it exists anywhere in the snapshot
+        if (snapshot.value.toString().contains(user) &&
+            snapshot.value.toString().contains(dates[0])) {
+          Map<dynamic, dynamic> value = snapshot.value;
+          value.forEach((key, value) {
+            if (value["date"].toString() == dates[0].toString() &&
+                value["users"].toString().contains(user)) {
+              //Turn time & endTime into datetime
+              String endTime = Data.getEndTime(value["time"]);
+              List<String> splitTime = value["time"].toString().split(":");
+              List<String> splitEndTime = endTime.toString().split(":");
 
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Cam(
-            channelName: _channelName.text,
-          ),
-        ),
-      );
+              DateTime tempTime = DateTime(
+                  2020, 1, 1, int.parse(splitTime[0]), int.parse(splitTime[1]));
+              DateTime tempEndTime = DateTime(
+                  2020, 1, 1, int.parse(endTime[0]), int.parse(endTime[1]));
+
+              print(dates[0].toString());
+              print(tempTime.toString());
+
+              print(tempEndTime.toString());
+            } else {
+              print(dates[0].toString());
+              setState(() {
+                errorText = "No appointments today";
+              });
+            }
+          });
+        }
+        //Does not exist anywhere
+        else {
+          setState(() {
+            errorText = "Please book or wait for a match";
+          });
+        }
+      });
+      print(isValid);
     }
+  }
+
+  //DateTime compareTimes(List<String> time, List<String> endTime) {}
+  Future<void> toWebcam() async {
+    //else if incorect . . .
+    setState(() {
+      errorText = null;
+    });
+    print(_channelName);
+    //Get permission for Mic and Camera and see if they accepted them
+    await _getCameraAndMic();
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Cam(
+          channelName: _channelName.text,
+        ),
+      ),
+    );
   }
 
   Future<void> _getCameraAndMic() async {

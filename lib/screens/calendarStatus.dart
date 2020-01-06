@@ -203,7 +203,7 @@ class _CalendarStatusState extends State<CalendarStatus> {
                     snapshot.data.value["date"].toString().contains(date)) {
                   channel = snapshot.data.value["channelName"].toString();
                   time = snapshot.data.value["time"];
-                  endTime = getEndTime(time);
+                  endTime = Data.getEndTime(time);
                   //our data holds a list of users
                   users = snapshot.data.value["users"];
                   return time != null
@@ -221,23 +221,6 @@ class _CalendarStatusState extends State<CalendarStatus> {
             });
       },
     );
-  }
-
-  String getEndTime(String time) {
-    List<String> splitTime;
-    String endTime;
-    splitTime = time.toString().split(":");
-
-    int byOneHour = int.parse(splitTime[0]) + 1;
-
-    if (splitTime[0].startsWith("0")) {
-      splitTime[0] = "0" + byOneHour.toString();
-      endTime = splitTime[0] + ":" + splitTime[1];
-    } else {
-      splitTime[0] = byOneHour.toString();
-      endTime = splitTime[0] + ":" + splitTime[1];
-    }
-    return endTime;
   }
 
   Widget awaitingWidget(String time, String goal, String status) {
