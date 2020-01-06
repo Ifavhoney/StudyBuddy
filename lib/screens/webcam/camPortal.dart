@@ -29,6 +29,8 @@ class _CamPortalState extends State<CamPortal>
 
   TextEditingController _channelName = new TextEditingController();
   String errorText;
+  //Using this to display
+  String hintText;
   //neccessary to set the duration of our animation
   AnimationController controller;
   //0-1 indicates wether running or completed
@@ -59,8 +61,6 @@ class _CamPortalState extends State<CamPortal>
     });
     controller.forward();
   }
-
-  bool isValid = false;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +98,9 @@ class _CamPortalState extends State<CamPortal>
                               border: UnderlineInputBorder(
                                   borderSide: BorderSide(width: 1)),
                               errorText: this.errorText,
-                              hintText: "Enter Channel Name"),
+                              hintText: this.hintText == null
+                                  ? "Enter Channel Name"
+                                  : this.hintText),
                         ),
                         SizedBox(
                           height: 10,
@@ -115,7 +117,7 @@ class _CamPortalState extends State<CamPortal>
                         Align(
                           alignment: Alignment.bottomRight,
                           child: Text(
-                            "Opened 10 minutes \nprior appointment",
+                            "Opened 10 minute\nprior appointment",
                             style: TextStyle(
                                 fontSize: 10,
                                 fontStyle: FontStyle.italic,
@@ -144,6 +146,7 @@ class _CamPortalState extends State<CamPortal>
         if (snapshot.value.toString().contains(user) &&
             snapshot.value.toString().contains(dates[0])) {
           Map<dynamic, dynamic> value = snapshot.value;
+          bool foundTime = false;
           value.forEach((key, value) {
             //Get exact data
             if (value["date"].toString() == dates[0].toString() &&
@@ -153,26 +156,43 @@ class _CamPortalState extends State<CamPortal>
               List<String> splitTime = value["time"].toString().split(":");
               List<String> splitEndTime = endTime.toString().split(":");
               //CHANGEEEEEE
-              DateTime now = DateTime(2020, 1, 1, 2, 0);
+              DateTime now = DateTime(2020, 1, 1, 00, 0);
+
+              //At this point we've confirmed the user & the time
               if (isValidTime(now, splitTime, splitEndTime) == true) {
-                print("Acceptable " + value["time"] + " " + endTime);
+                setState(() {
+                  //overwriting the errorText due to loop capturing all data
+                  foundTime = true;
+                  errorText = "";
+                });
+
+                if (_channelName.text != value["channelName"].toString()) {
+                  setState(() {
+                    this.hintText = value["channelName"].toString();
+                    errorText = "Please enter these digits";
+                    this._channelName.text = "";
+                  });
+                } else {
+                  //go to cam
+                }
+
+                //Entering too late or too early, but means date is found
+              } else if (foundTime == false &&
+                  isValidTime(now, splitTime, splitEndTime) == false) {
+                setState(() {
+                  errorText = "Entering too early or too late";
+                });
               }
-            } else {
-              print(dates[0].toString());
-              setState(() {
-                errorText = "No appointments today";
-              });
             }
           });
         }
         //Does not exist anywhere
         else {
           setState(() {
-            errorText = "Please book or wait for a match";
+            errorText = "Please book, or review your status";
           });
         }
       });
-      print(isValid);
     }
   }
 

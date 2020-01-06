@@ -15,14 +15,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Study Buddy',
-      debugShowCheckedModeBanner: false,
-      theme: theme,
-      // home: Home(title: ''),
-      // home: Login());
-      home: CamPortal("A@gmail.com"),
-      // home: CalendarStatus("Blob@gmail.com"),
-      // home: CalendarStatus("Blob@gmail.com"),
-    );
+        title: 'Study Buddy',
+        debugShowCheckedModeBanner: false,
+        theme: theme,
+        // home: Home(title: ''),
+        home: Login()
+        //home: CamPortal("A@gmail.com"),
+        // home: CalendarStatus("Blob@gmail.com"),
+        // home: CalendarStatus("Blob@gmail.com"),
+        );
   }
 }
