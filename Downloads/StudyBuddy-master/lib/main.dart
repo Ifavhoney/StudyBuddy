@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: theme,
       // home: Home(title: ''),
-      home: CamPortal("nuthsaid@outlook.com"),
+      home: Login(),
       //home: CamPortal("A@gmail.com"),
       // home: CalendarStatus("Blob@gmail.com"),
       // home: CalendarStatus("Blob@gmail.com"),

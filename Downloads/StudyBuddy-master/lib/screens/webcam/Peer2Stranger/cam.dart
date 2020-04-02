@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:study_buddy/data/data.dart';
+import 'package:study_buddy/reusableWidgets/animations/popUp.dart';
 
 class Cam extends StatefulWidget {
   final String channelName;
@@ -45,8 +46,12 @@ class _CamState extends State<Cam> {
     const oneSec = const Duration(minutes: 1);
     _timer = Timer.periodic(oneSec, (Timer timer) {
       setState(() {
-        if (_min < 1) {
+        if (_min == 0) {
+          //iMPLEMENT LOGIC
+        }
+        if (_min <= -1) {
           timer.cancel();
+          Navigator.of(context).pop();
         } else {
           _min--;
         }

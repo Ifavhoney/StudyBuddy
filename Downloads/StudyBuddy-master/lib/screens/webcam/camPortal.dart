@@ -159,8 +159,8 @@ class _CamPortalState extends State<CamPortal>
               List<String> splitTime = startTime.toString().split(":");
               List<String> splitEndTime = endTime.toString().split(":");
               //CHANGEEEEEE
-              DateTime now = DateTime(2020, 1, 1, 0, 0);
-
+              DateTime now = DateTime(
+                  2020, 1, 1, DateTime.now().hour, DateTime.now().minute);
               //At this point we've confirmed the user & the time
               if (isValidTime(now, splitTime, splitEndTime) == true) {
                 setState(() {
@@ -185,6 +185,11 @@ class _CamPortalState extends State<CamPortal>
                 //Entering too late or too early, but means date is found
               } else if (foundTime == false &&
                   isValidTime(now, splitTime, splitEndTime) == false) {
+                print(now.toString() +
+                    " " +
+                    splitTime.toString() +
+                    " " +
+                    splitEndTime.toString());
                 setState(() {
                   errorText = "Entering too early or too late";
                 });
