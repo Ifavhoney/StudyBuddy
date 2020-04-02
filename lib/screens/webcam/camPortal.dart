@@ -132,7 +132,6 @@ class _CamPortalState extends State<CamPortal>
     );
   }
 
-//Validates wether this is the correct appointment
   void isValidateAppointment(String user) {
     //TO-DO Check if number corresponds to user(s)
     if (_channelName.text.isEmpty) {
@@ -140,7 +139,6 @@ class _CamPortalState extends State<CamPortal>
         errorText = "Text cannot be empty";
       });
     } else {
-      //Reads from database
       databaseUtil
           .getConfirmationData(_database2)
           .then((DataSnapshot snapshot) {
@@ -153,10 +151,9 @@ class _CamPortalState extends State<CamPortal>
             //Get exact data
             if (value["date"].toString() == dates[0].toString() &&
                 value["users"].toString().contains(user)) {
-              //Use the string of our startTime, and incremends it by 1 hour
-              String startTime = value["time"];
-              String endTime = Data.getEndTime(startTime);
-              List<String> splitTime = startTime.toString().split(":");
+              //Turn time & endTime into datetime
+              String endTime = Data.getEndTime(value["time"]);
+              List<String> splitTime = value["time"].toString().split(":");
               List<String> splitEndTime = endTime.toString().split(":");
               //CHANGEEEEEE
               DateTime now = DateTime(2020, 1, 1, 0, 0);
@@ -179,7 +176,7 @@ class _CamPortalState extends State<CamPortal>
                   setState(() {
                     this.errorText = "success";
                   });
-                  toWebcam(endTime);
+                  toWebcam();
                 }
 
                 //Entering too late or too early, but means date is found
@@ -192,7 +189,7 @@ class _CamPortalState extends State<CamPortal>
             }
           });
         }
-        //Does not exist anywhere 80413
+        //Does not exist anywhere
         else {
           setState(() {
             errorText = "Please book, or review your status";
@@ -202,7 +199,7 @@ class _CamPortalState extends State<CamPortal>
     }
   }
 
-//Uses a default date (month, year, day) as base to find out if time (hh:mm) is valid
+//Uses the current Time to find out  splitTime<now<splitEndTime
   bool isValidTime(
       DateTime now, List<String> splitTime, List<String> splitEndTime) {
     DateTime tempTime =
@@ -220,7 +217,7 @@ class _CamPortalState extends State<CamPortal>
   }
 
   //DateTime compareTimes(List<String> time, List<String> endTime) {}
-  Future<void> toWebcam(String endTime) async {
+  Future<void> toWebcam() async {
     //else if incorect . . .
     setState(() {
       errorText = null;
@@ -228,20 +225,12 @@ class _CamPortalState extends State<CamPortal>
     print(_channelName);
     //Get permission for Mic and Camera and see if they accepted them
     await _getCameraAndMic();
-    //Get current time - by endTime
 
-    List<String> splitEndTime = endTime.toString().split(":");
-    int hour = int.parse(splitEndTime[0]) - DateTime.now().hour;
-    int min = int.parse(splitEndTime[1]) - DateTime.now().minute;
-    Duration duration = Duration(hours: hour.abs(), minutes: min.abs());
-
-    //time remaining
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => Cam(
           channelName: _channelName.text,
-          duration: duration,
         ),
       ),
     );
