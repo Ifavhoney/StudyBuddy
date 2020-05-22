@@ -142,24 +142,31 @@ class _CamPortalState extends State<CamPortal>
       databaseUtil
           .getConfirmationData(_database2)
           .then((DataSnapshot snapshot) {
-        //if it exists anywhere in the snapshot
+        //if the user or the date exists anywhere in the snapshot
         if (snapshot.value.toString().contains(user) &&
             snapshot.value.toString().contains(dates[0])) {
           Map<dynamic, dynamic> value = snapshot.value;
           bool foundTime = false;
           value.forEach((key, value) {
-            //Get exact data
+            //Gets the corresponding user according to the date
             if (value["date"].toString() == dates[0].toString() &&
                 value["users"].toString().contains(user)) {
               //Turn time & endTime into datetime
-              String endTime = Data.getEndTime(value["time"]);
-              List<String> splitTime = value["time"].toString().split(":");
+              String startTime = value["time"];
+              String endTime = Data.getEndTime(startTime);
+              List<String> splitStartTime = startTime.toString().split(":");
               List<String> splitEndTime = endTime.toString().split(":");
+              //List<String> splitDateTime = DateTime
+              //  String dateFormat
               //CHANGEEEEEE
-              DateTime now = DateTime(2020, 1, 1, 0, 0);
+              DateTime now = DateTime(
+                  2020, 1, 1, DateTime.now().hour, DateTime.now().minute);
+              String nowTime =
+                  now.hour.toString() + ":" + now.minute.toString();
 
+              print("Curr: $nowTime");
               //At this point we've confirmed the user & the time
-              if (isValidTime(now, splitTime, splitEndTime) == true) {
+              if (isValidTime(now, splitStartTime, splitEndTime) == true) {
                 setState(() {
                   //overwriting the errorText due to loop capturing all data
                   foundTime = true;
@@ -176,12 +183,14 @@ class _CamPortalState extends State<CamPortal>
                   setState(() {
                     this.errorText = "success";
                   });
-                  toWebcam();
+                  //At this point, we can safely assume that the date & time is correct
+
+                  toWebcam(nowTime, endTime);
                 }
 
                 //Entering too late or too early, but means date is found
               } else if (foundTime == false &&
-                  isValidTime(now, splitTime, splitEndTime) == false) {
+                  isValidTime(now, splitStartTime, splitEndTime) == false) {
                 setState(() {
                   errorText = "Entering too early or too late";
                 });
@@ -216,8 +225,24 @@ class _CamPortalState extends State<CamPortal>
     }
   }
 
-  //DateTime compareTimes(List<String> time, List<String> endTime) {}
-  Future<void> toWebcam() async {
+  Future<void> toWebcam(String nowTime, String endTime) async {
+    //Timer
+    DateTime curHourTime = DateTime(
+        2020,
+        1,
+        1,
+        int.parse(nowTime.toString().split(":")[0]),
+        int.parse(nowTime.toString().split(":")[1]));
+    DateTime endHourTime = DateTime(
+      2020,
+      1,
+      1,
+      int.parse(endTime.toString().split(":")[0]),
+      int.parse(endTime.toString().split(":")[1]),
+    );
+    Duration timer = endHourTime.difference(curHourTime);
+    print("\n$timer");
+
     //else if incorect . . .
     setState(() {
       errorText = null;

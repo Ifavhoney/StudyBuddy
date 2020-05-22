@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:study_buddy/data/data.dart';
+import 'package:study_buddy/reusableWidgets/animations/popUp.dart';
 
 class Cam extends StatefulWidget {
   final String channelName;
-  Cam({this.channelName});
+  final Duration duration;
+
+  Cam({this.channelName, this.duration});
   @override
   _CamState createState() => _CamState();
 }
@@ -16,27 +21,77 @@ class _CamState extends State<Cam> {
   final _infoStrings = <String>[];
   //For our tooblar
   bool muted = false;
+  int _min = 0;
 
+  Timer _timer;
   //dispose() is called when the State object is removed
   @override
   void dispose() {
     super.dispose();
     _users.clear();
+    _timer.cancel();
+
     AgoraRtcEngine.leaveChannel();
     AgoraRtcEngine.destroy();
   }
 
   @override
   void initState() {
+    _min = int.parse(widget.duration.inMinutes.toString());
     super.initState();
     initialize();
   }
 
+  void startTimeout() {
+    const oneSec = const Duration(minutes: 1);
+    _timer = Timer.periodic(oneSec, (Timer timer) {
+      setState(() {
+        if (_min == 0) {
+          //iMPLEMENT LOGIC
+        }
+        if (_min <= -1) {
+          timer.cancel();
+          Navigator.of(context).pop();
+        } else {
+          _min--;
+        }
+      });
+    });
+
+    //return new Timer(duration, endTimer);
+  }
+
+  endTimer() {}
+
   @override
   Widget build(BuildContext context) {
+    startTimeout();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cam"),
+        title: Column(
+          children: <Widget>[
+            Text(
+              "Time Remaining: ",
+              //   style: Theme.of(context).textTheme.headline6,
+            ),
+            Text(
+              "$_min min",
+              //   style: Theme.of(context).textTheme.headline6,
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              //ADD NAME
+              /*
+              Text("Time Remaining: "),
+              Text("$_min min"),
+              */
+            ],
+          )
+        ],
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Center(

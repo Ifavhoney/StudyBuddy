@@ -80,6 +80,7 @@ class Data {
     return results;
   }
 
+  //Formatting date to make it easier to iterate through firebase list
   static List<String> days(int day) {
     int y = 0;
     int day = 7;
@@ -95,13 +96,15 @@ class Data {
     return dates;
   }
 
+  //Gets endTime by increasing the current time by one hour
   static String getEndTime(String time) {
     List<String> splitTime;
     String endTime;
     splitTime = time.toString().split(":");
+    print("HII " + time);
 
     int byOneHour = int.parse(splitTime[0]) + 1;
-
+    //Incrementing starts here
     if (splitTime[0].startsWith("0")) {
       splitTime[0] = "0" + byOneHour.toString();
       endTime = splitTime[0] + ":" + splitTime[1];

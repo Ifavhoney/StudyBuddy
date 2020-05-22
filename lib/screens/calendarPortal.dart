@@ -239,11 +239,12 @@ class _CalendarPortalState extends State<CalendarPortal>
               value.forEach((key, value) {
                 //this can be a method on its own
 
-                //Change String into DateTime function
+                //Change String into DateTime function,
                 splitTime = key.toString().split(":");
                 DateTime _dbTime = DateTime(2020, 1, 1, int.parse(splitTime[0]),
                     int.parse(splitTime[1]));
 
+                //dummy time to find the difference
                 if (selectedTime.isAfter(_dbTime)) {
                   int diff = selectedTime.difference(_dbTime).inMinutes;
                   if (diff >= 0 && diff <= 60) {
@@ -251,6 +252,7 @@ class _CalendarPortalState extends State<CalendarPortal>
                     setState(() {
                       i = 3;
                     });
+                    //Might have to re-check this since the print may be misleading
                     print("Incompatible: " + _dbTime.toString());
                   }
                 }

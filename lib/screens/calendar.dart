@@ -130,12 +130,12 @@ class _CalendarState extends State<Calendar> {
     if (dateSnapshot.value.toString().length >= 2) {}
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(50, 30, 50, 20),
       child: Material(
         borderRadius: BorderRadius.circular(10),
         elevation: 10,
         child: Container(
-          height: MediaQuery.of(context).size.height / 8,
+          height: MediaQuery.of(context).size.height / 4,
           child: Card(
             color: Colors.teal.shade200,
             child: InkWell(
@@ -175,6 +175,7 @@ class _CalendarState extends State<Calendar> {
                       ],
                     ),
                   ),
+
                   Flexible(
                     //Not the same as the usual once query (key)
                     //VERIFY you are in the correct key or you may face issues
@@ -223,6 +224,7 @@ class _CalendarState extends State<Calendar> {
                                   ? Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
+                                      mainAxisSize: MainAxisSize.min,
                                       // crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: <Widget>[
                                         Padding(
@@ -242,7 +244,6 @@ class _CalendarState extends State<Calendar> {
                           );
                         }),
                   )
-
                   //Display correct content
                 ],
               ),
