@@ -2,9 +2,9 @@
 Calls back (Sign in, Signout) & updates root screen when a login action or signout is made
 */
 
+/*
 import 'package:flutter/material.dart';
 import 'package:study_buddy/model/BaseAuth.dart';
-import 'package:study_buddy/screens/calendar.dart';
 
 enum AuthStatus {
   NOT_DETERMINED,
@@ -52,7 +52,6 @@ class _RootScreenState extends State<RootScreen> {
     });
   }
 
-  //
   void logoutCallBack() {
     setState(() {
       authStatus = AuthStatus.NOT_LOGGED_IN;
@@ -62,7 +61,14 @@ class _RootScreenState extends State<RootScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /*
+    print(_userId);
+  
+    return Container();
+  }
+}
+*/
+
+/*
     switch (authStatus) {
       case AuthStatus.NOT_DETERMINED:
         print("loading screen");
@@ -76,6 +82,3 @@ class _RootScreenState extends State<RootScreen> {
 
   }
   */
-    return Container();
-  }
-}
