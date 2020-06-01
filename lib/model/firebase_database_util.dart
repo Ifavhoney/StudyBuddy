@@ -9,10 +9,8 @@ class FirebaseDatabaseUtil {
 
   DatabaseReference _database;
 
-  StreamSubscription<Event> _messageSubscription;
   FirebaseDatabase database = new FirebaseDatabase();
 
-  int _counter;
   DatabaseError error;
 
   static final FirebaseDatabaseUtil _instance =

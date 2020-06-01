@@ -1,8 +1,7 @@
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:study_buddy/model/calendar/Appointments/confirmed.dart';
-import 'package:study_buddy/model/calendar/appointments/awaiting.dart';
+
 import 'webcam/camPortal.dart';
 import 'package:study_buddy/model/BaseAuth.dart';
 import 'calendarPortal.dart';
@@ -109,15 +108,16 @@ class _CalendarState extends State<Calendar> {
             Navigator.of(context).push(route);
           },
         ),
+        //Displays 7 snapshots of the awaiting table, and thus showing 7 cards
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 18, 0, 30),
+          padding: EdgeInsets.fromLTRB(0, 18, 0, 30),
           child: FirebaseAnimatedList(
               query: _database1.orderByKey().limitToFirst(7).startAt(dates[0]),
               itemBuilder: (BuildContext context, DataSnapshot snapshot,
                   Animation<double> animation, int i) {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  child: new Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[showCard(snapshot, i)],
                   ),
@@ -127,8 +127,6 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget showCard(DataSnapshot dateSnapshot, int i) {
-    if (dateSnapshot.value.toString().length >= 2) {}
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(50, 30, 50, 20),
       child: Material(
@@ -139,6 +137,7 @@ class _CalendarState extends State<Calendar> {
           child: Card(
             color: Colors.teal.shade200,
             child: InkWell(
+              //Link the correct date to the calendar portal using Snapshot.key
               onDoubleTap: () {
                 showDialog(
                     context: this.context,
@@ -152,7 +151,6 @@ class _CalendarState extends State<Calendar> {
                   SizedBox(
                     width: 10,
                   ),
-                  //WHERE WE ENTER KEY
                   ListTile(
                     title: Text(
                       dateSnapshot.key,
@@ -177,9 +175,6 @@ class _CalendarState extends State<Calendar> {
                   ),
 
                   Flexible(
-                    //Not the same as the usual once query (key)
-                    //VERIFY you are in the correct key or you may face issues
-
                     child: FirebaseAnimatedList(
                         primary: true,
                         scrollDirection: Axis.horizontal,
@@ -187,6 +182,7 @@ class _CalendarState extends State<Calendar> {
                         query: _database2.orderByKey(),
                         itemBuilder: (BuildContext context, DataSnapshot res,
                             Animation<double> animation, int i) {
+                          //res.key is the random generated key
                           return FutureBuilder<DataSnapshot>(
                             future: _database2.child(res.key).once(),
                             builder: (BuildContext context, snapshot) {
@@ -199,9 +195,6 @@ class _CalendarState extends State<Calendar> {
 
                               //Can be improved using a method
                               if (snapshot.hasData) {
-                                //Only if the time exists in the confirm collection
-                                if (dateSnapshot.key ==
-                                    snapshot.data.value["date"]) {}
                                 //shows where the user has an apppointment
                                 if (snapshot.data.value["users"]
                                         .toString()
@@ -266,19 +259,6 @@ class _CalendarState extends State<Calendar> {
         ),
       ),
     );
-  }
-
-  Widget confirmedData(DataSnapshot res) {
-    //used for keeping track of changes
-    List<String> userData;
-    //Proving we have data @ that exact location or else it'll throw an error
-    if (res.value.toString().length >= 2) {
-      Map<dynamic, dynamic> values;
-      values = res.value;
-      return Container();
-    } else {
-      return Container();
-    }
   }
 
   Future<DataSnapshot> getUserData(

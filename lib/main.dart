@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:study_buddy/screens/calendarPortal.dart';
 
 import 'package:study_buddy/screens/login.dart';
-import 'package:study_buddy/screens/register.dart';
-import 'package:study_buddy/screens/calendarStatus.dart';
-import 'package:study_buddy/screens/webcam/camPortal.dart';
 import 'package:study_buddy/theme/theme.dart';
-import 'package:study_buddy/screens/calendar.dart';
 
 void main() => runApp(MyApp());
 
