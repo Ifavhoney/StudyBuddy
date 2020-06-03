@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:study_buddy/helpers/debug_helper.dart';
+import 'package:study_buddy/model/BaseAuth.dart';
+import 'package:study_buddy/model/rootScreen.dart';
 
-import 'package:study_buddy/screens/login.dart';
 import 'package:study_buddy/theme/theme.dart';
 
 void main() => runApp(MyApp());
@@ -14,7 +17,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: theme,
         // home: Home(title: ''),
-        home: Login()
+        home: RootScreen(
+          auth: Auth(),
+        )
         //home: CamPortal("A@gmail.com"),
         // home: CalendarStatus("Blob@gmail.com"),
         // home: CalendarStatus("Blob@gmail.com"),
