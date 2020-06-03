@@ -23,14 +23,23 @@ class _CamState extends State<Cam> {
   //For our tooblar
   bool muted = false;
   int _min = 0;
+  int _start = 0;
 
-  Timer _timer;
+  Timer _primaryTimer;
+  Timer _secondaryTimer;
+
   //dispose() is called when the State object is removed
   @override
   void dispose() {
     super.dispose();
     _users.clear();
-    _timer.cancel();
+
+    if (_primaryTimer.isActive) {
+      _primaryTimer.cancel();
+    }
+    if (_secondaryTimer.isActive) {
+      _secondaryTimer.cancel();
+    }
 
     AgoraRtcEngine.leaveChannel();
     AgoraRtcEngine.destroy();
@@ -39,20 +48,38 @@ class _CamState extends State<Cam> {
   @override
   void initState() {
     _min = int.parse(widget.duration.inMinutes.toString());
-    startTimeout();
+    startPrimaryTimer();
 
     super.initState();
     initialize();
   }
 
-  void startTimeout() {
-    _timer = Timer.periodic(Duration(minutes: 1), (Timer timer) {
-      if (_min < 1) {
-        timer.cancel();
-        Navigator.of(context).pop();
+  void startPrimaryTimer() {
+    _primaryTimer = Timer.periodic(Duration(minutes: 1), (Timer timer) {
+      if (_min < 2) {
+        _primaryTimer.cancel();
+        setState(() {
+          _start = 60;
+        });
+        startSecondaryTimer();
       } else {
         setState(() {
           _min = _min - 1;
+        });
+      }
+    });
+
+    //return new Timer(duration, endTimer);
+  }
+
+  void startSecondaryTimer() {
+    _secondaryTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      if (_start < 1) {
+        _secondaryTimer.cancel();
+        Navigator.of(context).pop();
+      } else {
+        setState(() {
+          _start = _start - 1;
         });
       }
     });
@@ -66,6 +93,7 @@ class _CamState extends State<Cam> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Container(),
         title: Column(
           children: <Widget>[
             Text(
@@ -73,7 +101,9 @@ class _CamState extends State<Cam> {
               //   style: Theme.of(context).textTheme.headline6,
             ),
             Text(
-              "$_min minutes",
+              _primaryTimer.isActive == true
+                  ? "$_min minutes"
+                  : "$_start seconds",
               //   style: Theme.of(context).textTheme.headline6,
             ),
           ],
@@ -251,9 +281,7 @@ class _CamState extends State<Cam> {
         children: <Widget>[
           RawMaterialButton(
             onPressed: () {
-              startTimeout();
-
-              // _onToggleMute();
+              _onToggleMute();
             },
             child: Icon(muted ? Icons.mic : Icons.mic_off,
                 color: muted ? Colors.white : Colors.blueAccent),
