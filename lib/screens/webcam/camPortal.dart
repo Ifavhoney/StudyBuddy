@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:study_buddy/helpers/debug_helper.dart';
 import 'package:study_buddy/model/firebase_database_util.dart';
 import 'package:study_buddy/model/BaseAuth.dart';
 import 'package:study_buddy/data/data.dart';
@@ -236,10 +237,13 @@ class _CamPortalState extends State<CamPortal>
     //Get current time - by endTime
 
     List<String> splitEndTime = endTime.toString().split(":");
+    //e.g 9:30 -  8:30  = duration of 1 hour
     int hour = int.parse(splitEndTime[0]) - DateTime.now().hour;
     int min = int.parse(splitEndTime[1]) - DateTime.now().minute;
     Duration duration = Duration(hours: hour.abs(), minutes: min.abs());
+    // Duration duration = Duration(seconds: 15);
 
+    DebugHelper.green(duration.inHours);
     await Navigator.push(
       context,
       MaterialPageRoute(

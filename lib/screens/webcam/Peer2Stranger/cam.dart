@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:study_buddy/data/data.dart';
+import 'package:study_buddy/helpers/debug_helper.dart';
 import 'package:study_buddy/reusableWidgets/animations/popUp.dart';
 
 class Cam extends StatefulWidget {
@@ -38,24 +39,22 @@ class _CamState extends State<Cam> {
   @override
   void initState() {
     _min = int.parse(widget.duration.inMinutes.toString());
+    startTimeout();
+
     super.initState();
     initialize();
   }
 
   void startTimeout() {
-    const oneSec = const Duration(minutes: 1);
-    _timer = Timer.periodic(oneSec, (Timer timer) {
-      setState(() {
-        if (_min == 0) {
-          //iMPLEMENT LOGIC
-        }
-        if (_min <= -1) {
-          timer.cancel();
-          Navigator.of(context).pop();
-        } else {
-          _min--;
-        }
-      });
+    _timer = Timer.periodic(Duration(minutes: 1), (Timer timer) {
+      if (_min < 1) {
+        timer.cancel();
+        Navigator.of(context).pop();
+      } else {
+        setState(() {
+          _min = _min - 1;
+        });
+      }
     });
 
     //return new Timer(duration, endTimer);
@@ -65,7 +64,6 @@ class _CamState extends State<Cam> {
 
   @override
   Widget build(BuildContext context) {
-    startTimeout();
     return Scaffold(
       appBar: AppBar(
         title: Column(
@@ -75,7 +73,7 @@ class _CamState extends State<Cam> {
               //   style: Theme.of(context).textTheme.headline6,
             ),
             Text(
-              "$_min min",
+              "$_min minutes",
               //   style: Theme.of(context).textTheme.headline6,
             ),
           ],
@@ -252,7 +250,11 @@ class _CamState extends State<Cam> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           RawMaterialButton(
-            onPressed: _onToggleMute,
+            onPressed: () {
+              startTimeout();
+
+              // _onToggleMute();
+            },
             child: Icon(muted ? Icons.mic : Icons.mic_off,
                 color: muted ? Colors.white : Colors.blueAccent),
             shape: CircleBorder(),
