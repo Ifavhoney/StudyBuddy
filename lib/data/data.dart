@@ -83,12 +83,11 @@ class Data {
   //Formatting date to make it easier to iterate through firebase list
   static List<String> days(int day) {
     int y = 0;
-    int day = 7;
     DateTime now = DateTime.now();
 
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     List<String> dates = [];
-    dates.add(dateFormat.format(now).toString());
+    dates.add(dateFormat.format(now));
     while (y != day) {
       dates.add(dateFormat.format(now.add(Duration(days: y + 1))).toString());
       y += 1;

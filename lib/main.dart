@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:study_buddy/helpers/debug_helper.dart';
 import 'package:study_buddy/model/BaseAuth.dart';
 import 'package:study_buddy/model/rootScreen.dart';
 

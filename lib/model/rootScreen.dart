@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:study_buddy/helpers/debug_helper.dart';
 import 'package:study_buddy/model/BaseAuth.dart';
 import 'package:study_buddy/screens/calendar.dart';
-import 'package:study_buddy/screens/calendarPortal.dart';
 import 'package:study_buddy/screens/login.dart';
 
 enum AuthStatus {
