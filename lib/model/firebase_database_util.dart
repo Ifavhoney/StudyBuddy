@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 
+/*
+This class needs work 
+Some methods  don't belong here like initState
+*/
 class FirebaseDatabaseUtil {
   //Childs in our database
   String child1 = 'Peer2Strangers';

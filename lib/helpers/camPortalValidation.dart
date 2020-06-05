@@ -9,16 +9,21 @@ import 'package:study_buddy/screens/webcam/Peer2Stranger/cam.dart';
 class CamPortalValidation {
   static String errorText;
   static List<String> dates = Data.days(7);
-//Validates wether this is the correct appointment
-  static void isValidateAppointment(FirebaseDatabaseUtil databaseUtil,
-      String user, String channelName, BuildContext context) {
+  //Validates wether this is the correct appointment
+
+  ///Validates wether this is the correct appointment.
+  ///If channel name is set, then it is validated by time, and channel name.
+  ///Conversely if channel name is not set, then it is only validated by time.
+  static void isValidateAppointment(
+      FirebaseDatabaseUtil databaseUtil, String user, BuildContext context,
+      {String channelName = "auto"}) {
     String child1 = 'Peer2Strangers';
     String child2 = 'Appointments';
     String child4 = 'Confirmed';
     DatabaseReference _database2 = FirebaseDatabase.instance.reference();
     _database2 = _database2.child(child1).child(child2).child(child4);
     //TO-DO Check if number corresponds to user(s)
-    if (channelName.isEmpty) {
+    if (channelName.isEmpty && channelName != "auto") {
       errorText = "Text cannot be empty";
     } else {
       //Reads from database
@@ -40,28 +45,29 @@ class CamPortalValidation {
               String endTime = Data.getEndTime(startTime);
               List<String> splitTime = startTime.toString().split(":");
               List<String> splitEndTime = endTime.toString().split(":");
-              //CHANGEEEEEE
-              DateTime now = DateTime(
-                  2020, 1, 1, DateTime.now().hour, DateTime.now().minute);
+
               //At this point we've confirmed the user & the time
-              if (isValidTime(now, splitTime, splitEndTime) == true) {
+              if (isValidTime(splitTime, splitEndTime) == true) {
                 //overwriting the errorText due to loop capturing all data
                 foundTime = true;
                 errorText = "";
-
-                if (channelName != value["channelName"].toString()) {
-                  errorText = "Please enter these digits " +
-                      value["channelName"].toString();
-                } else {
+                if (channelName == "auto") {
                   toWebcam(endTime, channelName, context);
                   errorText = "success";
+                } else {
+                  if (channelName != value["channelName"].toString()) {
+                    errorText = "Please enter these digits " +
+                        value["channelName"].toString();
+                  } else {
+                    toWebcam(endTime, channelName, context);
+                    errorText = "success";
+                  }
                 }
 
                 //Entering too late or too early, but means date is found
               } else if (foundTime == false &&
-                  isValidTime(now, splitTime, splitEndTime) == false) {
-                print(now.toString() +
-                    " " +
+                  isValidTime(splitTime, splitEndTime) == false) {
+                DebugHelper.white("Appointment: " +
                     splitTime.toString() +
                     " " +
                     splitEndTime.toString());
@@ -70,7 +76,7 @@ class CamPortalValidation {
             }
           });
         }
-        //Does not exist anywhere 80413
+        //Does not exist anywhere
         else {
           errorText = "Please book, or review your status";
         }
@@ -79,13 +85,17 @@ class CamPortalValidation {
   }
 
 //Uses a default date (month, year, day) as base to find out if time (hh:mm) is valid
-  static bool isValidTime(
-      DateTime now, List<String> splitTime, List<String> splitEndTime) {
+  ///Valid time when the user enters 10 minutes earlier, on time,
+  ///or before the end of his appointment.
+  static bool isValidTime(List<String> splitTime, List<String> splitEndTime) {
+    DateTime now =
+        DateTime(2020, 1, 1, DateTime.now().hour, DateTime.now().minute);
+    DateTime tempEndTime = DateTime(
+        2020, 1, 1, int.parse(splitEndTime[0]), int.parse(splitEndTime[1]));
+    //Users can enter 10 minutes early
     DateTime tempTime =
         DateTime(2020, 1, 1, int.parse(splitTime[0]), int.parse(splitTime[1]))
             .subtract(Duration(minutes: 10));
-    DateTime tempEndTime = DateTime(
-        2020, 1, 1, int.parse(splitEndTime[0]), int.parse(splitEndTime[1]));
 
     if (now.isAfter(tempTime) && now.isBefore(tempEndTime) ||
         now.isAtSameMomentAs(tempTime)) {

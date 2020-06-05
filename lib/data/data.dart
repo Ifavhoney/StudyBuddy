@@ -92,6 +92,7 @@ class Data {
       dates.add(dateFormat.format(now.add(Duration(days: y + 1))).toString());
       y += 1;
     }
+    //Example: 2020-06-05
     return dates;
   }
 

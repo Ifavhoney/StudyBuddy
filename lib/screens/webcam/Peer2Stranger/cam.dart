@@ -37,7 +37,7 @@ class _CamState extends State<Cam> {
     if (_primaryTimer.isActive) {
       _primaryTimer.cancel();
     }
-    if (_secondaryTimer.isActive) {
+    if (_primaryTimer.isActive == false) {
       _secondaryTimer.cancel();
     }
 

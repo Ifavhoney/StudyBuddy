@@ -114,10 +114,11 @@ class _CamPortalState extends State<CamPortal>
                             ),
                             onPressed: () {
                               CamPortalValidation.isValidateAppointment(
-                                  databaseUtil,
-                                  user,
-                                  _channelName.text.toString(),
-                                  context);
+                                databaseUtil,
+                                user,
+                                context,
+                                channelName: _channelName.text,
+                              );
                               setState(() {
                                 errorText = CamPortalValidation.errorText;
                               });
