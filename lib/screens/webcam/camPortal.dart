@@ -120,7 +120,8 @@ class _CamPortalState extends State<CamPortal>
                                 channelName: _channelName.text,
                               );
                               setState(() {
-                                errorText = CamPortalValidation.errorText;
+                                errorText = CamPortalValidation
+                                    .camCredentialModel.errorText;
                               });
                             }),
                         SizedBox(

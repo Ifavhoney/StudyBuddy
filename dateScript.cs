@@ -18,8 +18,8 @@ namespace dateScript
 
         public static void Main(string[] args)
         {
-            DateTime startDate = new DateTime(2019, 12, 31);
-            DateTime endDate = new DateTime(2020, 1, 02);
+            DateTime startDate = new DateTime(2020, 06, 04);
+            DateTime endDate = new DateTime(2020, 06, 30);
 
             List<DateTime> dateList = new List<DateTime>();      
             IFirebaseClient client;

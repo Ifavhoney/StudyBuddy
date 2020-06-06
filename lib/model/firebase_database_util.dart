@@ -77,7 +77,7 @@ class FirebaseDatabaseUtil {
   }
 
   Future<DataSnapshot> getConfirmationData(DatabaseReference database) async {
-    return await database.once();
+    return database.once();
   }
 
   Future<DataSnapshot> getAwaitingApppointmentsData(

@@ -6,38 +6,60 @@ import 'package:study_buddy/helpers/debug_helper.dart';
 import 'package:study_buddy/model/firebase_database_util.dart';
 import 'package:study_buddy/screens/webcam/Peer2Stranger/cam.dart';
 
+class CamCredentialModel {
+  String errorText;
+  String endTime;
+  String channelName;
+  CamCredentialModel({this.errorText, this.endTime, this.channelName});
+}
+
 class CamPortalValidation {
-  static String errorText;
+  static CamCredentialModel camCredentialModel =
+      CamCredentialModel(errorText: " ");
+
   static List<String> dates = Data.days(7);
+  static bool foundTime = false;
+
   //Validates wether this is the correct appointment
 
   ///Validates wether this is the correct appointment.
   ///If channel name is set, then it is validated by time, and channel name.
   ///Conversely if channel name is not set, then it is only validated by time.
-  static void isValidateAppointment(
+  static Future<void> isValidateAppointment(
       FirebaseDatabaseUtil databaseUtil, String user, BuildContext context,
-      {String channelName = "auto"}) {
+      {String channelName = "auto"}) async {
+    //Always check for nulls
+    if (user == null) {
+      return;
+    }
     String child1 = 'Peer2Strangers';
     String child2 = 'Appointments';
     String child4 = 'Confirmed';
+    //initialize
+
     DatabaseReference _database2 = FirebaseDatabase.instance.reference();
     _database2 = _database2.child(child1).child(child2).child(child4);
     //TO-DO Check if number corresponds to user(s)
     if (channelName.isEmpty && channelName != "auto") {
-      errorText = "Text cannot be empty";
+      camCredentialModel.errorText = "Text cannot be empty";
     } else {
       //Reads from database
+      if (_database2 == null) {
+        DebugHelper.green("test!!!");
+      }
 
-      databaseUtil
+      await databaseUtil
           .getConfirmationData(_database2)
-          .then((DataSnapshot snapshot) {
+          .then((DataSnapshot snapshot) async {
+        DebugHelper.red(snapshot.value.toString());
+
         //if it exists anywhere in the snapshot
         if (snapshot.value.toString().contains(user) &&
             snapshot.value.toString().contains(dates[0])) {
           Map<dynamic, dynamic> value = snapshot.value;
-          bool foundTime = false;
           value.forEach((key, value) {
             //Get exact data
+
             if (value["date"].toString() == dates[0].toString() &&
                 value["users"].toString().contains(user)) {
               //Use the string of our startTime, and incremends it by 1 hour
@@ -50,17 +72,22 @@ class CamPortalValidation {
               if (isValidTime(splitTime, splitEndTime) == true) {
                 //overwriting the errorText due to loop capturing all data
                 foundTime = true;
-                errorText = "";
+                camCredentialModel.errorText = "";
+                camCredentialModel.channelName = channelName;
+                camCredentialModel.endTime = endTime;
                 if (channelName == "auto") {
-                  toWebcam(endTime, channelName, context);
-                  errorText = "success";
+                  camCredentialModel.errorText = "success";
+                  //toWebcam
                 } else {
                   if (channelName != value["channelName"].toString()) {
-                    errorText = "Please enter these digits " +
-                        value["channelName"].toString();
+                    camCredentialModel.errorText =
+                        "Please enter these digits " +
+                            value["channelName"].toString();
                   } else {
-                    toWebcam(endTime, channelName, context);
-                    errorText = "success";
+                    //towebcam
+                    // toWebcam(endTime, channelName, context);
+
+                    camCredentialModel.errorText = "success";
                   }
                 }
 
@@ -71,14 +98,14 @@ class CamPortalValidation {
                     splitTime.toString() +
                     " " +
                     splitEndTime.toString());
-                errorText = "Entering too early or too late";
+                camCredentialModel.errorText = "Entering too early or too late";
               }
             }
           });
         }
         //Does not exist anywhere
         else {
-          errorText = "Please book, or review your status";
+          camCredentialModel.errorText = "Please book, or review your status";
         }
       });
     }
@@ -107,15 +134,16 @@ class CamPortalValidation {
 
   //DateTime compareTimes(List<String> time, List<String> endTime) {}
   static Future<void> toWebcam(
-      String endTime, String channelName, BuildContext context) async {
+      CamCredentialModel camCredentialModel, BuildContext context) async {
     //else if incorect . . .
-    errorText = null;
-    print(channelName);
+    // errorText = null;
+    print(camCredentialModel.channelName);
     //Get permission for Mic and Camera and see if they accepted them
     await _getCameraAndMic();
     //Get current time - by endTime
 
-    List<String> splitEndTime = endTime.toString().split(":");
+    List<String> splitEndTime =
+        camCredentialModel.endTime.toString().split(":");
     //e.g 9:30 -  8:30  = duration of 1 hour
     int hour = int.parse(splitEndTime[0]) - DateTime.now().hour;
     int min = int.parse(splitEndTime[1]) - DateTime.now().minute;
@@ -127,7 +155,7 @@ class CamPortalValidation {
       context,
       MaterialPageRoute(
         builder: (context) => Cam(
-          channelName: channelName,
+          channelName: camCredentialModel.channelName,
           duration: duration,
         ),
       ),

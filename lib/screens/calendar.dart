@@ -34,7 +34,7 @@ class _CalendarState extends State<Calendar> {
 
   List<String> dates = [];
   String user;
-  bool hasNotBooked = false;
+  bool isConfirmed = false;
 
   TextEditingController channelName = new TextEditingController();
   String initialText;
@@ -82,26 +82,66 @@ class _CalendarState extends State<Calendar> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  Future<void> _showButton() async {
+    await CamPortalValidation.isValidateAppointment(databaseUtil, user, context)
+        .whenComplete(() {
+      if (CamPortalValidation.camCredentialModel.errorText == "success") {
+        /*
+        CamPortalValidation.toWebcam(
+            CamPortalValidation.camCredentialModel, context);
+            */
+        setState(() {
+          isConfirmed = true;
+        });
+      } else {
+        setState(() {
+          isConfirmed = false;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
+          centerTitle: true,
           leading: Container(),
           title: Text("Calendar"),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.videocam),
-              onPressed: () {
-                CamPortalValidation.isValidateAppointment(
-                    databaseUtil, user, context);
-                /*
+            FutureBuilder(
+              future: _showButton(),
+              // initialData: databaseUtil.getConfirmationData,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (isConfirmed == true) {
+                  return Icon(Icons.camera);
+                } else {
+                  return Icon(Icons.ac_unit);
+                }
+              },
+            ),
+            /*
+          IconButton(
+                    icon: Icon(Icons.videocam),
+                    onPressed: () {
+                      /*
                 showDialog(
                   context: context,
                   builder: (_) => CamPortal(user),
                 );
                 */
-              },
-            )
+                    },
+                  )
+                IconButton(
+                    icon: Icon(Icons.alarm),
+                    onPressed: () {},
+                  )
+                  */
           ],
         ),
         floatingActionButton: RaisedButton(

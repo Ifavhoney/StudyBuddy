@@ -34,11 +34,11 @@ class _CamState extends State<Cam> {
     super.dispose();
     _users.clear();
 
-    if (_primaryTimer.isActive) {
-      _primaryTimer.cancel();
-    }
     if (_primaryTimer.isActive == false) {
       _secondaryTimer.cancel();
+    }
+    if (_primaryTimer.isActive) {
+      _primaryTimer.cancel();
     }
 
     AgoraRtcEngine.leaveChannel();
@@ -160,7 +160,7 @@ class _CamState extends State<Cam> {
     //For errors (May not neccessarly break code)
     AgoraRtcEngine.onError = (dynamic code) {
       setState(() {
-        _infoStrings.add(code);
+        _infoStrings.add(int.parse(code).toString());
       });
     };
     //occurs when somebody joins
