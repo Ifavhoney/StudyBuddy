@@ -80,6 +80,37 @@ class Data {
     return results;
   }
 
+//School Data for registation
+  static List<DropdownMenuItem> schools() {
+  String _school1 = "Centennial College";
+  String _school2 = "Guelph University";
+
+  List<DropdownMenuItem> results = [
+    DropdownMenuItem(
+      value: _school1,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(_school1),
+        ],
+      ),
+    ),
+
+    DropdownMenuItem(
+      value: _school2,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(_school2),
+        ],
+      ),
+    ),
+    
+  ];
+  return results;
+}
+  
+
   //Formatting date to make it easier to iterate through firebase list
   static List<String> days(int day) {
     int y = 0;

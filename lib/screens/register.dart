@@ -17,11 +17,13 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
+  final _schoolFormKey = GlobalKey<FormState>();
 
   TextEditingController email;
   TextEditingController password;
   TextEditingController firstName;
   TextEditingController lastName;
+  TextEditingController schoolEmail;
 
   final databaseReference = Firestore.instance;
 
@@ -42,7 +44,7 @@ class _RegisterState extends State<Register> {
           function: () {
             MaterialPageRoute route =
                 MaterialPageRoute(builder: (context) => Login());
-            Navigator.of(context).push(route);
+            Navigator.of(context).push(route).then((value) => _formKey.currentState.reset());
           },
         ),
       ));
@@ -52,12 +54,23 @@ class _RegisterState extends State<Register> {
           .then((user) => Auth().sendEmailVerification())
           .catchError((onError) => print("invalid"));
 
-      databaseReference.collection("Users").document(User.email).setData({
-        'First Name': User.fName,
-        'Last Name': User.lName,
-        'Reason For Joining': User.reason,
-        "Show Get Started": User.showGetStarted.toString()
-      });
+      if (User.reason == "School") {
+        databaseReference.collection("Users").document(User.email).setData({
+          'First Name': User.fName,
+          'Last Name': User.lName,
+          'Reason For Joining': User.reason,
+          "Show Get Started": User.showGetStarted.toString(),
+          "School Name": User.schoolName,
+          "School Email": User.schoolEmail
+        });
+      } else {
+        databaseReference.collection("Users").document(User.email).setData({
+          'First Name': User.fName,
+          'Last Name': User.lName,
+          'Reason For Joining': User.reason,
+          "Show Get Started": User.showGetStarted.toString(),
+        });
+      }
     } else {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         duration: Duration(days: 1),
@@ -81,6 +94,101 @@ class _RegisterState extends State<Register> {
             }),
       ));
     }
+  }
+
+  selectSchoolInfo(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Form(
+                      key: _schoolFormKey,
+                      child: new Column(
+                        children: <Widget>[
+                          Container(
+                            color: AppBarTheme.of(context).color,
+                            child: DropdownButton(
+                              items: Data.schools(),
+                              onChanged: (value) {
+                                if (value != "") {
+                                  setState(() {
+                                    User.schoolName = value;
+                                  });
+                                } else {
+                                  return null;
+                                }
+                              },
+                              isExpanded: true,
+                              hint: Text(
+                                User.schoolName != null
+                                    ? "\t\t" + User.schoolName
+                                    : "\t\tSelect a School you're attending",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          ListTileIconField(
+                            controller: schoolEmail,
+                            leadingIcon: Icon(Icons.email),
+                            hintText: "School Email",
+                            keyboardType: TextInputType.emailAddress,
+                            function: (String value) {
+                              if (!isValidEmail(value)) {
+                                return "Invalid Email";
+                              } else if (value.contains("@outlook.com") ||
+                                  value.contains("@hotmail.com") ||
+                                  value.contains("@hotmail.ca") ||
+                                  value.contains("@gmail.com") ||
+                                  value.contains("@yahoo.ca") ||
+                                  value.contains("@yahoo.com")) {
+                                return "School Email is only valid";
+                              } else {
+                                setState(() {
+                                  User.schoolEmail = value;
+                                });
+                                return null;
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          RaisedButton(
+                            child: Text(
+                              "Submit",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              if (this._schoolFormKey.currentState.validate() &&
+                                  User.schoolEmail != null) {
+                                MaterialPageRoute route = MaterialPageRoute(
+                                    builder: (context) => Register());
+                                Navigator.of(context).pop(route);
+                                _schoolFormKey.currentState.reset();
+                              } else {
+                                print("Please put in email");
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              },
+            ),
+          );
+        });
   }
 
   @override
@@ -199,6 +307,9 @@ class _RegisterState extends State<Register> {
                     if (value != "") {
                       setState(() {
                         User.reason = value;
+                        if (User.reason == "School") {
+                          selectSchoolInfo(context);
+                        }
                       });
                     } else {
                       return null;
