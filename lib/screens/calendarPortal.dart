@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:study_buddy/helpers/debug_helper.dart';
 import 'package:study_buddy/model/BaseAuth.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -20,6 +22,7 @@ class CalendarPortal extends StatefulWidget {
 
 class _CalendarPortalState extends State<CalendarPortal>
     with SingleTickerProviderStateMixin {
+  int _radioValue1 = 0;
   String child1 = 'Peer2Strangers';
   String child2 = 'Appointments';
   String child3 = 'Awaiting';
@@ -36,11 +39,10 @@ class _CalendarPortalState extends State<CalendarPortal>
   DateTime selectedTime;
   DateTime storeEndTime;
 
-  List<String> _timeConflicts = new List<String>();
   String user;
-  List<String> allUsers = new List<String>();
-  TextEditingController _goal = new TextEditingController();
-  List<String> errorText = new List<String>();
+  List<String> allUsers = List<String>();
+  TextEditingController _goal = TextEditingController();
+  List<String> errorText = List<String>();
   int i;
   int numHours;
   int clicked = -1;
@@ -105,103 +107,152 @@ class _CalendarPortalState extends State<CalendarPortal>
   Widget build(BuildContext context) {
     callRandNumber();
     return Center(
-      child: Material(
-        color: Colors.transparent,
-        child: ScaleTransition(
-          scale: scaleAnimation,
-          child: Padding(
-            padding: const EdgeInsets.all(50.0),
-            child: Container(
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                child: Padding(
-                    padding: const EdgeInsets.all(30.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+      child: Material(color: Colors.transparent, child: selectTimeZone()),
+    );
+  }
+
+  Widget selectTimeZone() {
+    return ScaleTransition(
+      scale: scaleAnimation,
+      child: Padding(
+        padding: const EdgeInsets.all(50.0),
+        child: Container(
+            decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      "Hi, Jason",
+                      style: TextStyle(
+                          fontSize:
+                              Theme.of(context).textTheme.display1.fontSize),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Text(
+                        "Do you still reside in Toronto?",
+                        style: TextStyle(
+                            fontSize:
+                                Theme.of(context).textTheme.display1.fontSize),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        TextField(
-                          controller: _goal,
-                          textAlign: TextAlign.center,
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 0.0, horizontal: 10.0),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).appBarTheme.color),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red)),
-                              border: UnderlineInputBorder(
-                                  borderSide: BorderSide(width: 1)),
-                              errorText: this.errorText[i],
-                              hintText: "Enter Your Goal"),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(30, 10, 50, 0),
-                          child: Container(
-                            height: 40,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Icon(Icons.access_time),
-                                Expanded(
-                                  child: CupertinoDatePicker(
-                                    minuteInterval: 30,
-                                    use24hFormat: true,
-                                    initialDateTime: dateTime,
-                                    mode: CupertinoDatePickerMode.time,
-                                    onDateTimeChanged: (currentTime) {
-                                      setState(() {
-                                        this.time = _df.format(currentTime);
-
-                                        this.selectedTime = currentTime;
-                                        this.storeEndTime = currentTime
-                                            .add(Duration(hours: numHours));
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+                        RaisedButton(
+                          child: Text(
+                            "Yes",
+                            style: Theme.of(context).textTheme.button,
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        GestureDetector(
-                          child: RaisedButton(
-                              child: Text(
-                                "Book",
-                                style: Theme.of(context).textTheme.button,
-                              ),
-                              onPressed: () {
-                                if (storeEndTime == null ||
-                                    selectedTime == null ||
-                                    time == null) {
-                                  setState(() {
-                                    time = "00:00";
-                                    selectedTime = dateTime;
-                                    storeEndTime =
-                                        dateTime.add(Duration(hours: 1));
-                                  });
-                                }
-
-                                setState(() {
-                                  i = 0;
-                                });
-
-                                validateAppointment(user, _goal.text, time);
-                              }),
+                          onPressed: () {},
                         )
                       ],
-                    ))),
-          ),
-        ),
+                    ),
+                  ],
+                ))),
+      ),
+    );
+  }
+
+  Widget selectTime() {
+    return ScaleTransition(
+      scale: scaleAnimation,
+      child: Padding(
+        padding: const EdgeInsets.all(50.0),
+        child: Container(
+            decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: _goal,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 0.0, horizontal: 10.0),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).appBarTheme.color),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red)),
+                          border: UnderlineInputBorder(
+                              borderSide: BorderSide(width: 1)),
+                          errorText: this.errorText[i],
+                          hintText: "Enter Your Goal"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: Container(
+                        height: 40,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(Icons.access_time),
+                            Expanded(
+                              child: CupertinoDatePicker(
+                                minuteInterval: 30,
+                                use24hFormat: false,
+                                initialDateTime: dateTime,
+                                mode: CupertinoDatePickerMode.time,
+                                onDateTimeChanged: (currentTime) {
+                                  setState(() {
+                                    this.time = _df.format(currentTime);
+
+                                    this.selectedTime = currentTime;
+                                    this.storeEndTime = currentTime
+                                        .add(Duration(hours: numHours));
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    GestureDetector(
+                      child: RaisedButton(
+                          child: Text(
+                            "Book",
+                            style: Theme.of(context).textTheme.button,
+                          ),
+                          onPressed: () {
+                            if (storeEndTime == null ||
+                                selectedTime == null ||
+                                time == null) {
+                              setState(() {
+                                time = "00:00";
+                                selectedTime = dateTime;
+                                storeEndTime = dateTime.add(Duration(hours: 1));
+                              });
+                            }
+                            setState(() {
+                              i = 0;
+                            });
+
+                            validateAppointment(user, _goal.text, time);
+                          }),
+                    )
+                  ],
+                ))),
       ),
     );
   }
@@ -277,10 +328,11 @@ class _CalendarPortalState extends State<CalendarPortal>
               addAppointment(
                 time == null ? "00:00" : time,
                 _df.format(storeEndTime),
-                _timeConflicts,
                 user,
                 _goal.text,
-              );
+              ).whenComplete(() {
+                //  Navigator.of(context).pop();
+              });
             }
           });
         }
@@ -295,30 +347,26 @@ class _CalendarPortalState extends State<CalendarPortal>
     return num;
   }
 
-  void addAppointment(String time, String endTime, List<String> timeConflicts,
-      String user, String goals) {
+  Future<void> addAppointment(
+      String time, String endTime, String user, String goals) async {
     Confirmed confirmedAppointment;
-    Awaiting newAppointment;
+    Awaiting Appointment;
     Awaiting prexistingAppointment;
     //Used to get the key & Value of our Snapshot
     Map<dynamic, dynamic> values;
 
     //Reads through database, given the date & time
-    databaseUtil
+    await databaseUtil
         .getAwaitingApppointmentsData(_database, widget.selectedDate, time)
         .then((DataSnapshot snapshot) {
-      newAppointment = Awaiting(
-          user: user,
-          goal: goals,
-          hasMatched: false,
-          //    timeConflicts: timeConflicts,
-          endTime: endTime);
+      Appointment = Awaiting(
+          user: user, goal: goals, hasMatched: false, endTime: endTime);
 
       //Meaning these are the first entry of the day @ that time
       if (snapshot.value == null) {
         //insert
         databaseUtil.insertAppointment(
-            _database, widget.selectedDate, time, newAppointment);
+            _database, widget.selectedDate, time, Appointment);
         // Navigator.of(context).pop();
       } else {
         values = snapshot.value;
@@ -332,12 +380,11 @@ class _CalendarPortalState extends State<CalendarPortal>
 
           // print("HII" + values["timeConflicts"].toString());
 
-          //Change previous false value to true, and give the new value to true
+          //Change previous false value to true, and give the   value to true
           if (values["hasMatched"] == false) {
             prexistingAppointment = Awaiting(
                 user: values["user"],
                 goal: values["goal"],
-                // timeConflicts: values["timeConflicts"],
                 endTime: values["endTime"],
                 hasMatched: true);
             this.allUsers.add(values["user"].toString());
@@ -345,11 +392,11 @@ class _CalendarPortalState extends State<CalendarPortal>
             databaseUtil.updateAppointmentGivenKey(_database,
                 widget.selectedDate, time, key, prexistingAppointment);
 
-            newAppointment.hasMatched = true;
+            Appointment.hasMatched = true;
             //insert
             databaseUtil.insertAppointment(
-                _database, widget.selectedDate, time, newAppointment);
-            allUsers.add(newAppointment.user);
+                _database, widget.selectedDate, time, Appointment);
+            allUsers.add(Appointment.user);
 
             confirmedAppointment = Confirmed(
                 users: this.allUsers,
@@ -360,12 +407,12 @@ class _CalendarPortalState extends State<CalendarPortal>
             databaseUtil.insertConfirmation(
                 _database2, widget.selectedDate, time, confirmedAppointment);
             //    Navigator.of(context).pop();
-          } else if (j == length && newAppointment.hasMatched == false) {
+          } else if (j == length && Appointment.hasMatched == false) {
             //Get end time
 
             //insert
             databaseUtil.insertAppointment(
-                _database, widget.selectedDate, time, newAppointment);
+                _database, widget.selectedDate, time, Appointment);
           }
           allUsers.clear();
         });

@@ -174,7 +174,7 @@ class _CalendarState extends State<Calendar> {
                           filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
                           child: GestureDetector(
                             child: FlashingCam(),
-                            onTap: () {
+                            onDoubleTap: () {
                               _showButton();
 
                               CamPortalValidation.toWebcam(

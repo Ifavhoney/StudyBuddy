@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:study_buddy/helpers/debug_helper.dart';
 
 /*For a C# based person, this may look like a confusing approach (no interface call on dart)
 For an Android dev, documentation is scrace, but implenetation is easy
@@ -31,6 +32,18 @@ class Auth implements BaseAuth {
     } else {
       return Future.value(false);
     }
+  }
+
+  Future<List<DocumentSnapshot>> getAllUsers() async {
+    Firestore _firebaseStore = Firestore.instance;
+    List<DocumentSnapshot> users;
+    await _firebaseStore
+        .collection("Users")
+        .getDocuments()
+        .then((QuerySnapshot val) {
+      users = val.documents;
+    });
+    return users;
   }
 
   @override

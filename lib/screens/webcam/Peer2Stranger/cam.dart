@@ -19,7 +19,7 @@ class _CamState extends State<Cam> {
   //list of user IDs
   static final _users = <int>[];
   //Webcam Info for debugging purposes
-  final _infoStrings = <String>[];
+  final _infoStrings = <dynamic>[];
   //For our tooblar
   bool muted = false;
   int _min = 0;
@@ -160,7 +160,7 @@ class _CamState extends State<Cam> {
     //For errors (May not neccessarly break code)
     AgoraRtcEngine.onError = (dynamic code) {
       setState(() {
-        _infoStrings.add(int.parse(code).toString());
+        _infoStrings.add(code);
       });
     };
     //occurs when somebody joins
