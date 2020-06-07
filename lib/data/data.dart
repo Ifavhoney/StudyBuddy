@@ -113,4 +113,13 @@ class Data {
     }
     return endTime;
   }
+
+  static int getTotalMinutesFromNow(List<String> splitEndTime) {
+    Duration endTime = Duration(
+        hours: int.parse(splitEndTime[0]), minutes: int.parse(splitEndTime[1]));
+
+    Duration curTime =
+        Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute);
+    return endTime.inMinutes - curTime.inMinutes;
+  }
 }

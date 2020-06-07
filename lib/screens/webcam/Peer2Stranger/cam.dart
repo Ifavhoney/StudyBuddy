@@ -8,7 +8,7 @@ import 'package:study_buddy/reusableWidgets/animations/popUp.dart';
 
 class Cam extends StatefulWidget {
   final String channelName;
-  final Duration duration;
+  final int duration;
 
   Cam({this.channelName, this.duration});
   @override
@@ -47,7 +47,7 @@ class _CamState extends State<Cam> {
 
   @override
   void initState() {
-    _min = int.parse(widget.duration.inMinutes.toString());
+    _min = widget.duration;
     startPrimaryTimer();
 
     super.initState();

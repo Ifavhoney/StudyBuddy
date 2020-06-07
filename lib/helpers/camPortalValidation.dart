@@ -146,19 +146,13 @@ class CamPortalValidation {
 
     List<String> splitEndTime =
         camCredentialModel.endTime.toString().split(":");
-    //e.g 9:30 -  8:30  = duration of 1 hour
-    int hour = int.parse(splitEndTime[0]) - DateTime.now().hour;
-    int min = int.parse(splitEndTime[1]) - DateTime.now().minute;
-    Duration duration = Duration(hours: hour.abs(), minutes: min.abs());
-    // Duration duration = Duration(seconds: 15);
 
-    DebugHelper.green(duration.inHours);
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => Cam(
           channelName: camCredentialModel.channelName,
-          duration: duration,
+          duration: Data.getTotalMinutesFromNow(splitEndTime),
         ),
       ),
     );
