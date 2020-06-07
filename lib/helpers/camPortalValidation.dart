@@ -51,7 +51,7 @@ class CamPortalValidation {
       await databaseUtil
           .getConfirmationData(_database2)
           .then((DataSnapshot snapshot) async {
-        DebugHelper.red(snapshot.value.toString());
+        //  DebugHelper.red(snapshot.value.toString());
 
         //if it exists anywhere in the snapshot
         if (snapshot.value.toString().contains(user) &&
@@ -94,10 +94,12 @@ class CamPortalValidation {
                 //Entering too late or too early, but means date is found
               } else if (foundTime == false &&
                   isValidTime(splitTime, splitEndTime) == false) {
+                /*
                 DebugHelper.white("Appointment: " +
                     splitTime.toString() +
                     " " +
                     splitEndTime.toString());
+                    */
                 camCredentialModel.errorText = "Entering too early or too late";
               }
             }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -5,9 +7,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:study_buddy/data/data.dart';
 import 'package:study_buddy/helpers/camPortalValidation.dart';
 import 'package:study_buddy/helpers/debug_helper.dart';
+import 'package:study_buddy/reusableWidgets/animations/flashingCam.dart';
 import 'package:study_buddy/screens/webcam/Peer2Stranger/cam.dart';
 
-import 'webcam/camPortal.dart';
 import 'package:study_buddy/model/BaseAuth.dart';
 import 'calendarPortal.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -102,76 +104,90 @@ class _CalendarState extends State<Calendar> {
           isConfirmed = false;
         });
       }
+      CamPortalValidation.camCredentialModel.errorText = " ";
     });
   }
 
+  double _sigmaX = 5; // from 0-10
+  double _sigmaY = 5; // from 0-10
+  double _opacity = 0.2; // from 0-1.0
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        appBar: AppBar(
-          centerTitle: true,
-          leading: Container(),
-          title: Text("Calendar"),
-          actions: <Widget>[
-            FutureBuilder(
-              future: _showButton(),
-              // initialData: databaseUtil.getConfirmationData,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (isConfirmed == true) {
-                  return Icon(Icons.camera);
-                } else {
-                  return Icon(Icons.ac_unit);
-                }
-              },
-            ),
-            /*
-          IconButton(
-                    icon: Icon(Icons.videocam),
+    return FutureBuilder(
+      future: _showButton(),
+      builder: (context, snapshot) {
+        return Scaffold(
+            backgroundColor: Theme.of(context).backgroundColor,
+            appBar: isConfirmed == false
+                ? AppBar(
+                    centerTitle: true,
+                    leading: Container(),
+                    title: Text("Calendar"),
+                  )
+                : null,
+            floatingActionButton: isConfirmed == false
+                ? RaisedButton(
+                    child: Text(
+                      "View Status",
+                      style: Theme.of(context).textTheme.button,
+                    ),
                     onPressed: () {
-                      /*
-                showDialog(
-                  context: context,
-                  builder: (_) => CamPortal(user),
-                );
-                */
+                      MaterialPageRoute route =
+                          MaterialPageRoute(builder: (context) {
+                        return CalendarStatus(user);
+                      });
+                      Navigator.of(context).push(route);
                     },
                   )
-                IconButton(
-                    icon: Icon(Icons.alarm),
-                    onPressed: () {},
-                  )
-                  */
-          ],
-        ),
-        floatingActionButton: RaisedButton(
-          child: Text(
-            "View Status",
-            style: Theme.of(context).textTheme.button,
-          ),
-          onPressed: () {
-            MaterialPageRoute route = MaterialPageRoute(builder: (context) {
-              return CalendarStatus(user);
-            });
-            Navigator.of(context).push(route);
-          },
-        ),
-        //Displays 7 snapshots of the awaiting table, and thus showing 7 cards
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(0, 18, 0, 30),
-          child: FirebaseAnimatedList(
-              query: _database1.orderByKey().limitToFirst(7).startAt(dates[0]),
-              itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                  Animation<double> animation, int i) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[showCard(snapshot, i)],
-                  ),
-                );
-              }),
-        ));
+                : null,
+            //Displays 7 snapshots of the awaiting table, and thus showing 7 cards
+            body: Stack(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 18, 0, 30),
+                  child: FirebaseAnimatedList(
+                      physics: isConfirmed == false
+                          ? AlwaysScrollableScrollPhysics()
+                          : NeverScrollableScrollPhysics(),
+                      query: _database1
+                          .orderByKey()
+                          .limitToFirst(7)
+                          .startAt(dates[0]),
+                      itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                          Animation<double> animation, int i) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[showCard(snapshot, i)],
+                          ),
+                        );
+                      }),
+                ),
+                isConfirmed == false
+                    ? Container()
+                    : Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                          child: GestureDetector(
+                            child: FlashingCam(),
+                            onTap: () {
+                              _showButton();
+
+                              CamPortalValidation.toWebcam(
+                                  CamPortalValidation.camCredentialModel,
+                                  context);
+                            },
+                          ),
+                        ),
+                      )
+              ],
+            ));
+      },
+    );
   }
 
   Widget showCard(DataSnapshot dateSnapshot, int i) {

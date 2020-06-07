@@ -7,7 +7,6 @@ import 'package:study_buddy/model/firebase_database_util.dart';
 import 'package:study_buddy/model/BaseAuth.dart';
 import 'package:study_buddy/data/data.dart';
 import 'dart:async';
-import 'Peer2Stranger/cam.dart';
 
 ///Cam Portal
 class CamPortal extends StatefulWidget {
