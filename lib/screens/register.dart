@@ -63,13 +63,17 @@ class _RegisterState extends State<Register> {
           "School Name": User.schoolName,
           "School Email": User.schoolEmail
         });
+        
       } else {
         databaseReference.collection("Users").document(User.email).setData({
           'First Name': User.fName,
           'Last Name': User.lName,
           'Reason For Joining': User.reason,
           "Show Get Started": User.showGetStarted.toString(),
+          "School Name": "",
+          "School Email": ""
         });
+    
       }
     } else {
       _scaffoldKey.currentState.showSnackBar(SnackBar(

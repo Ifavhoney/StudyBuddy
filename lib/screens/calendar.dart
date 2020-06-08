@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:study_buddy/helpers/debug_helper.dart';
+import 'package:study_buddy/screens/AddFriends/Navigation.dart';
 import 'package:study_buddy/screens/webcam/Peer2Stranger/cam.dart';
 
+import 'login.dart';
 import 'webcam/camPortal.dart';
 import 'package:study_buddy/model/BaseAuth.dart';
 import 'calendarPortal.dart';
@@ -89,6 +91,25 @@ class _CalendarState extends State<Calendar> {
           title: Text("Calendar"),
           actions: <Widget>[
             IconButton(
+              icon: Icon(Icons.time_to_leave),
+              onPressed: (){
+                Auth().signOut();
+                MaterialPageRoute route =
+                    MaterialPageRoute(builder: (context) => Login());
+                Navigator.of(context).pop(route);
+              },
+
+            ),
+            IconButton(
+              icon: Icon(Icons.person),
+              onPressed: (){
+                MaterialPageRoute route =
+                    MaterialPageRoute(builder: (context) => NavigationPage());
+                Navigator.of(context).push(route);
+              },
+
+            ),
+            IconButton(
               icon: Icon(Icons.videocam),
               onPressed: () {
                 //Does something
@@ -97,7 +118,7 @@ class _CalendarState extends State<Calendar> {
                   builder: (_) => CamPortal(user),
                 );
               },
-            )
+            ), 
           ],
         ),
         floatingActionButton: RaisedButton(
