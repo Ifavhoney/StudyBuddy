@@ -10,6 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:study_buddy/model/calendar/Appointments/awaiting.dart';
 import 'package:study_buddy/model/calendar/Appointments/confirmed.dart';
 import 'package:study_buddy/model/firebase_database_util.dart';
+import 'package:study_buddy/service/timeHelperService.dart';
+import 'package:timezone/timezone.dart';
 
 class CalendarPortal extends StatefulWidget {
   final String selectedDate;
@@ -22,7 +24,7 @@ class CalendarPortal extends StatefulWidget {
 
 class _CalendarPortalState extends State<CalendarPortal>
     with SingleTickerProviderStateMixin {
-  int _radioValue1 = 0;
+  int _selection = 0;
   String child1 = 'Peer2Strangers';
   String child2 = 'Appointments';
   String child3 = 'Awaiting';
@@ -83,10 +85,10 @@ class _CalendarPortalState extends State<CalendarPortal>
     super.initState();
 
     controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
     //CurvedAnimation makes Animations smoother (think curve graph as oppose to linear)
     scaleAnimation =
-        CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
+        CurvedAnimation(parent: controller, curve: Curves.easeInExpo);
     //Calls the animation whenever an animation changes - Set state rebuilds
     controller.addListener(() {
       setState(() {});
@@ -103,15 +105,30 @@ class _CalendarPortalState extends State<CalendarPortal>
     databaseUtil.dispose();
   }
 
+  Widget _handleSelection() {
+    switch (_selection) {
+      case 0:
+        return intro();
+        break;
+
+      case 1:
+        return selectTime();
+        break;
+      default:
+        return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    callRandNumber();
+    TimeHelperService().convertLocalToDetroit();
+
     return Center(
-      child: Material(color: Colors.transparent, child: selectTimeZone()),
+      child: Material(color: Colors.transparent, child: _handleSelection()),
     );
   }
 
-  Widget selectTimeZone() {
+  Widget intro() {
     return ScaleTransition(
       scale: scaleAnimation,
       child: Padding(
@@ -146,13 +163,43 @@ class _CalendarPortalState extends State<CalendarPortal>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        RaisedButton(
-                          child: Text(
-                            "Yes",
-                            style: Theme.of(context).textTheme.button,
+                        ButtonTheme(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 4.0,
+                              horizontal: 8.0), //adds padding inside the button
+                          minWidth: 40, //wraps child's width
+                          buttonColor: Theme.of(context).errorColor,
+                          child: RaisedButton(
+                            child: Text(
+                              "No",
+                              style: Theme.of(context).textTheme.button,
+                            ),
+                            onPressed: () {
+                              //Send them to settings
+                            },
                           ),
-                          onPressed: () {},
-                        )
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        ButtonTheme(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 4.0,
+                              horizontal: 8.0), //adds padding inside the button
+                          minWidth: 100, //wraps child's width
+                          buttonColor: Theme.of(context).buttonColor,
+                          child: RaisedButton(
+                            child: Text(
+                              "Yes",
+                              style: Theme.of(context).textTheme.button,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _selection = 1;
+                              });
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -160,6 +207,8 @@ class _CalendarPortalState extends State<CalendarPortal>
       ),
     );
   }
+
+  //Widget select
 
   Widget selectTime() {
     return ScaleTransition(
