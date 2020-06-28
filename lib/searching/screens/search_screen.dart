@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class SearchScreen extends StatefulWidget {
   SearchScreen({Key key}) : super(key: key);
@@ -17,7 +16,9 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       body: Center(
         child: Container(
-          child: Text("hello"),
+          child: Text(
+            "hello",
+          ),
         ),
       ),
       backgroundColor: Colors.white,
@@ -33,9 +34,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   height: 90,
                   decoration: BoxDecoration(boxShadow: [
                     BoxShadow(
-                        color: Color(0xff6F8BA4),
+                        color: Colors.grey.shade400,
                         blurRadius: 10,
-                        spreadRadius: -2)
+                        spreadRadius: 2)
                   ]),
                   child: Container(
                     color: Colors.white,
@@ -44,27 +45,45 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Material(
-                            color: Colors.white,
-                            child: Icon(
+                          IconButton(
+                            icon: Icon(
                               Icons.settings,
                               color: Color(0xFF6F8BA4),
                               size: 40,
                             ),
+                            onPressed: () {
+                              setState(() {
+                                _currentIndex = 0;
+                              });
+                            },
                           ),
                           Container(),
                           Container(),
                           Container(),
                           Container(),
-                          Icon(
-                            Icons.people,
-                            color: Color(0xFF6F8BA4),
-                            size: 40,
+                          IconButton(
+                            icon: Icon(
+                              Icons.people,
+                              color: Color(0xFF6F8BA4),
+                              size: 40,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _currentIndex = 2;
+                              });
+                            },
                           ),
-                          Icon(
-                            Icons.today,
-                            color: Color(0xFF6F8BA4),
-                            size: 40,
+                          IconButton(
+                            icon: Icon(
+                              Icons.today,
+                              color: Color(0xFF6F8BA4),
+                              size: 40,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _currentIndex = 3;
+                              });
+                            },
                           ),
                         ],
                       ),
@@ -73,38 +92,50 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             ),
-            Positioned(
-                child: Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 40),
-                child: Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xFF8BB1FB),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0xff6F8BA4),
-                            blurRadius: 10,
-                            spreadRadius: -2)
-                      ]),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Icon(
-                      Icons.search,
-                      size: 40,
-                      color: Colors.white,
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _currentIndex = 1;
+                });
+              },
+              child: Positioned(
+                  child: Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 40),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF8BB1FB),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black,
+                              blurRadius: 8,
+                              spreadRadius: -2)
+                        ]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Icon(
+                        Icons.search,
+                        size: 40,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            )),
+              )),
+            ),
             Positioned(
                 child: Align(
               alignment: Alignment.bottomRight,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("Bud"),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                child: Text("Buddy",
+                    style: TextStyle(
+                        fontFamily: "Nexa",
+                        fontSize: 14,
+                        color: Color(0xFFB9D1FF))),
               ),
             )),
 
