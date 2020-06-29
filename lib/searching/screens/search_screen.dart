@@ -16,8 +16,12 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       body: Center(
         child: Container(
-          child: Text(
-            "hello",
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.mic,
+            size: 100,
           ),
         ),
       ),
@@ -92,38 +96,39 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _currentIndex = 1;
-                });
-              },
-              child: Positioned(
-                  child: Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 40),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFF8BB1FB),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black,
-                              blurRadius: 8,
-                              spreadRadius: -2)
-                        ]),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Icon(
-                        Icons.search,
-                        size: 40,
-                        color: Colors.white,
+            Positioned(
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _currentIndex = 1;
+                  });
+                },
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 40),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xFF8BB1FB),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black,
+                                blurRadius: 8,
+                                spreadRadius: -2)
+                          ]),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Icon(
+                          Icons.search,
+                          size: 40,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              )),
+              ),
             ),
             Positioned(
                 child: Align(
