@@ -13,20 +13,6 @@ class AppTheme {
     cardColor: Color(0xFFB9D1FF),
   );
 
-  static Map<String, Color> camIconColors = {
-    "cam": Color(0xFFC5D3E0),
-    "mic": Color(0xFFC5D3E0),
-    "person": Color(0xFFC5D3E0),
-    "switch": Color(0xFFC5D3E0),
-    "end": Color(0xFFD0021B),
-  };
-  static Map<String, Color> friendIconColors = {
-    "cam": Color(0xFFC5D3E0),
-    "mic": Color(0xFFC5D3E0),
-    "person": Color(0xFFC5D3E0),
-    "switch": Color(0xFFC5D3E0),
-    "end": Color(0xFFD0021B),
-  };
   static TextTheme segoeUi = Fonts.segoeUi;
   static TextTheme sfProText = Fonts.sfProText;
   static TextTheme nexa = Fonts.nexa;
