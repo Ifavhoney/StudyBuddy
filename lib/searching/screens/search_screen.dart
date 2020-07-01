@@ -1,3 +1,4 @@
+import 'package:buddy/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -110,7 +111,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(0xFF8BB1FB),
+                          color: Color(AppTheme.),
                           boxShadow: [
                             BoxShadow(
                                 color: Colors.black,

@@ -1,3 +1,4 @@
+import 'package:buddy/theme/colors/icon_colors.dart';
 import 'package:buddy/theme/fonts/fonts.dart';
 import 'package:flutter/material.dart';
 
@@ -17,5 +18,9 @@ class AppTheme {
   static TextTheme sfProText = Fonts.sfProText;
   static TextTheme nexa = Fonts.nexa;
 
+  static IconColors signupIcons = IconColors.;
   //cardTheme: CardTheme(color: );
+  void main(){
+   // AppTheme.segoeUi..
+  }
 }
