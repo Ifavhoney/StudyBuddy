@@ -1,3 +1,4 @@
+import 'package:buddy/theme/colors/icon_colors.dart';
 import 'package:buddy/theme/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -111,7 +112,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(AppTheme.),
+                          color: AppTheme.bottomNavigationBarIcons["search"],
                           boxShadow: [
                             BoxShadow(
                                 color: Colors.black,
@@ -137,16 +138,12 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: Text("Buddy",
-                    style: TextStyle(
-                        fontFamily: "Nexa",
-                        fontSize: 14,
-                        color: Color(0xFFB9D1FF))),
+                child: Text("Buddy", style: AppTheme.nexa.headline6),
               ),
             )),
 
             /*
-                Icon(
+                Icon( 
                   Icons.search,
                   color: Color(0xFF6F8BA4),
                   size: 35,
