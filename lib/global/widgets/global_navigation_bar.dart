@@ -1,3 +1,4 @@
+import 'package:buddy/global/widgets/global_box_container.dart';
 import 'package:buddy/theme/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -22,14 +23,12 @@ class _GlobalNavigationBarState extends State<GlobalNavigationBar> {
           Positioned(
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: Container(
-                height: 100,
-                decoration: BoxDecoration(boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.shade400,
-                      blurRadius: 10,
-                      spreadRadius: 2)
-                ]),
+              child: GlobalBoxContainer(
+                containerHeight: 100,
+                boxShadow: BoxShadow(
+                    color: Colors.grey.shade400,
+                    blurRadius: 10,
+                    spreadRadius: 2),
                 child: Container(
                   color: Colors.white,
                   child: Padding(
@@ -86,7 +85,6 @@ class _GlobalNavigationBarState extends State<GlobalNavigationBar> {
             child: Column(
               children: <Widget>[
                 Align(
-                  alignment: Alignment.topCenter,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 40),
                     child: Container(
