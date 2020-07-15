@@ -138,7 +138,9 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: Text("Buddy", style: AppTheme.nexa.headline6),
+                child: Text("Buddy",
+                    style: AppTheme.nexa.bodyText1
+                        .apply(color: Color(0xFFB9D1FF))),
               ),
             )),
 
