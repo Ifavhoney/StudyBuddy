@@ -1,4 +1,4 @@
-import 'package:buddy/searching/screens/search_screen.dart';
+import 'package:buddy/searching/screens/searching_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:buddy/theme/theme.dart';
 
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: AppTheme.mainTheme,
-      home: SearchScreen(),
+      home: SearchingScreen(),
     );
   }
 }

@@ -4,12 +4,12 @@ import 'package:buddy/global/widgets/static/global_navigation_bar.dart';
 import 'package:buddy/theme/theme.dart';
 import 'package:flutter/material.dart';
 
-class SearchScreen extends StatefulWidget {
+class WaitingScreen extends StatefulWidget {
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  _WaitingScreenState createState() => _WaitingScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _WaitingScreenState extends State<WaitingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
