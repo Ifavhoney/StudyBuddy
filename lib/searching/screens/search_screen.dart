@@ -1,5 +1,6 @@
-import 'package:buddy/global/widgets/global_box_container.dart';
-import 'package:buddy/global/widgets/global_navigation_bar.dart';
+import 'package:buddy/global/widgets/animation/global_falling_circle.dart';
+import 'package:buddy/global/widgets/static/global_box_container.dart';
+import 'package:buddy/global/widgets/static/global_navigation_bar.dart';
 import 'package:buddy/theme/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -13,13 +14,37 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(
-          children: <Widget>[
-            _searchBackround(),
-            _search(),
-          ],
-        ),
+            children: <Widget>[_searchBackround(), _search(), _allCircles()]),
         backgroundColor: Colors.white,
         bottomNavigationBar: GlobalNavigationBar());
+  }
+
+  Widget _circles() {
+    return GlobalFallingCircle(
+      durationInSeconds: 10,
+      heightOfDevice: MediaQuery.of(context).size.height,
+      widthOfDevice: MediaQuery.of(context).size.width,
+    );
+  }
+
+  Widget _allCircles() {
+    return Stack(
+      children: <Widget>[
+        _circles(),
+        _circles(),
+        _circles(),
+        _circles(),
+        _circles(),
+        _circles(),
+        _circles(),
+        _circles(),
+        _circles(),
+        _circles(),
+        _circles(),
+        _circles(),
+        _circles(),
+      ],
+    );
   }
 
   Widget _search() => Center(

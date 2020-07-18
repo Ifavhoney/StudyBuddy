@@ -7,12 +7,14 @@ class GlobalBoxContainer extends StatelessWidget {
   @required
   final Widget child;
   final double containerHeight;
+  final double containerWidth;
   final Color containerColor;
   final BoxShape boxShape;
 
   const GlobalBoxContainer(
       {Key key,
       this.containerHeight,
+      this.containerWidth,
       this.containerColor = Colors.white,
       this.boxShape = BoxShape.rectangle,
       this.boxShadow,
@@ -22,6 +24,7 @@ class GlobalBoxContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         height: containerHeight,
+        width: containerWidth,
         decoration: BoxDecoration(
             shape: boxShape, color: containerColor, boxShadow: [boxShadow]),
         child: child);

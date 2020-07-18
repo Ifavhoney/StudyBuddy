@@ -1,4 +1,4 @@
-import 'package:buddy/global/widgets/global_box_container.dart';
+import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/theme/theme.dart';
 import 'package:flutter/material.dart';
 
