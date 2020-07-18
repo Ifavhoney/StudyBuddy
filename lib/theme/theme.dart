@@ -2,6 +2,7 @@ import 'package:buddy/theme/colors/icon_colors.dart';
 import 'package:buddy/theme/fonts/fonts.dart';
 import 'package:flutter/material.dart';
 
+///@LastModifiedBy: Jason NGuessan
 /*
 Fonts are bigger on this app
 https://api.flutter.dev/flutter/material/TextTheme-class.html

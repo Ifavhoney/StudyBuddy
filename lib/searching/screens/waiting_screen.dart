@@ -1,9 +1,10 @@
-import 'package:buddy/global/widgets/animation/global_falling_circle.dart';
+import 'package:buddy/global/widgets/animation/global_falling_circles.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_navigation_bar.dart';
 import 'package:buddy/theme/theme.dart';
 import 'package:flutter/material.dart';
 
+///@LastModifiedBy: Jason NGuessan
 class WaitingScreen extends StatefulWidget {
   @override
   _WaitingScreenState createState() => _WaitingScreenState();
@@ -13,38 +14,17 @@ class _WaitingScreenState extends State<WaitingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-            children: <Widget>[_searchBackround(), _search(), _allCircles()]),
+        body: Stack(children: <Widget>[
+          _searchBackround(),
+          _search(),
+          GlobalFallingCircles(
+            durationInSeconds: 10,
+            heightOfDevice: MediaQuery.of(context).size.height,
+            widthOfDevice: MediaQuery.of(context).size.width,
+          )
+        ]),
         backgroundColor: Colors.white,
         bottomNavigationBar: GlobalNavigationBar());
-  }
-
-  Widget _circles() {
-    return GlobalFallingCircle(
-      durationInSeconds: 10,
-      heightOfDevice: MediaQuery.of(context).size.height,
-      widthOfDevice: MediaQuery.of(context).size.width,
-    );
-  }
-
-  Widget _allCircles() {
-    return Stack(
-      children: <Widget>[
-        _circles(),
-        _circles(),
-        _circles(),
-        _circles(),
-        _circles(),
-        _circles(),
-        _circles(),
-        _circles(),
-        _circles(),
-        _circles(),
-        _circles(),
-        _circles(),
-        _circles(),
-      ],
-    );
   }
 
   Widget _search() => Center(

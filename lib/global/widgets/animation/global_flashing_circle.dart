@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+///@LastModifiedBy: Jason NGuessan
 class GlobalFlashingCircle extends StatefulWidget {
   GlobalFlashingCircle({Key key}) : super(key: key);
 
@@ -15,22 +16,29 @@ class _GlobalFlashingCircleState extends State<GlobalFlashingCircle>
   Animation<double> _fadeInFadeOut;
   Animation<double> _fadeInFadeOut2;
 
+  AnimationController _createAnimationController(int seconds) {
+    return new AnimationController(
+      vsync: this,
+      duration: Duration(seconds: seconds),
+    );
+  }
+
+  Animation<double> _createFadeInTransition(
+      {AnimationController animationController, double begin, double end}) {
+    return new Tween<double>(begin: begin, end: end)
+        .animate(animationController);
+  }
+
   @override
   void initState() {
-    _animationController2 = new AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 1),
-    );
-    _fadeInFadeOut2 =
-        Tween<double>(begin: 1, end: 0.8).animate(_animationController2);
-    _animationController2.addStatusListener((status) {});
+    _animationController2 = _createAnimationController(1);
+    _fadeInFadeOut2 = _createFadeInTransition(
+        begin: 1, end: 0.5, animationController: _animationController2);
 
-    _animationController = new AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 2),
-    );
-    _fadeInFadeOut =
-        Tween<double>(begin: 1, end: 0.0).animate(_animationController);
+    _animationController = _createAnimationController(1);
+    _fadeInFadeOut = _createFadeInTransition(
+        begin: 1, end: 0, animationController: _animationController);
+
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _animationController.reverse();
@@ -49,7 +57,6 @@ class _GlobalFlashingCircleState extends State<GlobalFlashingCircle>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _animationController.dispose();
     _animationController2.dispose();
 
@@ -61,51 +68,50 @@ class _GlobalFlashingCircleState extends State<GlobalFlashingCircle>
     return Stack(
       children: <Widget>[
         _flashingCircle(
-            mainTransition: true,
+            transition: _fadeInFadeOut,
             scale: 1.2,
             boxShadowColor: Color(0xFFBCBCBC),
             boxShapeColor: Color(0xFFF5F7FB)),
         _flashingCircle(
-            mainTransition: false,
+            transition: _fadeInFadeOut2,
             scale: 2,
             boxShadowColor: Color(0xFFD8D8D8),
             boxShapeColor: Color(0xFFF3F8FC)),
-
-        /*
-        Center(
-          child: FadeTransition(
-            opacity: _fadeInFadeOut,
-            child: Container(
-              width: MediaQuery.of(context).size.width / 3.5,
-              height: MediaQuery.of(context).size.height / 3.5,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Color(0xFFE4F1FC)),
-              child: Text(" "),
-            ),
-          ),
-          
-        ),
-        */
+        _circle(
+            scale: 3.5,
+            boxShadowColor: Color(0xFFC5C5C5),
+            boxShapeColor: Color(0xFFE4F1FC))
       ],
     );
   }
 
   Widget _flashingCircle(
-          {bool mainTransition = true,
+          {Animation<double> transition,
           double scale,
           Color boxShapeColor,
           Color boxShadowColor}) =>
       Center(
         child: FadeTransition(
-          opacity: mainTransition == true ? _fadeInFadeOut : _fadeInFadeOut2,
-          child: Container(
-            width: MediaQuery.of(context).size.width / scale,
-            height: MediaQuery.of(context).size.height / scale,
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(color: boxShadowColor, blurRadius: 1, spreadRadius: -4)
-            ], shape: BoxShape.circle, color: boxShapeColor),
-            child: Text(" "),
-          ),
+            opacity: transition,
+            child: _circle(
+                scale: scale,
+                boxShadowColor: boxShadowColor,
+                boxShapeColor: boxShapeColor)),
+      );
+
+  Widget _circle(
+          {Animation<double> transition,
+          double scale,
+          Color boxShapeColor,
+          Color boxShadowColor}) =>
+      Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width / scale,
+          height: MediaQuery.of(context).size.height / scale,
+          decoration: BoxDecoration(boxShadow: [
+            BoxShadow(color: boxShadowColor, blurRadius: 1, spreadRadius: -4)
+          ], shape: BoxShape.circle, color: boxShapeColor),
+          child: Text(" "),
         ),
       );
 }

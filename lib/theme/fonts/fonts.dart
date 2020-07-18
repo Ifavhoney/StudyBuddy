@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+///@LastModifiedBy: Jason NGuessan
 class Fonts {
   static TextTheme segoeUi = TextTheme(
     headline1: TextStyle(

@@ -2,12 +2,13 @@ import 'dart:math';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:flutter/material.dart';
 
-///Use this with a stack widget
+///@LastModifiedBy: Jason NGuessan
 class GlobalFallingCircle extends StatefulWidget {
   final int durationInSeconds;
   final double heightOfDevice;
   final double widthOfDevice;
 
+  ///Use this with a stack widget or with GlobalFallingCircles
   GlobalFallingCircle(
       {Key key,
       @required this.durationInSeconds,
