@@ -1,7 +1,6 @@
-import 'package:buddy/global/widgets/animation/global_falling_circles.dart';
+import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
-import 'package:buddy/global/widgets/static/global_navigation_bar.dart';
-import 'package:buddy/theme/theme.dart';
+import 'package:buddy/global/widgets/static/global_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 ///@LastModifiedBy: Jason NGuessan
@@ -17,14 +16,16 @@ class _WaitingScreenState extends State<WaitingScreen> {
         body: Stack(children: <Widget>[
           _searchBackround(),
           _search(),
+          /*
           GlobalFallingCircles(
             durationInSeconds: 10,
             heightOfDevice: MediaQuery.of(context).size.height,
             widthOfDevice: MediaQuery.of(context).size.width,
           )
+          */
         ]),
         backgroundColor: Colors.white,
-        bottomNavigationBar: GlobalNavigationBar());
+        bottomNavigationBar: GlobalBottomNavigationBar());
   }
 
   Widget _search() => Center(

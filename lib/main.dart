@@ -1,6 +1,7 @@
-import 'package:buddy/searching/screens/searching_screen.dart';
+import 'package:buddy/global/theme/theme.dart';
+import 'package:buddy/layout/auth/screens/login.dart';
 import 'package:flutter/material.dart';
-import 'package:buddy/theme/theme.dart';
+import 'layout/searching/screens/searching_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: AppTheme.mainTheme,
-      home: SearchingScreen(),
+      home: Login(),
     );
   }
 }

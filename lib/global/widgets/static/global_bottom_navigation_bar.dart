@@ -1,16 +1,17 @@
+import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
-import 'package:buddy/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 ///@LastModifiedBy: Jason NGuessan
-class GlobalNavigationBar extends StatefulWidget {
-  GlobalNavigationBar({Key key}) : super(key: key);
+class GlobalBottomNavigationBar extends StatefulWidget {
+  GlobalBottomNavigationBar({Key key}) : super(key: key);
 
   @override
-  _GlobalNavigationBarState createState() => _GlobalNavigationBarState();
+  _GlobalBottomNavigationBarState createState() =>
+      _GlobalBottomNavigationBarState();
 }
 
-class _GlobalNavigationBarState extends State<GlobalNavigationBar> {
+class _GlobalBottomNavigationBarState extends State<GlobalBottomNavigationBar> {
   int _currentIndex = 0;
 
   @override

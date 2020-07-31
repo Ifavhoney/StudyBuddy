@@ -1,6 +1,7 @@
-import 'package:buddy/theme/colors/icon_colors.dart';
-import 'package:buddy/theme/fonts/fonts.dart';
+import 'package:buddy/global/theme/fonts/fonts.dart';
 import 'package:flutter/material.dart';
+
+import 'colors/icon_colors.dart';
 
 ///@LastModifiedBy: Jason NGuessan
 /*

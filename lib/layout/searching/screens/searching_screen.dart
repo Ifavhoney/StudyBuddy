@@ -1,4 +1,3 @@
-import 'package:buddy/global/widgets/animation/global_falling_circles.dart';
 import 'package:buddy/global/widgets/animation/global_flashing_circle.dart';
 
 import 'package:flutter/material.dart';
@@ -16,11 +15,13 @@ class _SearchingScreenState extends State<SearchingScreen> {
       body: Stack(children: <Widget>[
         GlobalFlashingCircle(),
         _mascot(),
+        /*
         GlobalFallingCircles(
           durationInSeconds: 10,
           heightOfDevice: MediaQuery.of(context).size.height,
           widthOfDevice: MediaQuery.of(context).size.width,
         )
+        */
       ]),
       backgroundColor: Colors.white,
     );
