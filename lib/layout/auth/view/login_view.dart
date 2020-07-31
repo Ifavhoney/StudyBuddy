@@ -1,6 +1,5 @@
+import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
-import "package:google_sign_in/google_sign_in.dart";
-import "package:firebase_auth/firebase_auth.dart";
 
 class LoginView extends StatelessWidget {
   @override
@@ -15,11 +14,11 @@ class LoginView extends StatelessWidget {
         children: <Widget>[
           RaisedButton(
             child: Text("Sign in with google"),
-            onPressed: () => _googleSignIn(),
+            onPressed: () => AuthController().signInWithGoogle(),
           ),
           RaisedButton(
               child: Text("Sign out with google"),
-              onPressed: () => FirebaseAuth.instance.signOut())
+              onPressed: () => AuthController().signOut())
         ],
       )),
     );

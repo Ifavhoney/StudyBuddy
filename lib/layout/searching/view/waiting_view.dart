@@ -4,12 +4,12 @@ import 'package:buddy/global/widgets/static/global_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 ///@LastModifiedBy: Jason NGuessan
-class WaitingScreen extends StatefulWidget {
+class WaitingView extends StatefulWidget {
   @override
-  _WaitingScreenState createState() => _WaitingScreenState();
+  _WaitingViewState createState() => _WaitingViewState();
 }
 
-class _WaitingScreenState extends State<WaitingScreen> {
+class _WaitingViewState extends State<WaitingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +38,7 @@ class _WaitingScreenState extends State<WaitingScreen> {
             child: Icon(
               Icons.search,
               size: 45,
-              color: AppTheme.searchingScreenIcons["search"].withOpacity(0.8),
+              color: AppTheme.searchingViewIcons["search"].withOpacity(0.8),
             ),
           ),
         ),

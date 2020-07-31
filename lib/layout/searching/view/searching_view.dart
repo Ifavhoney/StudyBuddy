@@ -3,12 +3,12 @@ import 'package:buddy/global/widgets/animation/global_flashing_circle.dart';
 import 'package:flutter/material.dart';
 
 ///@LastModifiedBy: Jason NGuessan
-class SearchingScreen extends StatefulWidget {
+class SearchingView extends StatefulWidget {
   @override
-  _SearchingScreenState createState() => _SearchingScreenState();
+  _SearchingViewState createState() => _SearchingViewState();
 }
 
-class _SearchingScreenState extends State<SearchingScreen> {
+class _SearchingViewState extends State<SearchingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

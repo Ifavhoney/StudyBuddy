@@ -71,12 +71,12 @@ class AppTheme {
   ///<summary>
   ///{}
   ///</summary>
-  static Map<String, Color> homeScreenIcons = IconColors.homeScreen;
+  static Map<String, Color> homeViewIcons = IconColors.homeView;
 
   ///<summary>
   ///"arrowBack": Color(0xFFE1C2EB)
   ///</summary>
-  static Map<String, Color> loginScreenIcons = IconColors.loginScreen;
+  static Map<String, Color> loginViewIcons = IconColors.loginView;
 
   ///<summary>
   ///
@@ -84,7 +84,7 @@ class AppTheme {
   ///
   ///"add": Color(0xFF707070)
   ///</summary>
-  static Map<String, Color> signupScreenIcons = IconColors.signupScreen;
+  static Map<String, Color> signupViewIcons = IconColors.signupView;
 
   ///<summary>
   ///
@@ -92,8 +92,7 @@ class AppTheme {
   ///
   ///"add": Color(0xFF707070)
   ///</summary>
-  static Map<String, Color> preferenceScreenIcons =
-      IconColors.preferencesScreen;
+  static Map<String, Color> preferenceViewIcons = IconColors.preferencesView;
 
   ///<summary>
   ///
@@ -109,7 +108,7 @@ class AppTheme {
   ///
   ///end": Color(0xFFD0021B)
   ///</summary>
-  static Map<String, Color> camScreenIcons = IconColors.camScreen;
+  static Map<String, Color> camViewIcons = IconColors.camView;
 
   ///<summary>
   ///
@@ -121,7 +120,7 @@ class AppTheme {
   ///
   ///"add": Color(0xFF504DE5)
   ///</summary>
-  static Map<String, Color> audioScreenIcons = IconColors.audioScreen;
+  static Map<String, Color> audioViewIcons = IconColors.audioView;
 
   ///<summary>
   ///
@@ -135,20 +134,20 @@ class AppTheme {
   ///
   ///"search": Color(0xFFC6C6C6)
   ///</summary>
-  static Map<String, Color> friendScreenIcons = IconColors.friendScreen;
+  static Map<String, Color> friendViewIcons = IconColors.friendView;
 
   ///<summary>
   ///
   ///"logout": Color(0xFF504DE5)
   ///
   ///</summary>
-  static Map<String, Color> settingsScreenIcons = IconColors.settingsScreen;
+  static Map<String, Color> settingsViewIcons = IconColors.settingsView;
 
   ///<summary>
   ///
   ///"search": Color(0xFF737BCE)
   ///</summary>
-  static Map<String, Color> searchingScreenIcons = IconColors.searchingScreen;
+  static Map<String, Color> searchingViewIcons = IconColors.searchingView;
 
   ///<summary>
   ///

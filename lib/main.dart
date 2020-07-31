@@ -1,5 +1,5 @@
 import 'package:buddy/global/theme/theme.dart';
-import 'package:buddy/layout/auth/screens/login_screen.dart';
+import 'package:buddy/layout/auth/view/login_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: AppTheme.mainTheme,
-      home: LoginScreen(),
+      home: LoginView(),
     );
   }
 }
