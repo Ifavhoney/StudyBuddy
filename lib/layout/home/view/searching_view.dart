@@ -1,5 +1,7 @@
 import 'package:buddy/global/widgets/animation/global_flashing_circle.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
+import 'package:buddy/layout/webcam/controller/cam_controller.dart';
+import 'package:buddy/layout/webcam/model/cam_model.dart';
 
 import 'package:flutter/material.dart';
 
@@ -29,6 +31,7 @@ class _SearchingViewState extends State<SearchingView> {
       body: Stack(children: <Widget>[
         GlobalFlashingCircle(),
         _mascot(),
+
         /*
         GlobalFallingCircles(
           durationInSeconds: 10,
@@ -41,11 +44,15 @@ class _SearchingViewState extends State<SearchingView> {
     );
   }
 
-  Widget _mascot() => Center(
-        child: Image.asset(
-          "assets/images/mascot.png",
-          fit: BoxFit.scaleDown,
-          height: MediaQuery.of(context).size.height / 14,
+  Widget _mascot() => GestureDetector(
+        onTap: () => CamController.toWebcam(
+            CamModel(channelName: "1", endTime: "09:15"), context),
+        child: Center(
+          child: Image.asset(
+            "assets/images/mascot.png",
+            fit: BoxFit.scaleDown,
+            height: MediaQuery.of(context).size.height / 14,
+          ),
         ),
       );
 }

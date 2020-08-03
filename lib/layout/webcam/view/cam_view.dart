@@ -151,6 +151,7 @@ class _CamState extends State<CamView> {
   //Create an Agora Instance given the App_ID & start video
   Future<void> _initAgoraRtcEngine() async {
     await AgoraRtcEngine.create(Keys.AGORA_ID);
+
     await AgoraRtcEngine.enableVideo();
   }
 
@@ -271,6 +272,7 @@ class _CamState extends State<CamView> {
 
   ///tooblar represents our icon
   Widget _tooblar() {
+    print(_infoStrings);
     return Container(
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.symmetric(vertical: 48),
