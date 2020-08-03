@@ -1,10 +1,13 @@
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_bottom_navigation_bar.dart';
+import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:flutter/material.dart';
 
 ///@LastModifiedBy: Jason NGuessan
 class WaitingView extends StatefulWidget {
+  static const routeName = '/waiting_view';
+
   @override
   _WaitingViewState createState() => _WaitingViewState();
 }
@@ -28,17 +31,20 @@ class _WaitingViewState extends State<WaitingView> {
         bottomNavigationBar: GlobalBottomNavigationBar());
   }
 
-  Widget _search() => Center(
-        child: GlobalBoxContainer(
-          boxShape: BoxShape.circle,
-          boxShadow: BoxShadow(
-              color: Color(0xFF737BCE), blurRadius: 8, spreadRadius: -2),
-          child: Padding(
-            padding: const EdgeInsets.all(23.0),
-            child: Icon(
-              Icons.search,
-              size: 45,
-              color: AppTheme.searchingViewIcons["search"].withOpacity(0.8),
+  Widget _search() => GestureDetector(
+        onTap: () => Navigator.of(context).pushNamed(SearchingView.routeName),
+        child: Center(
+          child: GlobalBoxContainer(
+            boxShape: BoxShape.circle,
+            boxShadow: BoxShadow(
+                color: Color(0xFF737BCE), blurRadius: 8, spreadRadius: -2),
+            child: Padding(
+              padding: const EdgeInsets.all(23.0),
+              child: Icon(
+                Icons.search,
+                size: 45,
+                color: AppTheme.searchingViewIcons["search"].withOpacity(0.8),
+              ),
             ),
           ),
         ),
