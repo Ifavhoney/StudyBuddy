@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:flutter/material.dart';
@@ -30,44 +31,6 @@ class _GlobalFallingCircleState extends State<GlobalFallingCircle>
   int _rightPosition;
 
   @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-        duration:
-            Duration(seconds: Random().nextInt(widget.durationInSeconds) + 1),
-        vsync: this);
-    _animation = Tween<double>(begin: 0, end: widget.heightOfDevice).animate(
-        _controller)
-      ..addListener(() {
-        //  print(animation.value);
-        setState(() {});
-        if (_animation.isCompleted) {
-          _controller.reset();
-          Future.delayed(Duration(seconds: Random().nextInt(2)), () {
-            _controller.forward();
-          });
-          _controller.duration =
-              Duration(seconds: Random().nextInt(widget.durationInSeconds) + 1);
-
-          _rightPosition = Random().nextInt(widget.widthOfDevice.floor());
-          _color = Color((Random().nextDouble() * 0xFFFFFF).toInt())
-              .withOpacity(1.0);
-        }
-      });
-
-    _controller.forward();
-
-    _rightPosition = Random().nextInt(widget.widthOfDevice.floor());
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return _dots();
   }
@@ -86,5 +49,45 @@ class _GlobalFallingCircleState extends State<GlobalFallingCircle>
         child: Text(" "),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    int seconds = Platform.isAndroid == true ? 20 : 1;
+    super.initState();
+
+    _controller = AnimationController(
+        duration: Duration(
+            seconds: Random().nextInt(widget.durationInSeconds) + seconds),
+        vsync: this);
+    _animation =
+        Tween<double>(begin: 0, end: widget.heightOfDevice).animate(_controller)
+          ..addListener(() {
+            //  print(animation.value);
+            setState(() {});
+            if (_animation.isCompleted) {
+              _controller.reset();
+              Future.delayed(Duration(seconds: Random().nextInt(2)), () {
+                _controller.forward();
+              });
+              _controller.duration = Duration(
+                  seconds:
+                      Random().nextInt(widget.durationInSeconds) + seconds);
+
+              _rightPosition = Random().nextInt(widget.widthOfDevice.floor());
+              _color = Color((Random().nextDouble() * 0xFFFFFF).toInt())
+                  .withOpacity(1.0);
+            }
+          });
+
+    _controller.forward();
+
+    _rightPosition = Random().nextInt(widget.widthOfDevice.floor());
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

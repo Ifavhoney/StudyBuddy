@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 ///@LastModifiedBy: Jason NGuessan
@@ -15,53 +17,6 @@ class _GlobalFlashingCircleState extends State<GlobalFlashingCircle>
 
   Animation<double> _fadeInFadeOut;
   Animation<double> _fadeInFadeOut2;
-
-  AnimationController _createAnimationController(int seconds) {
-    return new AnimationController(
-      vsync: this,
-      duration: Duration(seconds: seconds),
-    );
-  }
-
-  Animation<double> _createFadeInTransition(
-      {AnimationController animationController, double begin, double end}) {
-    return new Tween<double>(begin: begin, end: end)
-        .animate(animationController);
-  }
-
-  @override
-  void initState() {
-    _animationController2 = _createAnimationController(1);
-    _fadeInFadeOut2 = _createFadeInTransition(
-        begin: 1, end: 0.5, animationController: _animationController2);
-
-    _animationController = _createAnimationController(1);
-    _fadeInFadeOut = _createFadeInTransition(
-        begin: 1, end: 0, animationController: _animationController);
-
-    _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _animationController.reverse();
-        _animationController2.forward();
-      } else if (status == AnimationStatus.dismissed) {
-        _animationController.forward();
-        _animationController2.reverse();
-      }
-    });
-
-    _animationController.forward();
-    _animationController2.forward();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _animationController2.dispose();
-
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,4 +69,53 @@ class _GlobalFlashingCircleState extends State<GlobalFlashingCircle>
           child: Text(" "),
         ),
       );
+
+  AnimationController _createAnimationController(int seconds) {
+    return new AnimationController(
+      vsync: this,
+      duration: Duration(seconds: seconds),
+    );
+  }
+
+  Animation<double> _createFadeInTransition(
+      {AnimationController animationController, double begin, double end}) {
+    return new Tween<double>(begin: begin, end: end)
+        .animate(animationController);
+  }
+
+  @override
+  void initState() {
+    //bug with IOS, for some reason the seconds are not the same
+    int seconds = Platform.isAndroid == true ? 20 : 1;
+    _animationController2 = _createAnimationController(seconds);
+    _fadeInFadeOut2 = _createFadeInTransition(
+        begin: 1, end: 0.5, animationController: _animationController2);
+
+    _animationController = _createAnimationController(seconds);
+    _fadeInFadeOut = _createFadeInTransition(
+        begin: 1, end: 0, animationController: _animationController);
+
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _animationController.reverse();
+        _animationController2.forward();
+      } else if (status == AnimationStatus.dismissed) {
+        _animationController.forward();
+        _animationController2.reverse();
+      }
+    });
+
+    _animationController.forward();
+    _animationController2.forward();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _animationController2.dispose();
+
+    super.dispose();
+  }
 }

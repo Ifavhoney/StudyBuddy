@@ -26,67 +26,6 @@ class _CamState extends State<CamView> {
   Timer _primaryTimer;
   Timer _secondaryTimer;
 
-  //dispose() is called when the State object is removed
-  @override
-  void dispose() {
-    super.dispose();
-    _users.clear();
-
-    if (_primaryTimer.isActive == false) {
-      _secondaryTimer.cancel();
-    }
-    if (_primaryTimer.isActive) {
-      _primaryTimer.cancel();
-    }
-
-    AgoraRtcEngine.leaveChannel();
-    AgoraRtcEngine.destroy();
-  }
-
-  @override
-  void initState() {
-    _min = widget.duration;
-    startPrimaryTimer();
-
-    super.initState();
-    initialize();
-  }
-
-  void startPrimaryTimer() {
-    _primaryTimer = Timer.periodic(Duration(minutes: 1), (Timer timer) {
-      if (_min < 2) {
-        _primaryTimer.cancel();
-        setState(() {
-          _start = 60;
-        });
-        startSecondaryTimer();
-      } else {
-        setState(() {
-          _min = _min - 1;
-        });
-      }
-    });
-
-    //return new Timer(duration, endTimer);
-  }
-
-  void startSecondaryTimer() {
-    _secondaryTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-      if (_start < 1) {
-        _secondaryTimer.cancel();
-        Navigator.of(context).pop();
-      } else {
-        setState(() {
-          _start = _start - 1;
-        });
-      }
-    });
-
-    //return new Timer(duration, endTimer);
-  }
-
-  endTimer() {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -335,4 +274,65 @@ class _CamState extends State<CamView> {
   void _onSwitchCamera() {
     AgoraRtcEngine.switchCamera();
   }
+
+  @override
+  void initState() {
+    _min = widget.duration;
+    startPrimaryTimer();
+
+    super.initState();
+    initialize();
+  }
+
+  //dispose() is called when the State object is removed
+  @override
+  void dispose() {
+    super.dispose();
+    _users.clear();
+
+    if (_primaryTimer.isActive == false) {
+      _secondaryTimer.cancel();
+    }
+    if (_primaryTimer.isActive) {
+      _primaryTimer.cancel();
+    }
+
+    AgoraRtcEngine.leaveChannel();
+    AgoraRtcEngine.destroy();
+  }
+
+  void startPrimaryTimer() {
+    _primaryTimer = Timer.periodic(Duration(minutes: 1), (Timer timer) {
+      if (_min < 2) {
+        _primaryTimer.cancel();
+        setState(() {
+          _start = 60;
+        });
+        startSecondaryTimer();
+      } else {
+        setState(() {
+          _min = _min - 1;
+        });
+      }
+    });
+
+    //return new Timer(duration, endTimer);
+  }
+
+  void startSecondaryTimer() {
+    _secondaryTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      if (_start < 1) {
+        _secondaryTimer.cancel();
+        Navigator.of(context).pop();
+      } else {
+        setState(() {
+          _start = _start - 1;
+        });
+      }
+    });
+
+    //return new Timer(duration, endTimer);
+  }
+
+  endTimer() {}
 }
