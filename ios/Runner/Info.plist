@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<string>en</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -20,18 +20,15 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-
+	
 	<key>NSCameraUsageDescription</key>
-	<string>camera</string>
-	<key>NSContactsUsageDescription</key>
+	<string>The app tries to use your camera</string>
+		<key>NSContactsUsageDescription</key>
 	<string>contacts</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>microphone</string>
-
-
-
+	<string>The app tries to use your microphone</string>
 	<key>LSRequiresIPhoneOS</key>
-	<true/>
+	<true/>	
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -49,10 +46,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	
-	<key>CFBundleURLTypes</key>
+  	<key>CFBundleURLTypes</key>
 <array>
 	<dict>
 		<key>CFBundleTypeRole</key>
@@ -65,6 +59,9 @@
 		</array>
 	</dict>
 </array>
-
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 </dict>
 </plist>
