@@ -31,9 +31,7 @@ class _GlobalFallingCircleState extends State<GlobalFallingCircle>
   int _rightPosition;
 
   @override
-  Widget build(BuildContext context) {
-    return _dots();
-  }
+  Widget build(BuildContext context) => _dots();
 
   Widget _dots() {
     return Positioned(

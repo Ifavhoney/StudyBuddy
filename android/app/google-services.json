@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "610079262652-c0vk9t7ggj8voupdcajmk7cfb8b9d93p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.studdyBuddyScreens",
+            "certificate_hash": "be1b126ebbab59ec925fe76de770840cfb6b0833"
+          }
+        },
+        {
           "client_id": "610079262652-1nhf2a01ltocoto7tmgr70hs0mlg95c8.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -32,7 +40,7 @@
               "client_type": 3
             },
             {
-              "client_id": "610079262652-ahcullrk2kfvuh04c3rbplevpfrdfhpv.apps.googleusercontent.com",
+              "client_id": "610079262652-hrn78ptprtk7obhv9pb2b6kde0fonkj4.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "social.buddy"
@@ -68,7 +76,7 @@
               "client_type": 3
             },
             {
-              "client_id": "610079262652-ahcullrk2kfvuh04c3rbplevpfrdfhpv.apps.googleusercontent.com",
+              "client_id": "610079262652-hrn78ptprtk7obhv9pb2b6kde0fonkj4.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "social.buddy"

@@ -2,6 +2,7 @@ import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/layout/auth/view/login_view.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
+import 'package:buddy/signInDemo.dart';
 import 'package:flutter/material.dart';
 
 void main() {

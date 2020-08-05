@@ -1,8 +1,9 @@
-import 'package:buddy/global/widgets/animation/global_falling_circles.dart';
+import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/widgets/animation/global_flashing_circle.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:buddy/layout/webcam/controller/cam_controller.dart';
 import 'package:buddy/layout/webcam/model/cam_model.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,9 @@ class SearchingView extends StatefulWidget {
 
 class _SearchingViewState extends State<SearchingView> {
   String user;
+  String child11 = "child1";
+
+  FirebaseDatabase database = new FirebaseDatabase();
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +26,32 @@ class _SearchingViewState extends State<SearchingView> {
       body: Stack(children: <Widget>[
         GlobalFlashingCircle(),
         _mascot(),
+        /*
         GlobalFallingCircles(
           durationInSeconds: 10,
           heightOfDevice: MediaQuery.of(context).size.height,
           widthOfDevice: MediaQuery.of(context).size.width,
         )
+        */
       ]),
       backgroundColor: Colors.white,
     );
+  }
+
+  @override
+  void initState() {
+    _funct();
+    super.initState();
+  }
+
+  _funct() async {
+    await AuthController().getCurrentUser().then((firebaseUser) {
+      this.user = firebaseUser.email.toString();
+    }).catchError((error) {
+      this.user = "dummy@gmail.com";
+      //Re login
+    });
+    DebugHelper.red("user is " + this.user);
   }
 
   Widget _mascot() => GestureDetector(
@@ -43,15 +65,4 @@ class _SearchingViewState extends State<SearchingView> {
           ),
         ),
       );
-
-  @override
-  void initState() {
-    AuthController().getCurrentUser().then((firebaseUser) {
-      this.user = firebaseUser.email.toString();
-    }).catchError((error) {
-      this.user = "dummy@gmail.com";
-      //Re login
-    });
-    super.initState();
-  }
 }
