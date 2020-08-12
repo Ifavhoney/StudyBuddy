@@ -16,21 +16,17 @@ class SearchingView extends StatefulWidget {
 
 class _SearchingViewState extends State<SearchingView> {
   String user;
-  String child11 = "child1";
 
   FirebaseDatabase database = new FirebaseDatabase();
 
   @override
   void initState() {
-    _funct();
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     //insert
-    DatabaseReference _ref = database.reference().child("user");
     /*
     _ref.push().set(<String, String>{
       "user": "some name",
@@ -41,7 +37,6 @@ class _SearchingViewState extends State<SearchingView> {
     // _ref.child("-MEWxIbDR1L_EGzxVplq").update({"user": "something else"});
 
     //delete
-    _ref.child("-MEWxIbDR1L_EGzxVplq").remove();
 
     return Scaffold(
       body: Stack(children: <Widget>[

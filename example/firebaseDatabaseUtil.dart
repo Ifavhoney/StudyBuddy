@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:buddy/debug/debug_helper.dart';
-import 'package:buddy/layout/home/model/user.dart';
 import 'package:firebase_database/firebase_database.dart';
+
+import 'user.dart';
 
 class FirebaseDatabaseUtil {
   //reference

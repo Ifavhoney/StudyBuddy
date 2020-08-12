@@ -3,8 +3,8 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
 import 'addUserDialog.dart';
-import 'layout/home/model/firebaseDatabaseUtil.dart';
-import 'layout/home/model/user.dart';
+import 'firebaseDatabaseUtil.dart';
+import 'user.dart';
 
 class UserDashboard extends StatefulWidget {
   @override

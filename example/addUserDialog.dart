@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'layout/home/model/user.dart';
+import 'user.dart';
 
 class AddUserDialog {
   final teName = TextEditingController();
