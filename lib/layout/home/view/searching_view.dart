@@ -21,7 +21,28 @@ class _SearchingViewState extends State<SearchingView> {
   FirebaseDatabase database = new FirebaseDatabase();
 
   @override
+  void initState() {
+    _funct();
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    //insert
+    DatabaseReference _ref = database.reference().child("user");
+    /*
+    _ref.push().set(<String, String>{
+      "user": "some name",
+    }).then((value) => DebugHelper.red("COMPLETE"));
+    */
+
+    //UPDATE
+    // _ref.child("-MEWxIbDR1L_EGzxVplq").update({"user": "something else"});
+
+    //delete
+    _ref.child("-MEWxIbDR1L_EGzxVplq").remove();
+
     return Scaffold(
       body: Stack(children: <Widget>[
         GlobalFlashingCircle(),
@@ -36,12 +57,6 @@ class _SearchingViewState extends State<SearchingView> {
       ]),
       backgroundColor: Colors.white,
     );
-  }
-
-  @override
-  void initState() {
-    _funct();
-    super.initState();
   }
 
   _funct() async {
