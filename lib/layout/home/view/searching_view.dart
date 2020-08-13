@@ -1,11 +1,17 @@
 import 'package:buddy/debug/debug_helper.dart';
+import 'package:buddy/global/config/config.dart';
 import 'package:buddy/global/widgets/animation/global_flashing_circle.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
+import 'package:buddy/layout/home/controller/search_controller.dart';
+import 'package:buddy/layout/home/model/search_model.dart';
+import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:buddy/layout/webcam/controller/cam_controller.dart';
 import 'package:buddy/layout/webcam/model/cam_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 ///@LastModifiedBy: Jason NGuessan
 class SearchingView extends StatefulWidget {
@@ -15,33 +21,27 @@ class SearchingView extends StatefulWidget {
 }
 
 class _SearchingViewState extends State<SearchingView> {
-  String user;
-
-  FirebaseDatabase database = new FirebaseDatabase();
+  FirebaseUser user;
+  SearchController searchController = new SearchController();
 
   @override
   void initState() {
+    user = Config.user;
+    searchController.initState();
+
+    searchController.addUserToAwaiting(
+      SearchModel(hasMatched: false, timer: 15, user: user.email),
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    //insert
-    /*
-    _ref.push().set(<String, String>{
-      "user": "some name",
-    }).then((value) => DebugHelper.red("COMPLETE"));
-    */
-
-    //UPDATE
-    // _ref.child("-MEWxIbDR1L_EGzxVplq").update({"user": "something else"});
-
-    //delete
-
     return Scaffold(
       body: Stack(children: <Widget>[
         GlobalFlashingCircle(),
         _mascot(),
+
         /*
         GlobalFallingCircles(
           durationInSeconds: 10,
@@ -52,16 +52,6 @@ class _SearchingViewState extends State<SearchingView> {
       ]),
       backgroundColor: Colors.white,
     );
-  }
-
-  _funct() async {
-    await AuthController().getCurrentUser().then((firebaseUser) {
-      this.user = firebaseUser.email.toString();
-    }).catchError((error) {
-      this.user = "dummy@gmail.com";
-      //Re login
-    });
-    DebugHelper.red("user is " + this.user);
   }
 
   Widget _mascot() => GestureDetector(

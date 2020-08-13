@@ -20,7 +20,9 @@ class AuthController implements BaseAuthModel {
 
   @override
   Future<FirebaseUser> getCurrentUser() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+    FirebaseUser user = await _firebaseAuth.currentUser().catchError((error) {
+      return "invalid";
+    });
     return user;
   }
 

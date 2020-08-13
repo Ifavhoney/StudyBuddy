@@ -6,7 +6,7 @@ class SearchModel {
   //waiting
   String key;
   String user;
-  String timer;
+  int timer;
   bool hasMatched;
 
   SearchModel({this.user, this.timer, this.hasMatched});

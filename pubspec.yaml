@@ -31,6 +31,7 @@ dependencies:
   firebase_database: ^3.1.1
   agora_rtc_engine: 1.0.5
   permission_handler: ^4.0.0
+  intl: ^0.16.0
 
   cloud_firestore: ^0.13.0+1
 

@@ -1,6 +1,10 @@
 import 'package:intl/intl.dart';
 
 class DateHelper {
+  ///Gets Datetime.now() in yyyy-MM-dd string format
+  static String currentDayInString() =>
+      DateFormat("yyyy-MM-dd").format(DateTime.now());
+
   ///Gets a list of days from now + int of days
   static List<String> days(int day) {
     int y = 0;
@@ -17,8 +21,8 @@ class DateHelper {
     return dates;
   }
 
-  //Gets endTime by increasing the current time by one hour
-  static String getEndTime(String time) {
+  ///Gets endTime by increasing the current time by one hour
+  static String getEndTimeByOneHour(String time) {
     List<String> splitTime;
     String endTime;
     splitTime = time.toString().split(":");
@@ -35,6 +39,7 @@ class DateHelper {
     return endTime;
   }
 
+  ///Gets the total minutes from now
   static int getTotalMinutesFromNow(List<String> splitEndTime) {
     Duration endTime = Duration(
         hours: int.parse(splitEndTime[0]), minutes: int.parse(splitEndTime[1]));
