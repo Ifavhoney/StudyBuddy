@@ -28,11 +28,14 @@ class _SearchingViewState extends State<SearchingView> {
   void initState() {
     user = Config.user;
     searchController.initState();
+    _func();
+    super.initState();
+  }
 
-    searchController.addUserToAwaiting(
+  _func() async {
+    await searchController.addUserToAwaiting(
       SearchModel(hasMatched: false, timer: 15, user: user.email),
     );
-    super.initState();
   }
 
   @override
