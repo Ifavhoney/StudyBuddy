@@ -1,3 +1,4 @@
+import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/layout/auth/model/base_auth_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,7 +22,7 @@ class AuthController implements BaseAuthModel {
   @override
   Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser user = await _firebaseAuth.currentUser().catchError((error) {
-      return "invalid";
+      return null;
     });
     return user;
   }
@@ -74,6 +75,7 @@ class AuthController implements BaseAuthModel {
             accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
         await _firebaseAuth.signInWithCredential(credential);
+        DebugHelper.green("user: " + account.email.toString());
       });
     }
   }

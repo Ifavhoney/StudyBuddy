@@ -1,17 +1,15 @@
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/config.dart';
+import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/animation/global_flashing_circle.dart';
-import 'package:buddy/layout/auth/controller/auth_controller.dart';
+import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:buddy/layout/home/controller/search_controller.dart';
-import 'package:buddy/layout/home/model/search_model.dart';
-import 'package:buddy/layout/home/view/waiting_view.dart';
+import 'package:buddy/layout/home/model/awaiting_model.dart';
 import 'package:buddy/layout/webcam/controller/cam_controller.dart';
 import 'package:buddy/layout/webcam/model/cam_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 ///@LastModifiedBy: Jason NGuessan
 class SearchingView extends StatefulWidget {
@@ -22,19 +20,22 @@ class SearchingView extends StatefulWidget {
 
 class _SearchingViewState extends State<SearchingView> {
   FirebaseUser user;
+  bool _slowAnimations = false;
+
   SearchController searchController = new SearchController();
 
   @override
   void initState() {
     user = Config.user;
-    searchController.initState();
     _func();
+    setState(() {});
     super.initState();
   }
 
   _func() async {
+    await searchController.initState();
     await searchController.addUserToAwaiting(
-      SearchModel(hasMatched: false, timer: 15, user: user.email),
+      AwaitingModel(hasMatched: false, timer: 15, user: user.email),
     );
   }
 
@@ -44,7 +45,8 @@ class _SearchingViewState extends State<SearchingView> {
       body: Stack(children: <Widget>[
         GlobalFlashingCircle(),
         _mascot(),
-
+        GlobalTrademarkText(),
+        _backArrow(),
         /*
         GlobalFallingCircles(
           durationInSeconds: 10,
@@ -68,4 +70,14 @@ class _SearchingViewState extends State<SearchingView> {
           ),
         ),
       );
+  Widget _backArrow() => Positioned.fill(
+          child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: AppTheme.searchingViewIcons["arrowBack"],
+            )),
+      ));
 }

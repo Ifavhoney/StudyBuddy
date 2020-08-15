@@ -21,6 +21,12 @@ class AppTheme {
     backgroundColor: Colors.white,
     accentColor: Color(0xFFF8FAFF),
     cardColor: Color(0xFFB9D1FF),
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: <TargetPlatform, PageTransitionsBuilder>{
+        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      },
+    ),
   );
 
   ///<summary>
@@ -146,6 +152,12 @@ class AppTheme {
   ///<summary>
   ///
   ///"search": Color(0xFF737BCE)
+  ///</summary>
+  static Map<String, Color> waitingViewIcons = IconColors.waitingView;
+
+  ///<summary>
+  ///
+  ///"arrowBack": Color(0xFFE1C2EB)
   ///</summary>
   static Map<String, Color> searchingViewIcons = IconColors.searchingView;
 

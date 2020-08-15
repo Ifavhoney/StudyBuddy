@@ -47,8 +47,11 @@ class IconColors {
     "logout": Color(0xFF504DE5),
   };
 
-  static Map<String, Color> searchingView = {
+  static Map<String, Color> waitingView = {
     "search": Color(0xFF737BCE),
+  };
+  static Map<String, Color> searchingView = {
+    "arrowBack": Color(0xFFE1C2EB),
   };
 
   static Map<String, Color> bottomNavigationBar = {

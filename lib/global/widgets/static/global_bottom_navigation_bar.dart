@@ -1,5 +1,6 @@
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
+import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:flutter/material.dart';
 
 ///@LastModifiedBy: Jason NGuessan
@@ -116,15 +117,7 @@ class _GlobalBottomNavigationBarState extends State<GlobalBottomNavigationBar> {
             )),
       );
 
-  Widget _buddy() => Positioned(
-          child: Align(
-        alignment: Alignment.bottomRight,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: Text("Buddy",
-              style: AppTheme.nexa.bodyText1.apply(color: Color(0xFFB9D1FF))),
-        ),
-      ));
+  Widget _buddy() => Positioned(child: GlobalTrademarkText());
 
   Widget _dot(int index) => _currentIndex == index
       ? Transform(
