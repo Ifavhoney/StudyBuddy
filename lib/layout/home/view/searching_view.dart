@@ -5,8 +5,8 @@ import 'package:buddy/global/widgets/animation/global_flashing_circle.dart';
 import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:buddy/layout/home/controller/search_controller.dart';
 import 'package:buddy/layout/home/model/awaiting_model.dart';
-import 'package:buddy/layout/webcam/controller/cam_controller.dart';
-import 'package:buddy/layout/webcam/model/cam_model.dart';
+import 'package:buddy/layout/rtc/controller/cam_controller.dart';
+import 'package:buddy/layout/rtc/model/cam_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -20,20 +20,17 @@ class SearchingView extends StatefulWidget {
 
 class _SearchingViewState extends State<SearchingView> {
   FirebaseUser user;
-  bool _slowAnimations = false;
-
   SearchController searchController = new SearchController();
 
   @override
   void initState() {
     user = Config.user;
     _func();
-    setState(() {});
     super.initState();
   }
 
   _func() async {
-    await searchController.initState();
+    await searchController.initState(context);
     await searchController.addUserToAwaiting(
       AwaitingModel(hasMatched: false, timer: 15, user: user.email),
     );

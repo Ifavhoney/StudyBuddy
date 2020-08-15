@@ -4,9 +4,12 @@ import 'dart:math';
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/config.dart';
 import 'package:buddy/global/helper/date_helper.dart';
+import 'package:buddy/layout/RTC/view/audio_view.dart';
+import 'package:buddy/layout/auth/view/login_view.dart';
 import 'package:buddy/layout/home/model/awaiting_model.dart';
 import 'package:buddy/layout/home/model/confirmed_model.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 
 class SearchController {
   //Childs in our database
@@ -22,7 +25,7 @@ class SearchController {
   factory SearchController() {
     return _instance;
   }
-  Future<void> initState() async {
+  Future<void> initState(BuildContext context) async {
     _searchRef =
         FirebaseDatabase.instance.reference().child("Home").child("Search");
 
@@ -35,6 +38,7 @@ class SearchController {
 
     _searchAwaitingSub = _searchAwaitingRef.onValue.listen((event) {
       Map<dynamic, dynamic> map = event.snapshot.value;
+
       if (map != null) {
         map.forEach((key, value) async {
           AwaitingModel awaitingModel = AwaitingModel.fromJson(key, value);
@@ -42,25 +46,42 @@ class SearchController {
           if (awaitingModel.hasMatched == false &&
               awaitingModel.user != Config.user.email) {
             //Finds un matched user & set to true to lock matching process
-
-            String user = awaitingModel.user;
-            DebugHelper.red("found user " + awaitingModel.user);
             awaitingModel.hasMatched = true;
-
-            await _searchAwaitingRef
-                .child(awaitingModel.key)
-                .set(awaitingModel.toJson());
-                
             await _searchAwaitingRef
                 .child(awaitingModel.key)
                 .set(awaitingModel.toJson());
 
-            ConfirmedModel confirmedModel = ConfirmedModel(
-                timer: awaitingModel.timer,
-                users: [awaitingModel.user, Config.user.email],
-                channelName: Random().nextInt(100000));
+            //Finds un matched user & set to true to lock matching process
+            getByKey(_searchAwaitingRef, "user", Config.user.email)
+                .then((DataSnapshot snapshot) async {
+              Map<dynamic, dynamic> map = snapshot.value;
+              if (map != null) {
+                map.forEach((key, value) async {
+                  awaitingModel = AwaitingModel.fromJson(key, value);
+                  awaitingModel.hasMatched = true;
+                  await _searchAwaitingRef
+                      .child(awaitingModel.key)
+                      .set(awaitingModel.toJson());
+                });
+              }
+              ConfirmedModel confirmedModel = ConfirmedModel(
+                  timer: awaitingModel.timer,
+                  users: [awaitingModel.user, Config.user.email],
+                  channelName: Random().nextInt(100000));
+              await addUsersToConfirmed(confirmedModel);
 
-            await addUsersToConfirmed(confirmedModel);
+              /*
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AudioView(
+                    channelName: "1",
+                  ),
+                ),
+              
+              );
+                */
+            });
           }
         });
       }
@@ -85,6 +106,11 @@ class SearchController {
         .limitToFirst(1)
         .once()
         .then((value) => DebugHelper.green("FB: Home/Search/Awaiting/Date"));
+
+    await _searchConfirmedRef
+        .limitToFirst(1)
+        .once()
+        .then((value) => DebugHelper.green("FB: Home/Search/Confirmed/Date"));
   }
 
   Future<void> addUserToAwaiting(AwaitingModel awaitingModel) async {
@@ -103,6 +129,8 @@ class SearchController {
 
       if (!(value.contains(Config.user.email))) {
         _searchConfirmedRef.push().set(confirmedModel.toJson());
+      } else {
+        //This user did not finish session
       }
     });
   }

@@ -1,5 +1,6 @@
 import 'package:buddy/global/config/config.dart';
 import 'package:buddy/global/theme/theme.dart';
+import 'package:buddy/layout/RTC/view/audio_view.dart';
 import 'package:buddy/layout/auth/view/login_view.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         LoginView.routeName: (ctx) => LoginView(),
         WaitingView.routeName: (ctx) => WaitingView(),
         SearchingView.routeName: (ctx) => SearchingView(),
+        AudioView.routeName: (ctx) => AudioView(),
       },
     );
   }

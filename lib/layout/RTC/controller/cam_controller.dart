@@ -1,6 +1,6 @@
 import 'package:buddy/global/helper/date_helper.dart';
-import 'package:buddy/layout/webcam/model/cam_model.dart';
-import 'package:buddy/layout/webcam/view/cam_view.dart';
+import 'package:buddy/layout/rtc/model/cam_model.dart';
+import 'package:buddy/layout/rtc/view/cam_view.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -8,7 +8,10 @@ class CamController {
   static List<String> dates = DateHelper.days(7);
   static bool foundTime = false;
 
-  static Future<void> toWebcam(CamModel camModel, BuildContext context) async {
+  static Future<void> toWebcam(
+      CamModel camModel,
+    BuildContext context,
+  ) async {
     //else if incorect . . .
     // errorText = null;
     print(camModel.channelName);
