@@ -32,6 +32,8 @@ dependencies:
   agora_rtc_engine: 1.0.5
   permission_handler: ^4.0.0
   intl: ^0.16.0
+  flutter_screenutil: ^1.1.0
+
 
   cloud_firestore: ^0.13.0+1
 
@@ -72,6 +74,11 @@ flutter:
        fonts:
          - asset: assets/fonts/Nexa-Bold.ttf
          - asset: assets/fonts/Nexa-Light.ttf
+
+     - family: SfProText
+       fonts:
+         - asset: assets/fonts/SF-Pro-Regular.ttf
+
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

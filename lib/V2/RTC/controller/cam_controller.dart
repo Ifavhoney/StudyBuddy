@@ -1,6 +1,7 @@
+import 'package:buddy/V2/RTC/model/cam_model.dart';
+import 'package:buddy/V2/RTC/view/cam_view.dart';
 import 'package:buddy/global/helper/date_helper.dart';
-import 'package:buddy/layout/rtc/model/cam_model.dart';
-import 'package:buddy/layout/rtc/view/cam_view.dart';
+
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 

@@ -50,6 +50,8 @@ class AppTheme {
   static TextTheme segoeUi = Fonts.segoeUi;
 
   ///<summary>
+  ///headline2: 40px, bold
+
   ///headline4: 24px, bold
   ///
   ///headline5: 22px, bold

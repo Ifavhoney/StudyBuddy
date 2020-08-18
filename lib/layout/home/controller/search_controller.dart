@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/config.dart';
 import 'package:buddy/global/helper/date_helper.dart';
-import 'package:buddy/layout/RTC/view/audio_view.dart';
 import 'package:buddy/layout/auth/view/login_view.dart';
 import 'package:buddy/layout/home/model/awaiting_model.dart';
 import 'package:buddy/layout/home/model/confirmed_model.dart';

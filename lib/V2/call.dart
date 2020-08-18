@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:buddy/global/keys/keys.dart';
 import 'package:flutter/material.dart';
 
-import 'global/keys/keys.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page

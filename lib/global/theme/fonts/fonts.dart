@@ -43,6 +43,11 @@ class Fonts {
   );
 
   static TextTheme sfProText = TextTheme(
+    headline2: TextStyle(
+      fontSize: 40,
+      fontFamily: "SfProText",
+      fontWeight: FontWeight.bold,
+    ),
     headline4: TextStyle(
       fontSize: 24,
       fontFamily: "SfProText",
