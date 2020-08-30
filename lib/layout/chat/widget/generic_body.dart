@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class GenericBody extends StatelessWidget {
+import 'package:dash_chat/dash_chat.dart';
+
+class GenericBody extends StatefulWidget {
   final String title;
   final Color titleBackgroundColor;
   final bool onPop;
-  const GenericBody({this.title, this.titleBackgroundColor, this.onPop});
+  final Widget body;
+  const GenericBody(
+      {this.title, this.titleBackgroundColor, this.onPop, this.body});
+  @override
+  _GenericBodyState createState() => _GenericBodyState();
+}
 
+class _GenericBodyState extends State<GenericBody> {
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -14,9 +22,9 @@ class GenericBody extends StatelessWidget {
         Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          color: titleBackgroundColor == null
+          color: widget.titleBackgroundColor == null
               ? Color(0XFF504DE5)
-              : titleBackgroundColor,
+              : widget.titleBackgroundColor,
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -27,6 +35,12 @@ class GenericBody extends StatelessWidget {
                 gradient: LinearGradient(
                     colors: [Color(0xFFF6F7FB), Color(0xfff6f7fb)])),
           ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+              height: MediaQuery.of(context).size.height / 1.3,
+              child: widget.body),
         ),
 
         //increase clickable area
@@ -52,13 +66,13 @@ class GenericBody extends StatelessWidget {
             top: 75.h,
             left: MediaQuery.of(context).size.width / 3.7,
             child: Align(
-              alignment: Alignment.bottomCenter,
+              alignment: Alignment.centerLeft,
               child: Padding(
                   padding: EdgeInsets.fromLTRB(80.h, 40.h, 10.h, 40.h),
                   child: Display(
                     color: Colors.white,
                     display: 1,
-                    text: title,
+                    text: widget.title,
                   )),
             )),
       ],

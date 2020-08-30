@@ -1,3 +1,4 @@
+import 'package:buddy/global/config/config.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,10 @@ class LoginView extends StatelessWidget {
         children: <Widget>[
           RaisedButton(
             child: Text("Sign in with google"),
-            onPressed: () => AuthController().signInWithGoogle().whenComplete(
-                () => Navigator.of(context).pushNamed(SearchingView.routeName)),
+            onPressed: () =>
+                AuthController().signInWithGoogle().whenComplete(() {
+              Navigator.of(context).pushNamed(SearchingView.routeName);
+            }),
           ),
           RaisedButton(
               child: Text("Sign out with google"),

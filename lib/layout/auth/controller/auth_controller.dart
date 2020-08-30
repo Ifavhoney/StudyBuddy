@@ -1,4 +1,5 @@
 import 'package:buddy/debug/debug_helper.dart';
+import 'package:buddy/global/config/config.dart';
 import 'package:buddy/layout/auth/model/base_auth_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +25,7 @@ class AuthController implements BaseAuthModel {
     FirebaseUser user = await _firebaseAuth.currentUser().catchError((error) {
       return null;
     });
+    Config.user = user;
     return user;
   }
 
@@ -76,6 +78,7 @@ class AuthController implements BaseAuthModel {
 
         await _firebaseAuth.signInWithCredential(credential);
         DebugHelper.green("user: " + account.email.toString());
+        getCurrentUser();
       });
     }
   }

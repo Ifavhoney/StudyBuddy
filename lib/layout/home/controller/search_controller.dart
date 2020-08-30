@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/config.dart';
 import 'package:buddy/global/helper/date_helper.dart';
-import 'package:buddy/layout/auth/view/login_view.dart';
+import 'package:buddy/layout/chat/models/chat_model.dart';
 import 'package:buddy/layout/home/model/awaiting_model.dart';
 import 'package:buddy/layout/home/model/confirmed_model.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -15,6 +15,7 @@ class SearchController {
   DatabaseReference _searchRef;
   DatabaseReference _searchAwaitingRef;
   DatabaseReference _searchConfirmedRef;
+  DatabaseReference _chatSearchRef;
 
   StreamSubscription<Event> _searchAwaitingSub;
 
@@ -27,10 +28,13 @@ class SearchController {
   Future<void> initState(BuildContext context) async {
     _searchRef =
         FirebaseDatabase.instance.reference().child("Home").child("Search");
+    _chatSearchRef =
+        FirebaseDatabase.instance.reference().child("Chat").child("Search");
 
+    // DateHelper.currentDayInString();
     _searchConfirmedRef = _searchRef.child("Confirmed").child("2020-08-14");
     _searchAwaitingRef = _searchRef.child("Awaiting").child("2020-08-14");
-
+    _chatSearchRef = _chatSearchRef.child("2020-08-14");
     await checkRefStatus();
 
     //Need to check if user is already in the room
@@ -63,11 +67,15 @@ class SearchController {
                       .set(awaitingModel.toJson());
                 });
               }
+
               ConfirmedModel confirmedModel = ConfirmedModel(
                   timer: awaitingModel.timer,
                   users: [awaitingModel.user, Config.user.email],
                   channelName: Random().nextInt(100000));
+              ChatModel chatModel = ChatModel(messages: [" ", " "]);
               await addUsersToConfirmed(confirmedModel);
+              print("created private event");
+              await createPrivateChat(confirmedModel.channelName, chatModel);
 
               /*
               Navigator.push(
@@ -110,6 +118,11 @@ class SearchController {
         .limitToFirst(1)
         .once()
         .then((value) => DebugHelper.green("FB: Home/Search/Confirmed/Date"));
+
+    await _chatSearchRef
+        .limitToFirst(1)
+        .once()
+        .then((value) => DebugHelper.green("FB: Chat/Search/Date"));
   }
 
   Future<void> addUserToAwaiting(AwaitingModel awaitingModel) async {
@@ -120,6 +133,16 @@ class SearchController {
         _searchAwaitingRef.push().set(awaitingModel.toJson());
       }
     });
+  }
+
+  Future<void> createPrivateChat(int channelName, ChatModel chatModel) async {
+    await _chatSearchRef.child(channelName.toString()).set(chatModel.toJson());
+  }
+
+  Future<void> deleteUserFromSearch(AwaitingModel awaitingModel) async {
+    //needs to be implemented
+    //await _searchAwaitingRef.child(awaitingModel.key).remove();
+    // await _searchAwaitingRef.child(awaitingModel.key).remove();
   }
 
   Future<void> addUsersToConfirmed(ConfirmedModel confirmedModel) async {

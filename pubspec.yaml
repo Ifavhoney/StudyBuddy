@@ -33,6 +33,7 @@ dependencies:
   permission_handler: ^4.0.0
   intl: ^0.16.0
   flutter_screenutil: ^1.1.0
+  dash_chat: ^1.1.14
 
 
   cloud_firestore: ^0.13.0+1
