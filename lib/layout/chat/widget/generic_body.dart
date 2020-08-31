@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:dash_chat/dash_chat.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GenericBody extends StatefulWidget {
   final String title;
@@ -17,6 +17,7 @@ class GenericBody extends StatefulWidget {
 class _GenericBodyState extends State<GenericBody> {
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context);
     return Stack(
       children: <Widget>[
         Container(

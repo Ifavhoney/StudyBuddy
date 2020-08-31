@@ -2,9 +2,12 @@ import 'package:buddy/layout/chat/widget/generic_body.dart';
 import 'package:flutter/material.dart';
 
 class ChatView extends StatefulWidget {
+  static const String routeName = "/chat_view";
+
+  final int channel;
   final String fromView;
 
-  const ChatView({Key key, this.fromView}) : super(key: key);
+  const ChatView({this.fromView, this.channel});
 
   @override
   _ChatViewState createState() => _ChatViewState();

@@ -1,4 +1,3 @@
-import 'package:buddy/global/config/config.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:flutter/material.dart';

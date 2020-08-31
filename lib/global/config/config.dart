@@ -1,4 +1,3 @@
-import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

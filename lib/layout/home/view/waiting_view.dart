@@ -15,7 +15,6 @@ class WaitingView extends StatefulWidget {
 class _WaitingViewState extends State<WaitingView> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
