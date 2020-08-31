@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:buddy/debug/debug_helper.dart';
@@ -23,20 +24,23 @@ class SearchController {
   DatabaseReference _searchAwaitingRef;
   DatabaseReference _searchConfirmedRef;
 
-  //Initialize Refs, and listeners
-  Future<void> initState(BuildContext context) async {
+  //initialize Refs
+  void initSearchRefs() {
     _searchRef =
         FirebaseDatabase.instance.reference().child("Home").child("Search");
-
     // DateHelper.currentDayInString();
     _searchConfirmedRef = _searchRef.child("Confirmed").child("2020-08-14");
     _searchAwaitingRef = _searchRef.child("Awaiting").child("2020-08-14");
+  }
 
-    await checkRefStatus();
-    await checkIfInConfirmed();
+  //Initialize Methods, and listeners
+  Future<void> initState(BuildContext context) async {
+    initSearchRefs();
+    await _checkRefStatus();
+
+
     _searchAwaitingRef.onValue.listen((event) {
       Map<dynamic, dynamic> map = event.snapshot.value;
-
       if (map != null) {
         map.forEach((key, value) async {
           AwaitingModel awaitingModel = AwaitingModel.fromJson(key, value);
@@ -44,6 +48,7 @@ class SearchController {
           if (awaitingModel.hasMatched == false &&
               awaitingModel.user != Config.user.email) {
             //Finds un matched user & set to true to lock matching process
+
             awaitingModel.hasMatched = true;
             await _searchAwaitingRef
                 .child(awaitingModel.key)
@@ -56,7 +61,8 @@ class SearchController {
               Map<dynamic, dynamic> map = snapshot.value;
               if (map != null) {
                 map.forEach((key, value) async {
-                  awaitingModel = AwaitingModel.fromJson(key, value);
+                  AwaitingModel awaitingModel =
+                      AwaitingModel.fromJson(key, value);
                   awaitingModel.hasMatched = true;
                   await _searchAwaitingRef
                       .child(awaitingModel.key)
@@ -68,9 +74,9 @@ class SearchController {
                   timer: awaitingModel.timer,
                   users: [awaitingModel.user, Config.user.email],
                   channelName: Random().nextInt(100000));
-              await addUsersToConfirmed(confirmedModel);
+              await _addUsersToConfirmed(confirmedModel);
 
-              Navigator.of(context).pushNamed(ChatView.routeName,
+              Navigator.of(context).pushReplacementNamed(ChatView.routeName,
                   arguments: ChatArgs(
                       channel: confirmedModel.channelName,
                       fromView: SearchingView.routeName));
@@ -90,31 +96,24 @@ class SearchController {
           DatabaseReference reference, String key, String value) =>
       reference.orderByChild(key).equalTo(value).once();
 
-  Future<void> checkIfInConfirmed() async {
-/*
-    getByKey(_searchConfirmedRef, key, value)
-    await _searchConfirmedRef.once().then((DataSnapshot dataSnapshot) {
-      String value = dataSnapshot.value.toString();
-
-      if ((value.contains(Config.user.email))) {
-      
-      }
-    });
-    */
-
+  Future<void> checkIfInConfirmed(BuildContext context) async {
     await _searchConfirmedRef.once().then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> map = snapshot.value;
       if (map != null) {
         map.forEach((key, value) async {
-          
+          ConfirmedModel confirmedModel = ConfirmedModel.fromJson(key, value);
+          if (confirmedModel.users.contains(Config.user.email)) {
+            Navigator.of(context).pushReplacementNamed(ChatView.routeName,
+                arguments: ChatArgs(
+                    channel: confirmedModel.channelName,
+                    fromView: SearchingView.routeName));
+          }
         });
       }
-
-      if ((value.contains(Config.user.email))) {}
     });
   }
 
-  Future<void> checkRefStatus() async {
+  Future<void> _checkRefStatus() async {
     await _searchRef
         .limitToFirst(1)
         .once()
@@ -147,7 +146,7 @@ class SearchController {
     // await _searchAwaitingRef.child(awaitingModel.key).remove();
   }
 
-  Future<void> addUsersToConfirmed(ConfirmedModel confirmedModel) async {
+  Future<void> _addUsersToConfirmed(ConfirmedModel confirmedModel) async {
     await _searchConfirmedRef.once().then((DataSnapshot snapshot) {
       String value = snapshot.value.toString();
 

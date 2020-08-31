@@ -6,10 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class GenericBody extends StatefulWidget {
   final String title;
   final Color titleBackgroundColor;
-  final bool onPop;
+  final bool implyLeading;
   final Widget body;
   const GenericBody(
-      {this.title, this.titleBackgroundColor, this.onPop, this.body});
+      {this.title,
+      this.titleBackgroundColor,
+      this.implyLeading = true,
+      this.body});
   @override
   _GenericBodyState createState() => _GenericBodyState();
 }
@@ -45,24 +48,26 @@ class _GenericBodyState extends State<GenericBody> {
         ),
 
         //increase clickable area
-        Positioned(
-            top: 40.h,
-            left: 0,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: GestureDetector(
-                child: Padding(
-                    padding: EdgeInsets.fromLTRB(10.h, 40.h, 10.h, 40.h),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                        size: 55.w,
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                    )),
-              ),
-            )),
+        widget.implyLeading
+            ? Positioned(
+                top: 40.h,
+                left: 0,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: GestureDetector(
+                    child: Padding(
+                        padding: EdgeInsets.fromLTRB(10.h, 40.h, 10.h, 40.h),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                            size: 55.w,
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        )),
+                  ),
+                ))
+            : Container(),
         Positioned(
             top: 75.h,
             left: MediaQuery.of(context).size.width / 3.7,

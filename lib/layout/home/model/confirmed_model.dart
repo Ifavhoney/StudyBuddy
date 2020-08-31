@@ -1,6 +1,6 @@
 class ConfirmedModel {
   String key;
-  List<String> users;
+  List<dynamic> users;
   int timer;
   int channelName;
 

@@ -19,20 +19,18 @@ class SearchingView extends StatefulWidget {
 }
 
 class _SearchingViewState extends State<SearchingView> {
-  FirebaseUser user;
   SearchController searchController = new SearchController();
 
   @override
   void initState() {
-    user = Config.user;
-    _func();
+    _asyncInitState();
     super.initState();
   }
 
-  _func() async {
+  _asyncInitState() async {
     await searchController.initState(context);
     await searchController.addUserToAwaiting(
-      AwaitingModel(hasMatched: false, timer: 15, user: user.email),
+      AwaitingModel(hasMatched: false, timer: 15, user: Config.user.email),
     );
   }
 

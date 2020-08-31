@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_bottom_navigation_bar.dart';
+import 'package:buddy/layout/home/controller/search_controller.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +18,14 @@ class WaitingView extends StatefulWidget {
 class _WaitingViewState extends State<WaitingView> {
   @override
   void initState() {
+    _asyncInitState();
     super.initState();
+  }
+
+  Future<void> _asyncInitState() async {
+    SearchController searchController = new SearchController();
+    searchController.initSearchRefs();
+    await searchController.checkIfInConfirmed(context);
   }
 
   @override
@@ -48,7 +58,7 @@ class _WaitingViewState extends State<WaitingView> {
               child: Icon(
                 Icons.search,
                 size: 45,
-                color: AppTheme.waitingViewIcons["waiting"].withOpacity(0.8),
+                color: AppTheme.waitingViewIcons["search"].withOpacity(0.8),
               ),
             ),
           ),
