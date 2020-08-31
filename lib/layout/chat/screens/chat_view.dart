@@ -20,6 +20,7 @@ class _ChatViewState extends State<ChatView> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: GenericBody(
+      implyLeading: false,
       title: "Messages",
       body: Text("hi"),
     ));
