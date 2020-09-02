@@ -1,5 +1,6 @@
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
+import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatelessWidget {
@@ -18,7 +19,7 @@ class LoginView extends StatelessWidget {
             child: Text("Sign in with google"),
             onPressed: () =>
                 AuthController().signInWithGoogle().whenComplete(() {
-              Navigator.of(context).pushNamed(SearchingView.routeName);
+              Navigator.of(context).pushNamed(WaitingView.routeName);
             }),
           ),
           RaisedButton(
