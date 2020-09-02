@@ -45,12 +45,12 @@ class _ChatViewState extends State<ChatView> {
                                   padding: EdgeInsets.fromLTRB(
                                       16.w, 16.h, 16.w, 16.h),
                                   child: Text(
-                                      'Yes Kinda sssdssdddsdddsdsdssshsshshshshsdssdsdssddshshshshshshsh',
+                                      'Yes Kinda I am glad you are online!',
                                       style: AppTheme.sfProText.bodyText1
                                           .copyWith(
-                                              color: Colors.black
-                                                  .withOpacity(0.70),
-                                              fontWeight: FontWeight.w600,
+                                              color:
+                                                  Colors.black.withOpacity(0.7),
+                                              fontWeight: FontWeight.w900,
                                               letterSpacing: 0.2))),
                             ),
                           ),
@@ -103,17 +103,15 @@ class _ChatViewState extends State<ChatView> {
                             focusNode: _focusNode,
                             minLines: 1,
                             maxLines: 5,
+                            maxLength: 150,
                             onSubmitted: (String value) => {},
                             decoration: InputDecoration(
-                                fillColor: Color(0xFFd3d3d3).withOpacity(0.5),
+                                fillColor: Color(0xFFd3d3d3).withOpacity(0.2),
                                 filled: true,
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
                                 contentPadding:
                                     EdgeInsets.fromLTRB(50.w, 25.h, 50.w, 25.h),
                                 border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(100.0),
                                   ),
