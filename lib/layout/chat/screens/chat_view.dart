@@ -1,4 +1,6 @@
 import 'package:buddy/global/theme/theme.dart';
+import 'package:buddy/layout/chat/widget/custom_chat_bubble.dart';
+import 'package:buddy/layout/chat/widget/people.dart';
 import 'package:buddy/layout/chat/widget/generic_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,19 +27,25 @@ class _ChatViewState extends State<ChatView> {
     return Scaffold(
         body: GenericBody(
             implyLeading: false,
+            chatPeople: _chatPeople(),
             title: "Messages",
             body: Stack(children: [
               Container(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                padding: EdgeInsets.all(40.h),
+                child: ListView(
                   children: <Widget>[
                     Container(
                       margin:
                           EdgeInsets.only(right: ScreenUtil.screenWidthDp / 4),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
+                          Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(16.w, 50.h, 10.w, 0.h),
+                              child: People()),
                           Flexible(
                             child: CustomPaint(
                               painter: CustomChatBubble(isOwn: false),
@@ -123,58 +131,20 @@ class _ChatViewState extends State<ChatView> {
                   ))
             ])));
   }
+
+  Widget _chatPeople() => Align(
+      alignment: Alignment.topRight,
+      child: Container(
+          width: MediaQuery.of(context).size.width / 2,
+          height: MediaQuery.of(context).size.height / 6,
+          child: ListView(
+              shrinkWrap: true,
+              reverse: true,
+              scrollDirection: Axis.horizontal,
+              physics: NeverScrollableScrollPhysics(),
+              children: <Widget>[People()])));
 }
 
-class CustomChatBubble extends CustomPainter {
-  CustomChatBubble({@required this.isOwn});
-
-  Color color;
-  bool isOwn;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint();
-    paint.color = color ?? Colors.blue;
-
-    Path paintBubbleTail() {
-      Path path;
-      if (isOwn) {
-        paint.color = Color(0xFF1982FC);
-        path = Path()
-          ..moveTo(size.width - 6, size.height - 4)
-          ..quadraticBezierTo(
-              size.width + 5, size.height, size.width + 16, size.height - 4)
-          ..quadraticBezierTo(
-              size.width + 5, size.height - 5, size.width, size.height - 17);
-      } else {
-        paint.color = Color(0xFFd3d3d3).withOpacity(0.5);
-
-        path = Path()
-          ..moveTo(5, size.height - 5)
-          //little triangle from the left
-          ..quadraticBezierTo(-5, size.height, -16, size.height - 4)
-          ..quadraticBezierTo(-5, size.height - 5, 0, size.height - 17);
-      }
-
-      return path;
-    }
-
-    //Use size of the custompainter to adjust text from bubble trail
-    final RRect bubbleBody = RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.width, size.height), Radius.circular(16));
-
-    final Path bubbleTail = paintBubbleTail();
-
-    canvas.drawRRect(bubbleBody, paint);
-    canvas.drawPath(bubbleTail, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
-    return true;
-  }
-}
 /*
 
 */

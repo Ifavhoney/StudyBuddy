@@ -1,5 +1,4 @@
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
-import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:flutter/material.dart';
 

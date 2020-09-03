@@ -1,4 +1,3 @@
-import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,11 +7,14 @@ class GenericBody extends StatefulWidget {
   final Color titleBackgroundColor;
   final bool implyLeading;
   final Widget body;
-  const GenericBody(
+  final Widget chatPeople;
+
+  GenericBody(
       {this.title,
       this.titleBackgroundColor,
       this.implyLeading = true,
-      this.body});
+      @required this.body,
+      @required this.chatPeople});
   @override
   _GenericBodyState createState() => _GenericBodyState();
 }
@@ -68,26 +70,11 @@ class _GenericBodyState extends State<GenericBody> {
                   ),
                 ))
             : Container(),
-        Positioned(
-            top: 75.h,
-            left: MediaQuery.of(context).size.width / 1.3,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(80.h, 40.h, 10.h, 40.h),
-                child: GlobalBoxContainer(
-                  boxShape: BoxShape.circle,
-                  containerColor: Colors.grey,
-                  containerHeight: 80.h,
-                  containerWidth: 80.w,
-                  boxShadow: BoxShadow(
-                      color: Color(0xFF0029F5),
-                      blurRadius: 8,
-                      spreadRadius: -2),
-                  child: Icon(Icons.person),
-                ),
-              ),
-            )),
+        Positioned.fill(top: 0, right: 40.w, child: widget.chatPeople),
+
+        /*
+ 
+        */
       ],
     );
   }
