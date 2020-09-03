@@ -1,6 +1,7 @@
 import 'package:buddy/global/theme/theme.dart';
+import 'package:buddy/layout/chat/widget/chat_message.dart';
 import 'package:buddy/layout/chat/widget/custom_chat_bubble.dart';
-import 'package:buddy/layout/chat/widget/people.dart';
+import 'package:buddy/layout/chat/widget/person.dart';
 import 'package:buddy/layout/chat/widget/generic_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,36 +35,11 @@ class _ChatViewState extends State<ChatView> {
                 padding: EdgeInsets.all(40.h),
                 child: ListView(
                   children: <Widget>[
-                    Container(
-                      margin:
-                          EdgeInsets.only(right: ScreenUtil.screenWidthDp / 4),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Padding(
-                              padding:
-                                  EdgeInsets.fromLTRB(16.w, 50.h, 10.w, 0.h),
-                              child: People()),
-                          Flexible(
-                            child: CustomPaint(
-                              painter: CustomChatBubble(isOwn: false),
-                              child: Container(
-                                  padding: EdgeInsets.fromLTRB(
-                                      16.w, 16.h, 16.w, 16.h),
-                                  child: Text(
-                                      'Yes Kinda I am glad you are online!',
-                                      style: AppTheme.sfProText.bodyText1
-                                          .copyWith(
-                                              color:
-                                                  Colors.black.withOpacity(0.7),
-                                              fontWeight: FontWeight.w900,
-                                              letterSpacing: 0.2))),
-                            ),
-                          ),
-                        ],
-                      ),
+                    ChatMessage(
+                      isOwn: false,
+                      people: Person(),
+                      text:
+                          "Whether it is Snapchat, Twitter, Facebook, tual characters matters. ",
                     ),
                     SizedBox(
                       height: 5,
@@ -81,19 +57,12 @@ class _ChatViewState extends State<ChatView> {
                     SizedBox(
                       height: 5,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        CustomPaint(
-                            painter: CustomChatBubble(isOwn: true),
-                            child: Container(
-                                padding: EdgeInsets.all(8),
-                                child: Text(
-                                  'Message from me',
-                                  style: TextStyle(color: Colors.white),
-                                ))),
-                      ],
-                    )
+                    ChatMessage(
+                      isOwn: true,
+                      people: Person(),
+                      text:
+                          "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                    ),
                   ],
                 ),
               ),
@@ -142,7 +111,7 @@ class _ChatViewState extends State<ChatView> {
               reverse: true,
               scrollDirection: Axis.horizontal,
               physics: NeverScrollableScrollPhysics(),
-              children: <Widget>[People()])));
+              children: <Widget>[Person()])));
 }
 
 /*

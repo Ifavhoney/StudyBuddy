@@ -2,11 +2,11 @@ import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class People extends StatelessWidget {
+class Person extends StatelessWidget {
   final child;
   final Color containerColor;
 
-  People({this.child, this.containerColor});
+  Person({this.child, this.containerColor});
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
