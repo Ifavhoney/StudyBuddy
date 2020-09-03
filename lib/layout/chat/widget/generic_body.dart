@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GenericBody extends StatefulWidget {
-  final String title;
-  final Color titleBackgroundColor;
+  final Color backgroundColor;
   final bool implyLeading;
   final Widget body;
+  final bool isKeyboardShowing;
+
   final Widget chatPeople;
 
   GenericBody(
-      {this.title,
-      this.titleBackgroundColor,
+      {this.backgroundColor,
       this.implyLeading = true,
       @required this.body,
-      @required this.chatPeople});
+      @required this.chatPeople,
+      @required this.isKeyboardShowing});
   @override
   _GenericBodyState createState() => _GenericBodyState();
 }
@@ -23,19 +23,18 @@ class _GenericBodyState extends State<GenericBody> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
+
     return Stack(
       children: <Widget>[
         Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height / 1.1,
           width: MediaQuery.of(context).size.width,
-          color: widget.titleBackgroundColor == null
-              ? Color(0XFF504DE5)
-              : widget.titleBackgroundColor,
+          color: _backgroundColor(),
         ),
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            height: MediaQuery.of(context).size.height / 1.1,
+            height: MediaQuery.of(context).size.height / _height(),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(50.h)),
@@ -45,7 +44,7 @@ class _GenericBodyState extends State<GenericBody> {
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-              height: MediaQuery.of(context).size.height / 1.1,
+              height: MediaQuery.of(context).size.height / _height(),
               child: widget.body),
         ),
 
@@ -70,12 +69,29 @@ class _GenericBodyState extends State<GenericBody> {
                   ),
                 ))
             : Container(),
-        Positioned.fill(top: 0, right: 40.w, child: widget.chatPeople),
+        Positioned.fill(
+            top: 0,
+            right: 40.w,
+            child: widget.isKeyboardShowing ? Container() : widget.chatPeople),
 
         /*
  
         */
       ],
     );
+  }
+
+  double _height() {
+    if (widget.isKeyboardShowing)
+      return 1;
+    else
+      return 1.1;
+  }
+
+  Color _backgroundColor() {
+    if (widget.isKeyboardShowing)
+      return Colors.white;
+    else
+      return widget.backgroundColor ?? Color(0XFF504DE5);
   }
 }

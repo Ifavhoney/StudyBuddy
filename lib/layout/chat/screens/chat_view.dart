@@ -21,84 +21,114 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   TextEditingController _editingController = TextEditingController();
   FocusNode _focusNode = FocusNode();
+  bool iskeyBardShowing;
+
   final TextStyle textStyle = TextStyle(color: Colors.white);
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
+    iskeyBardShowing =
+        MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
     return Scaffold(
         body: GenericBody(
             implyLeading: false,
             chatPeople: _chatPeople(),
-            title: "Messages",
-            body: Stack(children: [
-              Container(
-                padding: EdgeInsets.all(40.h),
-                child: ListView(
-                  children: <Widget>[
-                    ChatMessage(
-                      isOwn: false,
-                      people: Person(),
-                      text:
-                          "Whether it is Snapchat, Twitter, Facebook, tual characters matters. ",
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        CustomPaint(
-                            painter: CustomChatBubble(isOwn: false),
-                            child: Container(
-                                padding: EdgeInsets.all(10),
-                                child: FlutterLogo())),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    ChatMessage(
-                      isOwn: true,
-                      people: Person(),
-                      text:
-                          "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                    ),
-                  ],
+            isKeyboardShowing: iskeyBardShowing,
+            body: GestureDetector(
+              onDoubleTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: Stack(children: [
+                Container(
+                  padding: EdgeInsets.all(40.h),
+                  child: ListView(
+                    children: <Widget>[
+                      ChatMessage(
+                        isOwn: false,
+                        people: Person(),
+                        text:
+                            "Whether it is Snapchat, Twitter, Facebook, tual characters matters. ",
+                      ),
+                      SizedBox(height: 40.h),
+                      ChatMessage(
+                        isOwn: true,
+                        people: Person(),
+                        text:
+                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                      ),
+                      ChatMessage(
+                        isOwn: true,
+                        people: Person(),
+                        text:
+                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                      ),
+                      ChatMessage(
+                        isOwn: true,
+                        people: Person(),
+                        text:
+                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                      ),
+                      ChatMessage(
+                        isOwn: true,
+                        people: Person(),
+                        text:
+                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                      ),
+                      ChatMessage(
+                        isOwn: true,
+                        people: Person(),
+                        text:
+                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                      ),
+                      ChatMessage(
+                        isOwn: true,
+                        people: Person(),
+                        text:
+                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                      ),
+                      ChatMessage(
+                        isOwn: true,
+                        people: Person(),
+                        text:
+                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Positioned(
-                  bottom: 0,
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Flexible(
-                          child: TextField(
-                            controller: _editingController,
-                            focusNode: _focusNode,
-                            minLines: 1,
-                            maxLines: 5,
-                            maxLength: 150,
-                            onSubmitted: (String value) => {},
-                            decoration: InputDecoration(
-                                fillColor: Color(0xFFd3d3d3).withOpacity(0.2),
-                                filled: true,
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(50.w, 25.h, 50.w, 25.h),
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(100.0),
-                                  ),
-                                )),
+                Positioned(
+                    bottom: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Flexible(
+                            child: TextField(
+                              controller: _editingController,
+                              focusNode: _focusNode,
+                              minLines: 1,
+                              maxLines: 5,
+                              maxLength: 150,
+                              onSubmitted: (String value) => {},
+                              decoration: InputDecoration(
+                                  fillColor: Color(0xFFd3d3d3).withOpacity(0.2),
+                                  filled: true,
+                                  contentPadding: EdgeInsets.fromLTRB(
+                                      50.w, 25.h, 50.w, 25.h),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(100.0),
+                                    ),
+                                  )),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ))
-            ])));
+                        ],
+                      ),
+                    ))
+              ]),
+            )));
   }
 
   Widget _chatPeople() => Align(

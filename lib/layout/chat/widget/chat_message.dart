@@ -21,6 +21,7 @@ class ChatMessage extends StatelessWidget {
     if (isOwn) {
       return Container(
         margin: EdgeInsets.only(left: ScreenUtil.screenWidthDp / 7),
+        padding: EdgeInsets.fromLTRB(10.h, 40.h, 40.w, 40.h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
@@ -28,7 +29,7 @@ class ChatMessage extends StatelessWidget {
               child: CustomPaint(
                   painter: CustomChatBubble(isOwn: true),
                   child: Container(
-                      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 16.h),
+                      padding: EdgeInsets.fromLTRB(30.w, 40.h, 20.w, 40.h),
                       child: Text(text,
                           style: AppTheme.sfProText.bodyText1.copyWith(
                               color: Colors.white,
