@@ -6,6 +6,7 @@ import 'package:buddy/layout/chat/widget/chat_textfield.dart';
 import 'package:buddy/layout/chat/widget/person.dart';
 import 'package:buddy/layout/chat/widget/generic_body.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChatView extends StatefulWidget {
@@ -42,6 +43,7 @@ class _ChatViewState extends State<ChatView> {
     _iskeyBardShowing =
         MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         body: GenericBody(
             implyLeading: false,
             chatPeople: _chatPeople(),
@@ -50,52 +52,62 @@ class _ChatViewState extends State<ChatView> {
               onDoubleTap: () {
                 FocusScope.of(context).unfocus();
               },
-              child: Stack(children: [
-                Container(
-                  height: ScreenUtil.screenHeightDp / 1.3,
-                  padding: EdgeInsets.all(40.h),
-                  child: ListView(
-                    children: <Widget>[
-                      ChatMessage(
-                        isOwn: false,
-                        people: Person(),
-                        text:
-                            "Whether it is Snapchat, Twitter, Facebook, tual characters matters. ",
+              child: Container(
+                padding: EdgeInsets.all(40.h),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: <Widget>[
+                          ChatMessage(
+                            isOwn: false,
+                            people: Person(),
+                            text:
+                                "Whether it is Snapchat, Twitter, Facebook, tual characters matters. ",
+                          ),
+                          SizedBox(height: 40.h),
+                          ChatMessage(
+                            isOwn: true,
+                            people: Person(),
+                            text:
+                                "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                          ),
+                          SizedBox(height: 40.h),
+                          ChatMessage(
+                            isOwn: true,
+                            people: Person(),
+                            text:
+                                "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                          ),
+                          SizedBox(height: 40.h),
+                          ChatMessage(
+                            isOwn: false,
+                            people: Person(),
+                            text:
+                                "Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
+                          ),
+                          SizedBox(height: 40.h),
+                          ChatMessage(
+                            isOwn: false,
+                            people: Person(),
+                            text:
+                                "Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
+                          ),
+                          SizedBox(height: 40.h),
+                        ],
                       ),
-                      SizedBox(height: 40.h),
-                      ChatMessage(
-                        isOwn: true,
-                        people: Person(),
-                        text:
-                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                      ),
-                      SizedBox(height: 40.h),
-                      ChatMessage(
-                        isOwn: true,
-                        people: Person(),
-                        text:
-                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                      ),
-                      SizedBox(height: 40.h),
-                      ChatMessage(
-                        isOwn: false,
-                        people: Person(),
-                        text:
-                            "Whether it is Snapchat, Twitter, Facebook, tual characters matters. ",
-                      ),
-                      SizedBox(height: 40.h)
-                    ],
-                  ),
+                    ),
+                    ChatTextField(
+                      editingController: _editingController,
+                      focusNode: _focusNode,
+                      onSubmitted: (String value) {
+                        _chatController.sendMessage(value);
+                      },
+                    ),
+                  ],
                 ),
-                ChatTextField(
-                  editingController: _editingController,
-                  focusNode: _focusNode,
-                  heightFactor: 1.3,
-                  onSubmitted: (String value) {
-                    _chatController.sendMessage(value);
-                  },
-                )
-              ]),
+              ),
             )));
   }
 

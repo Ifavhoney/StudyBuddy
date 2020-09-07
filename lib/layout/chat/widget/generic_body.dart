@@ -23,61 +23,64 @@ class _GenericBodyState extends State<GenericBody> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-
-    return Stack(
-      children: <Widget>[
-        Container(
-          height: MediaQuery.of(context).size.height / 1.1,
-          width: MediaQuery.of(context).size.width,
-          color: _backgroundColor(),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            height: MediaQuery.of(context).size.height / _height(),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(50.h)),
+    return Container(
+      height: ScreenUtil.screenHeightDp,
+      child: Stack(
+        children: <Widget>[
+          Container(
+            height: MediaQuery.of(context).size.height / 1.1,
+            width: MediaQuery.of(context).size.width,
+            color: _backgroundColor(),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: MediaQuery.of(context).size.height / _height(),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(50.h)),
+              ),
             ),
           ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-              height: MediaQuery.of(context).size.height / _height(),
-              child: widget.body),
-        ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+                height: MediaQuery.of(context).size.height / _height(),
+                child: widget.body),
+          ),
 
-        //increase clickable area
-        widget.implyLeading
-            ? Positioned(
-                top: 40.h,
-                left: 0,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: GestureDetector(
-                    child: Padding(
-                        padding: EdgeInsets.fromLTRB(10.h, 40.h, 10.h, 40.h),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios,
-                            color: Colors.white,
-                            size: 55.w,
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                        )),
-                  ),
-                ))
-            : Container(),
-        Positioned.fill(
-            top: 0,
-            right: 40.w,
-            child: widget.isKeyboardShowing ? Container() : widget.chatPeople),
+          //increase clickable area
+          widget.implyLeading
+              ? Positioned(
+                  top: 40.h,
+                  left: 0,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: GestureDetector(
+                      child: Padding(
+                          padding: EdgeInsets.fromLTRB(10.h, 40.h, 10.h, 40.h),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                              size: 55.w,
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                          )),
+                    ),
+                  ))
+              : Container(),
+          Positioned.fill(
+              top: 0,
+              right: 40.w,
+              child:
+                  widget.isKeyboardShowing ? Container() : widget.chatPeople),
 
-        /*
+          /*
  
-        */
-      ],
+          */
+        ],
+      ),
     );
   }
 

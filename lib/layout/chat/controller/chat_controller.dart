@@ -27,7 +27,7 @@ class ChatController {
           .child("Search")
           .child("2020-08-14")
           .child(channelName.toString())
-          .child("messages");
+          .child("Messages");
     }
 
     await _checkRefStatus(fromView);
@@ -45,7 +45,7 @@ class ChatController {
       await _chatSearchRef
           .limitToFirst(1)
           .once()
-          .then((value) => DebugHelper.green("FB: Chat/Search/Date"));
+          .then((value) => DebugHelper.green("FB: Chat/Search/Date/Messages"));
     }
   }
 
@@ -54,8 +54,6 @@ class ChatController {
   }
 
   Future<void> sendMessage(String message) async {
-    print("sending message");
-
     await _chatSearchRef
         .set(ChatModel(email: Config.user.email, message: message).toJson());
   }
