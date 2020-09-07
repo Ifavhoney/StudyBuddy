@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_bottom_navigation_bar.dart';

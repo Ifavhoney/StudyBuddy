@@ -7,8 +7,6 @@ import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:buddy/layout/home/controller/search_controller.dart';
 import 'package:buddy/layout/home/model/awaiting_model.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 
 ///@LastModifiedBy: Jason NGuessan

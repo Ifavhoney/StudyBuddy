@@ -5,11 +5,12 @@ class ChatTextField extends StatelessWidget {
   final FocusNode focusNode;
   final TextEditingController editingController;
   final Function onSubmitted;
-
+  final Function onTap;
   const ChatTextField(
       {@required this.focusNode,
       @required this.editingController,
-      @required this.onSubmitted});
+      @required this.onSubmitted,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,7 @@ class ChatTextField extends StatelessWidget {
               maxLength: 150,
               textInputAction: TextInputAction.go,
               onSubmitted: onSubmitted,
+              onTap: onTap,
               decoration: InputDecoration(
                   fillColor: Color(0xFFd3d3d3).withOpacity(0.2),
                   filled: true,

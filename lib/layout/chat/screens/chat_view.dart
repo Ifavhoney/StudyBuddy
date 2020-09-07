@@ -1,12 +1,9 @@
-import 'package:buddy/global/config/config.dart';
 import 'package:buddy/layout/chat/controller/chat_controller.dart';
-import 'package:buddy/layout/chat/models/chat_model.dart';
 import 'package:buddy/layout/chat/widget/chat_message.dart';
 import 'package:buddy/layout/chat/widget/chat_textfield.dart';
 import 'package:buddy/layout/chat/widget/person.dart';
 import 'package:buddy/layout/chat/widget/generic_body.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChatView extends StatefulWidget {
@@ -24,9 +21,10 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   TextEditingController _editingController = TextEditingController();
   ChatController _chatController = new ChatController();
+  ScrollController _scrollController = new ScrollController();
 
   FocusNode _focusNode = FocusNode();
-  bool _iskeyBardShowing;
+  bool _iskeyboardShowing;
   @override
   void initState() {
     _asyncInitState();
@@ -40,14 +38,15 @@ class _ChatViewState extends State<ChatView> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    _iskeyBardShowing =
-        MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
+    _iskeyboardShowing =
+        MediaQuery.of(context).viewInsets.bottom > 0 ? true : false;
+
     return Scaffold(
         resizeToAvoidBottomInset: true,
         body: GenericBody(
             implyLeading: false,
             chatPeople: _chatPeople(),
-            isKeyboardShowing: _iskeyBardShowing,
+            isKeyboardShowing: _iskeyboardShowing,
             body: GestureDetector(
               onDoubleTap: () {
                 FocusScope.of(context).unfocus();
@@ -58,6 +57,7 @@ class _ChatViewState extends State<ChatView> {
                   children: <Widget>[
                     Expanded(
                       child: ListView(
+                        controller: _scrollController,
                         shrinkWrap: true,
                         children: <Widget>[
                           ChatMessage(
@@ -95,12 +95,59 @@ class _ChatViewState extends State<ChatView> {
                                 "Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
                           ),
                           SizedBox(height: 40.h),
+                          ChatMessage(
+                            isOwn: false,
+                            people: Person(),
+                            text:
+                                "Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
+                          ),
+                          SizedBox(height: 40.h),
+                          ChatMessage(
+                            isOwn: true,
+                            people: Person(),
+                            text:
+                                "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                          ),
+                          SizedBox(height: 40.h),
+                          ChatMessage(
+                            isOwn: true,
+                            people: Person(),
+                            text:
+                                "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                          ),
+                          SizedBox(height: 40.h),
+                          ChatMessage(
+                            isOwn: true,
+                            people: Person(),
+                            text:
+                                "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                          ),
+                          SizedBox(height: 40.h),
+                          ChatMessage(
+                            isOwn: false,
+                            people: Person(),
+                            text:
+                                "last: Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
+                          ),
+                          SizedBox(height: 40.h),
                         ],
                       ),
                     ),
                     ChatTextField(
                       editingController: _editingController,
                       focusNode: _focusNode,
+                      onTap: () {
+                        setState(() {});
+                        //TODO Store KeyboardSize in firestore for exact
+                        if (!_iskeyboardShowing) {
+                          _scrollController.animateTo(
+                            _scrollController.position.maxScrollExtent +
+                                MediaQuery.of(context).size.height / 3,
+                            curve: Curves.easeOut,
+                            duration: const Duration(milliseconds: 200),
+                          );
+                        }
+                      },
                       onSubmitted: (String value) {
                         _chatController.sendMessage(value);
                       },
