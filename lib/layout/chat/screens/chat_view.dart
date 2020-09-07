@@ -1,6 +1,5 @@
-import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/layout/chat/widget/chat_message.dart';
-import 'package:buddy/layout/chat/widget/custom_chat_bubble.dart';
+import 'package:buddy/layout/chat/widget/chat_textfield.dart';
 import 'package:buddy/layout/chat/widget/person.dart';
 import 'package:buddy/layout/chat/widget/generic_body.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +39,7 @@ class _ChatViewState extends State<ChatView> {
               },
               child: Stack(children: [
                 Container(
+                  height: ScreenUtil.screenHeightDp / 1.3,
                   padding: EdgeInsets.all(40.h),
                   child: ListView(
                     children: <Widget>[
@@ -56,77 +56,30 @@ class _ChatViewState extends State<ChatView> {
                         text:
                             "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
                       ),
+                      SizedBox(height: 40.h),
                       ChatMessage(
                         isOwn: true,
                         people: Person(),
                         text:
                             "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
                       ),
+                      SizedBox(height: 40.h),
                       ChatMessage(
-                        isOwn: true,
+                        isOwn: false,
                         people: Person(),
                         text:
-                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
+                            "Whether it is Snapchat, Twitter, Facebook, tual characters matters. ",
                       ),
-                      ChatMessage(
-                        isOwn: true,
-                        people: Person(),
-                        text:
-                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                      ),
-                      ChatMessage(
-                        isOwn: true,
-                        people: Person(),
-                        text:
-                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                      ),
-                      ChatMessage(
-                        isOwn: true,
-                        people: Person(),
-                        text:
-                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                      ),
-                      ChatMessage(
-                        isOwn: true,
-                        people: Person(),
-                        text:
-                            "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                      ),
+                      SizedBox(height: 40.h)
                     ],
                   ),
                 ),
-                Positioned(
-                    bottom: 0,
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Flexible(
-                            child: TextField(
-                              controller: _editingController,
-                              focusNode: _focusNode,
-                              minLines: 1,
-                              maxLines: 5,
-                              maxLength: 150,
-                              onSubmitted: (String value) => {},
-                              decoration: InputDecoration(
-                                  fillColor: Color(0xFFd3d3d3).withOpacity(0.2),
-                                  filled: true,
-                                  contentPadding: EdgeInsets.fromLTRB(
-                                      50.w, 25.h, 50.w, 25.h),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(100.0),
-                                    ),
-                                  )),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ))
+                ChatTextField(
+                  editingController: _editingController,
+                  focusNode: _focusNode,
+                  heightFactor: 1.3,
+                  onSubmitted: (String value) {},
+                )
               ]),
             )));
   }
