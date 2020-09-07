@@ -19,7 +19,7 @@ class SearchingView extends StatefulWidget {
 }
 
 class _SearchingViewState extends State<SearchingView> {
-  SearchController searchController = new SearchController();
+  SearchController _searchController = new SearchController();
 
   @override
   void initState() {
@@ -28,8 +28,8 @@ class _SearchingViewState extends State<SearchingView> {
   }
 
   _asyncInitState() async {
-    await searchController.initState(context);
-    await searchController.addUserToAwaiting(
+    await _searchController.initState(context);
+    await _searchController.addUserToAwaiting(
       AwaitingModel(hasMatched: false, timer: 15, user: Config.user.email),
     );
   }

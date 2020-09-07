@@ -1,3 +1,6 @@
+import 'package:buddy/global/config/config.dart';
+import 'package:buddy/layout/chat/controller/chat_controller.dart';
+import 'package:buddy/layout/chat/models/chat_model.dart';
 import 'package:buddy/layout/chat/widget/chat_message.dart';
 import 'package:buddy/layout/chat/widget/chat_textfield.dart';
 import 'package:buddy/layout/chat/widget/person.dart';
@@ -11,7 +14,7 @@ class ChatView extends StatefulWidget {
   final int channel;
   final String fromView;
 
-  const ChatView({this.fromView, this.channel});
+  const ChatView({@required this.fromView, @required this.channel});
 
   @override
   _ChatViewState createState() => _ChatViewState();
@@ -19,20 +22,30 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   TextEditingController _editingController = TextEditingController();
-  FocusNode _focusNode = FocusNode();
-  bool iskeyBardShowing;
+  ChatController _chatController = new ChatController();
 
-  final TextStyle textStyle = TextStyle(color: Colors.white);
+  FocusNode _focusNode = FocusNode();
+  bool _iskeyBardShowing;
+  @override
+  void initState() {
+    _asyncInitState();
+    super.initState();
+  }
+
+  _asyncInitState() async {
+    await _chatController.initState(context, widget.fromView, widget.channel);
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    iskeyBardShowing =
+    _iskeyBardShowing =
         MediaQuery.of(context).viewInsets.bottom != 0 ? true : false;
     return Scaffold(
         body: GenericBody(
             implyLeading: false,
             chatPeople: _chatPeople(),
-            isKeyboardShowing: iskeyBardShowing,
+            isKeyboardShowing: _iskeyBardShowing,
             body: GestureDetector(
               onDoubleTap: () {
                 FocusScope.of(context).unfocus();
@@ -78,7 +91,9 @@ class _ChatViewState extends State<ChatView> {
                   editingController: _editingController,
                   focusNode: _focusNode,
                   heightFactor: 1.3,
-                  onSubmitted: (String value) {},
+                  onSubmitted: (String value) {
+                    _chatController.sendMessage(value);
+                  },
                 )
               ]),
             )));

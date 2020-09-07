@@ -31,6 +31,7 @@ class ChatTextField extends StatelessWidget {
                   minLines: 1,
                   maxLines: 5,
                   maxLength: 150,
+                  textInputAction: TextInputAction.go,
                   onSubmitted: onSubmitted,
                   decoration: InputDecoration(
                       fillColor: Color(0xFFd3d3d3).withOpacity(0.2),

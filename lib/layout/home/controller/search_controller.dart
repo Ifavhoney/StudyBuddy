@@ -24,19 +24,18 @@ class SearchController {
   DatabaseReference _searchConfirmedRef;
 
   //initialize Refs
-  void initSearchRefs() {
+  Future<void> initSearchRefs() async {
     _searchRef =
         FirebaseDatabase.instance.reference().child("Home").child("Search");
     // DateHelper.currentDayInString();
     _searchConfirmedRef = _searchRef.child("Confirmed").child("2020-08-14");
     _searchAwaitingRef = _searchRef.child("Awaiting").child("2020-08-14");
+    await _checkRefStatus();
   }
 
   //Initialize Methods, and listeners
   Future<void> initState(BuildContext context) async {
-    initSearchRefs();
-    await _checkRefStatus();
-
+    await initSearchRefs();
 
     _searchAwaitingRef.onValue.listen((event) {
       Map<dynamic, dynamic> map = event.snapshot.value;
