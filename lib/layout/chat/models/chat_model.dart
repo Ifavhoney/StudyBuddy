@@ -9,7 +9,6 @@ class ChatModel {
   ChatModel.fromJson(dynamic value)
       : this.message = value["message"],
         this.email = value["email"];
-
 //Sends Data back to firebase in JSON format
   toJson() {
     return {

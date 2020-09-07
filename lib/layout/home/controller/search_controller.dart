@@ -53,6 +53,7 @@ class SearchController {
                 .set(awaitingModel.toJson());
 
             //Finds un matched user & set to true to lock matching process
+            //if there is no key, then it just ignores
             getByKey(_searchAwaitingRef, "user", Config.user.email)
                 .then((DataSnapshot snapshot) async {
               print(Config.user.email);
@@ -90,6 +91,23 @@ class SearchController {
   //functions
   DatabaseReference getReference() => _searchRef;
 
+  Future<void> _checkRefStatus() async {
+    await _searchRef
+        .limitToFirst(1)
+        .once()
+        .then((value) => DebugHelper.green("FB: Home/Search"));
+
+    await _searchAwaitingRef
+        .limitToFirst(1)
+        .once()
+        .then((value) => DebugHelper.green("FB: Home/Search/Awaiting/Date"));
+
+    await _searchConfirmedRef
+        .limitToFirst(1)
+        .once()
+        .then((value) => DebugHelper.green("FB: Home/Search/Confirmed/Date"));
+  }
+
   Future<DataSnapshot> getByKey(
           DatabaseReference reference, String key, String value) =>
       reference.orderByChild(key).equalTo(value).once();
@@ -109,23 +127,6 @@ class SearchController {
         });
       }
     });
-  }
-
-  Future<void> _checkRefStatus() async {
-    await _searchRef
-        .limitToFirst(1)
-        .once()
-        .then((value) => DebugHelper.green("FB: Home/Search"));
-
-    await _searchAwaitingRef
-        .limitToFirst(1)
-        .once()
-        .then((value) => DebugHelper.green("FB: Home/Search/Awaiting/Date"));
-
-    await _searchConfirmedRef
-        .limitToFirst(1)
-        .once()
-        .then((value) => DebugHelper.green("FB: Home/Search/Confirmed/Date"));
   }
 
   Future<void> addUserToAwaiting(AwaitingModel awaitingModel) async {

@@ -3,6 +3,8 @@ import 'package:buddy/layout/chat/widget/chat_message.dart';
 import 'package:buddy/layout/chat/widget/chat_textfield.dart';
 import 'package:buddy/layout/chat/widget/person.dart';
 import 'package:buddy/layout/chat/widget/generic_body.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -56,11 +58,59 @@ class _ChatViewState extends State<ChatView> {
                 child: Column(
                   children: <Widget>[
                     Expanded(
-                      child: ListView(
-                        controller: _scrollController,
-                        shrinkWrap: true,
-                        children: <Widget>[
-                          ChatMessage(
+                        child: FirebaseAnimatedList(
+                      query: _chatController.getReference(widget.fromView),
+                      itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                          Animation<double> animation, int i) {
+                        Map<dynamic, dynamic> map = snapshot.value;
+                        if (map != null) {
+                          //  print(snapshot.);
+
+                        } else {
+                          return Container();
+                        }
+                      },
+                    )),
+                    ChatTextField(
+                      editingController: _editingController,
+                      focusNode: _focusNode,
+                      onTap: () {
+                        setState(() {});
+                        //TODO Store KeyboardSize in firestore for exact
+                        if (!_iskeyboardShowing) {
+                          _scrollController.animateTo(
+                            _scrollController.position.maxScrollExtent +
+                                MediaQuery.of(context).size.height / 3,
+                            curve: Curves.easeOut,
+                            duration: const Duration(milliseconds: 200),
+                          );
+                        }
+                      },
+                      onSubmitted: (String value) {
+                        _chatController.sendMessage(value, widget.fromView);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            )));
+  }
+
+  Widget _chatPeople() => Align(
+      alignment: Alignment.topRight,
+      child: Container(
+          width: MediaQuery.of(context).size.width / 2,
+          height: MediaQuery.of(context).size.height / 6,
+          child: ListView(
+              shrinkWrap: true,
+              reverse: true,
+              scrollDirection: Axis.horizontal,
+              physics: NeverScrollableScrollPhysics(),
+              children: <Widget>[Person()])));
+}
+
+/*
+ ChatMessage(
                             isOwn: false,
                             people: Person(),
                             text:
@@ -127,50 +177,21 @@ class _ChatViewState extends State<ChatView> {
                             isOwn: false,
                             people: Person(),
                             text:
+                                " Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
+                          ),
+                          SizedBox(height: 40.h),
+                          ChatMessage(
+                            isOwn: false,
+                            people: Person(),
+                            text:
+                                " Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
+                          ),
+                          SizedBox(height: 40.h),
+                          ChatMessage(
+                            isOwn: false,
+                            people: Person(),
+                            text:
                                 "last: Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
                           ),
                           SizedBox(height: 40.h),
-                        ],
-                      ),
-                    ),
-                    ChatTextField(
-                      editingController: _editingController,
-                      focusNode: _focusNode,
-                      onTap: () {
-                        setState(() {});
-                        //TODO Store KeyboardSize in firestore for exact
-                        if (!_iskeyboardShowing) {
-                          _scrollController.animateTo(
-                            _scrollController.position.maxScrollExtent +
-                                MediaQuery.of(context).size.height / 3,
-                            curve: Curves.easeOut,
-                            duration: const Duration(milliseconds: 200),
-                          );
-                        }
-                      },
-                      onSubmitted: (String value) {
-                        _chatController.sendMessage(value);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            )));
-  }
-
-  Widget _chatPeople() => Align(
-      alignment: Alignment.topRight,
-      child: Container(
-          width: MediaQuery.of(context).size.width / 2,
-          height: MediaQuery.of(context).size.height / 6,
-          child: ListView(
-              shrinkWrap: true,
-              reverse: true,
-              scrollDirection: Axis.horizontal,
-              physics: NeverScrollableScrollPhysics(),
-              children: <Widget>[Person()])));
-}
-
-/*
-
 */

@@ -37,7 +37,23 @@ class ChatController {
   Future<void> initState(
       BuildContext context, String fromView, int channelName) async {
     await initChatRefs(fromView, channelName);
-    if (SearchingView.routeName == fromView) {}
+    if (SearchingView.routeName == fromView) {
+      //delete
+    }
+  }
+
+  DatabaseReference getReference(String fromView) {
+    if (SearchingView.routeName == fromView) {
+      return _chatSearchRef;
+    }
+    return _chatSearchRef;
+  }
+
+  Query orderReferenceByStamp(String fromView) {
+    if (SearchingView.routeName == fromView) {
+      return getReference(fromView).orderByChild("timestamp");
+    }
+    return _chatSearchRef;
   }
 
   Future<void> _checkRefStatus(String fromView) async {
@@ -49,12 +65,15 @@ class ChatController {
     }
   }
 
-  Future<void> createPrivateChat(int channelName, ChatModel chatModel) async {
-    await _chatSearchRef.child(channelName.toString()).set(chatModel.toJson());
-  }
-
-  Future<void> sendMessage(String message) async {
-    await _chatSearchRef
-        .set(ChatModel(email: Config.user.email, message: message).toJson());
+  Future<void> sendMessage(String message, String fromView) async {
+    if (SearchingView.routeName == fromView) {
+      await _chatSearchRef
+          .child("timestamp")
+          .child(DateTime.now().millisecondsSinceEpoch.toString())
+          .set(ChatModel(
+            email: Config.user.email,
+            message: message,
+          ).toJson());
+    }
   }
 }
