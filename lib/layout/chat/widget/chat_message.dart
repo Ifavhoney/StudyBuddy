@@ -22,8 +22,10 @@ class ChatMessage extends StatelessWidget {
       return Container(
         margin: EdgeInsets.only(left: ScreenUtil.screenWidthDp / 7),
         padding: EdgeInsets.fromLTRB(10.h, 0.h, 40.w, 0.h),
+        alignment: Alignment.bottomRight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Flexible(
               child: CustomPaint(
@@ -42,12 +44,13 @@ class ChatMessage extends StatelessWidget {
     } else {
       return Container(
         margin: EdgeInsets.only(right: ScreenUtil.screenWidthDp / 7),
+        alignment: Alignment.bottomLeft,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisSize: MainAxisSize.max,
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Person(),
+            people,
             Flexible(
               child: CustomPaint(
                 painter: CustomChatBubble(isOwn: isOwn),

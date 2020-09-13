@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/config.dart';
 import 'package:buddy/layout/chat/models/chat_model.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +17,9 @@ class ChatController {
 
   //Childs in our database
   DatabaseReference _chatSearchRef;
+
+  //other
+  List<ChatModel> list = new List();
 
   //initialize Refs
   Future<void> initChatRefs(String fromView, int channelName) async {
@@ -39,9 +40,15 @@ class ChatController {
   Future<void> initState(
       BuildContext context, String fromView, int channelName) async {
     await initChatRefs(fromView, channelName);
+
     if (SearchingView.routeName == fromView) {
-      //delete
-      //  orderReferenceByStamp(fromView);
+      await _chatSearchRef.once().then((DataSnapshot snapshot) {
+        _sortMessages(snapshot.value);
+      });
+
+      _chatSearchRef.onValue.listen((Event event) {
+        _sortMessages(event.snapshot.value);
+      });
     }
   }
 
@@ -58,6 +65,22 @@ class ChatController {
           .limitToFirst(1)
           .once()
           .then((value) => DebugHelper.green("FB: Chat/Search/Date/Messages"));
+    }
+  }
+
+  void _sortMessages(dynamic value) {
+    list = new List();
+
+    Map<dynamic, dynamic> map = value;
+
+    if (map != null) {
+      map.forEach((key, value) {
+        // print(value);
+
+        list.add(ChatModel.fromJson(value));
+      });
+
+      list.sort((a, b) => a.timestamp.compareTo(b.timestamp));
     }
   }
 

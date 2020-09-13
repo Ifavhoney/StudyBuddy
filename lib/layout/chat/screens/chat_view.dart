@@ -1,11 +1,10 @@
+import 'package:buddy/global/config/config.dart';
 import 'package:buddy/layout/chat/controller/chat_controller.dart';
-import 'package:buddy/layout/chat/models/chat_model.dart';
 import 'package:buddy/layout/chat/widget/chat_message.dart';
 import 'package:buddy/layout/chat/widget/chat_textfield.dart';
 import 'package:buddy/layout/chat/widget/person.dart';
 import 'package:buddy/layout/chat/widget/generic_body.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -34,8 +33,17 @@ class _ChatViewState extends State<ChatView> {
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
   _asyncInitState() async {
-    await _chatController.initState(context, widget.fromView, widget.channel);
+    await _chatController
+        .initState(context, widget.fromView, widget.channel)
+        .whenComplete(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -59,48 +67,46 @@ class _ChatViewState extends State<ChatView> {
                 child: Column(
                   children: <Widget>[
                     Expanded(
-                        child: FirebaseAnimatedList(
-                      query: _chatController
-                          .getReference(widget.fromView)
-                          .parent(),
-                      itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                          Animation<double> animation, int i) {
-                        Map<dynamic, dynamic> map = snapshot.value;
-                        if (map != null) {
-                          List<ChatModel> list = new List();
-
-                          map.forEach((key, value) async {
-                            //  print(value);
-                            list.add(ChatModel.fromJson(value));
-                          });
-                          list.sort(
-                              (a, b) => a.timestamp.compareTo(b.timestamp));
-
-                          return 
-                        } else {
-                          return Container();
-                        }
-                      },
-                    )),
+                        child: StreamBuilder(
+                            stream: _chatController
+                                .getReference(widget.fromView)
+                                .onValue,
+                            initialData: [],
+                            builder: (ctx, snapshot) => ListView.builder(
+                                shrinkWrap: true,
+                                controller: _scrollController,
+                                itemCount: _chatController.list.length,
+                                itemBuilder: (context, i) => Column(
+                                      children: <Widget>[
+                                        ChatMessage(
+                                          isOwn: Config.user.email ==
+                                              _chatController.list[i].email,
+                                          people: Person(),
+                                          text: _chatController.list[i].message,
+                                        ),
+                                        SizedBox(height: 40.h),
+                                      ],
+                                    )))),
                     ChatTextField(
                       editingController: _editingController,
                       focusNode: _focusNode,
                       onTap: () {
-                        setState(() {});
                         //TODO Store KeyboardSize in firestore for exact
-
                         if (!_iskeyboardShowing &&
                             _scrollController.hasClients) {
                           _scrollController.animateTo(
                             _scrollController.position.maxScrollExtent +
-                                MediaQuery.of(context).size.height / 3,
+                                ScreenUtil.screenHeightDp / 2,
                             curve: Curves.easeOut,
                             duration: const Duration(milliseconds: 200),
                           );
                         }
+                        setState(() {});
                       },
-                      onSubmitted: (String value) {
-                        _chatController.sendMessage(value, widget.fromView);
+                      onSubmitted: (String value) async {
+                        await _chatController.sendMessage(
+                            value, widget.fromView);
+                        _editingController.clear();
                       },
                     ),
                   ],
@@ -121,90 +127,3 @@ class _ChatViewState extends State<ChatView> {
               physics: NeverScrollableScrollPhysics(),
               children: <Widget>[Person()])));
 }
-
-/*
- ChatMessage(
-                            isOwn: false,
-                            people: Person(),
-                            text:
-                                "Whether it is Snapchat, Twitter, Facebook, tual characters matters. ",
-                          ),
-                          SizedBox(height: 40.h),
-                          ChatMessage(
-                            isOwn: true,
-                            people: Person(),
-                            text:
-                                "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                          ),
-                          SizedBox(height: 40.h),
-                          ChatMessage(
-                            isOwn: true,
-                            people: Person(),
-                            text:
-                                "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                          ),
-                          SizedBox(height: 40.h),
-                          ChatMessage(
-                            isOwn: false,
-                            people: Person(),
-                            text:
-                                "Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
-                          ),
-                          SizedBox(height: 40.h),
-                          ChatMessage(
-                            isOwn: false,
-                            people: Person(),
-                            text:
-                                "Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
-                          ),
-                          SizedBox(height: 40.h),
-                          ChatMessage(
-                            isOwn: false,
-                            people: Person(),
-                            text:
-                                "Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
-                          ),
-                          SizedBox(height: 40.h),
-                          ChatMessage(
-                            isOwn: true,
-                            people: Person(),
-                            text:
-                                "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                          ),
-                          SizedBox(height: 40.h),
-                          ChatMessage(
-                            isOwn: true,
-                            people: Person(),
-                            text:
-                                "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                          ),
-                          SizedBox(height: 40.h),
-                          ChatMessage(
-                            isOwn: true,
-                            people: Person(),
-                            text:
-                                "Yes i am glad to to see you too, how have you beeddsdsdsddsdsn? I have been good and i dsdsdds ve been a bit like busy but yu knwo i gt !",
-                          ),
-                          SizedBox(height: 40.h),
-                          ChatMessage(
-                            isOwn: false,
-                            people: Person(),
-                            text:
-                                " Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
-                          ),
-                          SizedBox(height: 40.h),
-                          ChatMessage(
-                            isOwn: false,
-                            people: Person(),
-                            text:
-                                " Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
-                          ),
-                          SizedBox(height: 40.h),
-                          ChatMessage(
-                            isOwn: false,
-                            people: Person(),
-                            text:
-                                "last: Wether it is Snapchat, Twitter, Facebook, tual characters matters. ",
-                          ),
-                          SizedBox(height: 40.h),
-*/

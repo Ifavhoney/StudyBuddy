@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: AppTheme.mainTheme,
-        home: Config.user == null ? LoginView() : WaitingView(),
+        home: Config.user == null ? LoginView() : LoginView(),
         routes: {
           LoginView.routeName: (ctx) => LoginView(),
           WaitingView.routeName: (ctx) => WaitingView(),
