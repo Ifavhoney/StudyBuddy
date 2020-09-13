@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/config.dart';
 import 'package:buddy/layout/chat/models/chat_model.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -39,19 +41,13 @@ class ChatController {
     await initChatRefs(fromView, channelName);
     if (SearchingView.routeName == fromView) {
       //delete
+      //  orderReferenceByStamp(fromView);
     }
   }
 
   DatabaseReference getReference(String fromView) {
     if (SearchingView.routeName == fromView) {
       return _chatSearchRef;
-    }
-    return _chatSearchRef;
-  }
-
-  Query orderReferenceByStamp(String fromView) {
-    if (SearchingView.routeName == fromView) {
-      return getReference(fromView).orderByChild("timestamp");
     }
     return _chatSearchRef;
   }
@@ -67,10 +63,7 @@ class ChatController {
 
   Future<void> sendMessage(String message, String fromView) async {
     if (SearchingView.routeName == fromView) {
-      await _chatSearchRef
-          .child("timestamp")
-          .child(DateTime.now().millisecondsSinceEpoch.toString())
-          .set(ChatModel(
+      await _chatSearchRef.push().set(ChatModel(
             email: Config.user.email,
             message: message,
           ).toJson());

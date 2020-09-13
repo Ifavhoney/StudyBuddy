@@ -1,4 +1,5 @@
 import 'package:buddy/layout/chat/controller/chat_controller.dart';
+import 'package:buddy/layout/chat/models/chat_model.dart';
 import 'package:buddy/layout/chat/widget/chat_message.dart';
 import 'package:buddy/layout/chat/widget/chat_textfield.dart';
 import 'package:buddy/layout/chat/widget/person.dart';
@@ -59,13 +60,23 @@ class _ChatViewState extends State<ChatView> {
                   children: <Widget>[
                     Expanded(
                         child: FirebaseAnimatedList(
-                      query: _chatController.getReference(widget.fromView),
+                      query: _chatController
+                          .getReference(widget.fromView)
+                          .parent(),
                       itemBuilder: (BuildContext context, DataSnapshot snapshot,
                           Animation<double> animation, int i) {
                         Map<dynamic, dynamic> map = snapshot.value;
                         if (map != null) {
-                          //  print(snapshot.);
+                          List<ChatModel> list = new List();
 
+                          map.forEach((key, value) async {
+                            //  print(value);
+                            list.add(ChatModel.fromJson(value));
+                          });
+                          list.sort(
+                              (a, b) => a.timestamp.compareTo(b.timestamp));
+
+                          return 
                         } else {
                           return Container();
                         }
@@ -77,7 +88,9 @@ class _ChatViewState extends State<ChatView> {
                       onTap: () {
                         setState(() {});
                         //TODO Store KeyboardSize in firestore for exact
-                        if (!_iskeyboardShowing) {
+
+                        if (!_iskeyboardShowing &&
+                            _scrollController.hasClients) {
                           _scrollController.animateTo(
                             _scrollController.position.maxScrollExtent +
                                 MediaQuery.of(context).size.height / 3,
