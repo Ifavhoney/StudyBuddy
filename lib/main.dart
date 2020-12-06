@@ -43,8 +43,4 @@ class MyApp extends StatelessWidget {
           }),
     );
   }
-
-  initGetX() {
-    Get.put(TimeHelper());
-  }
 }

@@ -1,45 +1,55 @@
 import 'dart:async';
-
+import 'package:buddy/debug/debug_helper.dart';
 import 'package:get/get.dart';
 
+///@LastModifiedBy: Jason NGuessan
 class TimeHelper extends GetxController {
-  Rx<Timer> primaryTimer = Timer(Duration.zero, () {}).obs;
-  Rx<Timer> secondaryTimer = Timer(Duration.zero, () {}).obs;
-  RxInt min = 0.obs;
-  RxInt start = 0.obs;
+  Timer primaryTimer = Timer(Duration.zero, () {});
+  Timer secondaryTimer = Timer(Duration.zero, () {});
+  int min = 0;
+  int second = 0;
+  int count = 0;
 
-  void startPrimaryTimer() {
-    primaryTimer.value = Timer.periodic(Duration(minutes: 1), (Timer timer) {
-      if (min < 2) {
-        primaryTimer.value.cancel();
-        start.value = 60;
-        startSecondaryTimer();
+  void init(int milliSeconds) {
+    primaryTimer =
+        Timer.periodic(Duration(milliseconds: 1000 * 60), (Timer timer) {
+      min = (milliSeconds / (1000 * 60)).ceil();
+      if (min <= 1) {
+        primaryTimer.cancel();
+        second = 60;
+        _startSecondaryTimer();
       } else {
         min = min - 1;
       }
+      update();
     });
-
-    //return new Timer(duration, endTimer);
   }
 
-  void startSecondaryTimer() {
-    secondaryTimer.value = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-      if (start < 1) {
-        secondaryTimer.value.cancel();
+  incrementCount() {
+    count++;
+    update();
+  }
+
+  void _startSecondaryTimer() {
+    secondaryTimer =
+        Timer.periodic(Duration(milliseconds: 1 * 1000), (Timer timer) {
+      if (second < 1) {
+        reset();
       } else {
-        start = start - 1;
+        second = second - 1;
       }
+      update();
     });
-
-    //return new Timer(duration, endTimer);
   }
 
-  void clean() async {
-    if (primaryTimer.value.isActive == false) {
-      secondaryTimer.value.cancel();
+  void reset() async {
+    if (primaryTimer.isActive == false) {
+      secondaryTimer.cancel();
+      Get.back();
     }
-    if (primaryTimer.value.isActive) {
-      primaryTimer.value.cancel();
+    if (primaryTimer.isActive) {
+      primaryTimer.cancel();
     }
+    update();
   }
 }

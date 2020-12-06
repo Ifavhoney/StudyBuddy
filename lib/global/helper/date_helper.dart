@@ -42,10 +42,16 @@ class DateHelper {
   ///Returns endtime in timestamp given a minute
   static int getEndTimeInTimestamp(int minutes) {
     // DateTime.fromMillisecondsSinceEpoch(
-    return DateTime.now().millisecondsSinceEpoch * (1000 * (minutes * 60));
+    return DateTime.now().millisecondsSinceEpoch + (1000 * (minutes * 60));
   }
 
-  ///Returns the total minutes from now
+  ///Returns remaining time from now given timestamp
+  static DateTime getRemainingTimeFromNowTS(int endTimestamp) {
+    return DateTime.fromMillisecondsSinceEpoch(endTimestamp).subtract(
+        Duration(milliseconds: DateTime.now().millisecondsSinceEpoch));
+  }
+
+  ///Returns the total minutes from now given list
   static int getTotalMinutesFromNow(List<String> splitEndTime) {
     Duration endTime = Duration(
         hours: int.parse(splitEndTime[0]), minutes: int.parse(splitEndTime[1]));

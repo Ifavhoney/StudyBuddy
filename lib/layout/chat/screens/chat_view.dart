@@ -1,8 +1,8 @@
-import 'dart:async';
-
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/config.dart';
+import 'package:buddy/global/helper/date_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
+import 'package:buddy/global/widgets/static/global_time_helper.dart';
 import 'package:buddy/layout/chat/controller/chat_controller.dart';
 import 'package:buddy/layout/chat/widget/chat_message.dart';
 import 'package:buddy/layout/chat/widget/chat_textfield.dart';
@@ -11,7 +11,6 @@ import 'package:buddy/layout/chat/widget/generic_body.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChatView extends StatefulWidget {
@@ -30,29 +29,13 @@ class _ChatViewState extends State<ChatView> {
   TextEditingController _editingController = TextEditingController();
   ChatController _chatController = new ChatController();
   ScrollController _scrollController = new ScrollController();
-
   FocusNode _focusNode = FocusNode();
   bool _iskeyboardShowing;
-
-  Timer _primaryTimer;
-  Timer _secondaryTimer;
-  int _min = 0;
-  int _start = 0;
   @override
   void initState() {
     super.initState();
 
     _asyncInitState();
-    DebugHelper.red("name" + widget.fromView);
-    if (widget.fromView == SearchingView.routeName) {
-      startPrimaryTimer();
-
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
   }
 
   _asyncInitState() async {
@@ -61,51 +44,6 @@ class _ChatViewState extends State<ChatView> {
         .whenComplete(() {
       setState(() {});
     });
-  }
-
-  void startPrimaryTimer() {
-    _primaryTimer = Timer.periodic(Duration(minutes: 1), (Timer timer) {
-      if (_min < 2) {
-        _primaryTimer.cancel();
-        setState(() {
-          _start = 60;
-        });
-        startSecondaryTimer();
-      } else {
-        setState(() {
-          _min = _min - 1;
-        });
-      }
-    });
-
-    //return new Timer(duration, endTimer);
-  }
-
-  void startSecondaryTimer() {
-    _secondaryTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-      if (_start < 1) {
-        _secondaryTimer.cancel();
-        //Navigator.of(context).pop();
-      } else {
-        setState(() {
-          _start = _start - 1;
-        });
-      }
-    });
-
-    //return new Timer(duration, endTimer);
-  }
-
-  @override
-  void dispose() async {
-    if (_primaryTimer.isActive == false) {
-      _secondaryTimer.cancel();
-    }
-    if (_primaryTimer.isActive) {
-      _primaryTimer.cancel();
-    }
-
-    super.dispose();
   }
 
   @override
@@ -122,7 +60,13 @@ class _ChatViewState extends State<ChatView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  _chatText(),
+                  GlobalTimeHelper(
+                      margin: EdgeInsets.only(top: 100.h),
+                      color: Colors.white,
+                      timerInMs:
+                          DateHelper.getRemainingTimeFromNowTS(1607267214698)
+                              .millisecond,
+                      textStyle: AppTheme.sfProText.subtitle1),
                   //  _chatPeople(),
                 ]),
             isKeyboardShowing: _iskeyboardShowing,
@@ -182,15 +126,6 @@ class _ChatViewState extends State<ChatView> {
               ),
             )));
   }
-
-  Widget _chatText() => Container(
-        margin: EdgeInsets.only(top: 100.h),
-        child: Text((_primaryTimer?.isActive == true ? "$_min\m" : "$_start\s"),
-            style: AppTheme.sfProText.subtitle1.copyWith(
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                letterSpacing: 0.2)),
-      );
 
   Widget _chatPeople() => Align(
       alignment: Alignment.topRight,
