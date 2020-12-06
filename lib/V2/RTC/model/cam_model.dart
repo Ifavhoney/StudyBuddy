@@ -5,3 +5,4 @@ class CamModel {
   String channelName;
   CamModel({this.errorText, this.endTime, this.channelName, this.timer});
 }
+

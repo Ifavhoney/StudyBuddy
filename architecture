@@ -1,0 +1,24 @@
+Problem with most codebases
+
+1. No consistency
+    -> Fix that with having themes folder for Icons, Fonts
+
+2. Too many duplicate code
+    -> Fix that by having a static & animations folder with the most common widgets
+
+3. Tablet optimization
+    -> Cya is tackling that issue in the same codebase with the .t tag
+        Theree must be a better way of doing it
+
+4. No testing
+    -> Need to intergrate devops, and push releases this way as apk to test 
+    -> Need to write common test cases for each layout
+    -> Need to test every single version
+
+5. Complex state management
+    -> Use set state or getX
+
+
+
+
+Consider a config setup one time

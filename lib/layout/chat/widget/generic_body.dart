@@ -6,7 +6,6 @@ class GenericBody extends StatefulWidget {
   final bool implyLeading;
   final Widget body;
   final bool isKeyboardShowing;
-
   final Widget chatPeople;
 
   GenericBody(

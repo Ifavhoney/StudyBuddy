@@ -55,9 +55,9 @@ class _GlobalFallingCircleState extends State<GlobalFallingCircle>
     super.initState();
 
     _controller = AnimationController(
+        vsync: this,
         duration: Duration(
-            seconds: Random().nextInt(widget.durationInSeconds) + seconds),
-        vsync: this);
+            seconds: Random().nextInt(widget.durationInSeconds) + seconds));
     _animation =
         Tween<double>(begin: 0, end: widget.heightOfDevice).animate(_controller)
           ..addListener(() {

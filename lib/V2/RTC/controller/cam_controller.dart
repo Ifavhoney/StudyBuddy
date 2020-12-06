@@ -10,7 +10,7 @@ class CamController {
   static bool foundTime = false;
 
   static Future<void> toWebcam(
-      CamModel camModel,
+    CamModel camModel,
     BuildContext context,
   ) async {
     //else if incorect . . .
@@ -33,8 +33,9 @@ class CamController {
   }
 
   static Future<void> _getCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
+    await [
+      Permission.location,
+      Permission.storage,
+    ].request();
   }
 }

@@ -54,11 +54,7 @@ class _GlobalFlashingCircleState extends State<GlobalFlashingCircle>
                 boxShapeColor: boxShapeColor)),
       );
 
-  Widget _circle(
-          {Animation<double> transition,
-          double scale,
-          Color boxShapeColor,
-          Color boxShadowColor}) =>
+  Widget _circle({double scale, Color boxShapeColor, Color boxShadowColor}) =>
       Center(
         child: Container(
           width: MediaQuery.of(context).size.width / scale,

@@ -45,7 +45,7 @@ class ChatController {
       await _chatSearchRef.once().then((DataSnapshot snapshot) {
         _sortMessages(snapshot.value);
       });
-
+      //Any changes that happens is refreshed is cleaned and re-added to
       _chatSearchRef.onValue.listen((Event event) {
         _sortMessages(event.snapshot.value);
       });

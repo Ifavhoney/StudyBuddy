@@ -179,7 +179,7 @@ class _MyHomePageState extends State<UserDashboard> implements AddUserCallback {
   //Get first letter from the name of user
   String getShortName(User user) {
     String shortName = "";
-    if (!user.name.isEmpty) {
+    if (user.name.isNotEmpty) {
       shortName = user.name.substring(0, 1);
     }
     return shortName;
