@@ -36,6 +36,8 @@ class SearchController {
   //Initialize Methods, and listeners
   Future<void> initState(BuildContext context) async {
     await initSearchRefs();
+    await addUserToAwaiting(
+        AwaitingModel(hasMatched: false, timer: 3, user: Config.user.email));
 
     _searchAwaitingRef.onValue.listen((event) {
       Map<dynamic, dynamic> map = event.snapshot.value;
@@ -74,11 +76,12 @@ class SearchController {
                   users: [awaitingModel.user, Config.user.email],
                   channelName: Random().nextInt(100000));
               await _addUsersToConfirmed(confirmedModel);
-
+/*
               Navigator.of(context).pushReplacementNamed(ChatView.routeName,
                   arguments: ChatArgs(
                       channel: confirmedModel.channelName,
                       fromView: SearchingView.routeName));
+                      */
             });
           }
         });
@@ -119,10 +122,13 @@ class SearchController {
         map.forEach((key, value) async {
           ConfirmedModel confirmedModel = ConfirmedModel.fromJson(key, value);
           if (confirmedModel.users.contains(Config.user.email)) {
+            print("user exists in here");
+            /*
             Navigator.of(context).pushReplacementNamed(ChatView.routeName,
                 arguments: ChatArgs(
                     channel: confirmedModel.channelName,
                     fromView: SearchingView.routeName));
+                    */
           }
         });
       }
@@ -142,7 +148,8 @@ class SearchController {
   Future<void> deleteUserFromSearch(AwaitingModel awaitingModel) async {
     //needs to be implemented
     //await _searchAwaitingRef.child(awaitingModel.key).remove();
-    // await _searchAwaitingRef.child(awaitingModel.key).remove();
+    print("delete model" + awaitingModel.user);
+    await _searchAwaitingRef.child(awaitingModel.key).remove();
   }
 
   Future<void> _addUsersToConfirmed(ConfirmedModel confirmedModel) async {

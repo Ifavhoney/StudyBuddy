@@ -26,7 +26,7 @@ class CamController {
       MaterialPageRoute(
         builder: (context) => CamView(
           channelName: camModel.channelName,
-          duration: DateHelper.getTotalMinutesFromNow(splitEndTime),
+          //  duration: DateHelper.getTotalMinutesFromNow(splitEndTime),
         ),
       ),
     );

@@ -36,7 +36,11 @@ class MyApp extends StatelessWidget {
                   final ChatArgs args = settings.arguments;
                   return MaterialPageRoute(
                       builder: (context) => ChatView(
-                          channel: args.channel, fromView: args.fromView));
+                            channel: args.channel,
+                            fromView: args.fromView,
+                            timerInMs: args.timerInMs,
+                            users: args.users,
+                          ));
                 }
             }
             return null; // to suppress a warning

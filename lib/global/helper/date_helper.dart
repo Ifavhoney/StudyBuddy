@@ -46,10 +46,23 @@ class DateHelper {
   }
 
   ///Returns remaining time from now given timestamp
-  static DateTime getRemainingTimeFromNowTS(int endTimestamp) {
-    return DateTime.fromMillisecondsSinceEpoch(endTimestamp).subtract(
-        Duration(milliseconds: DateTime.now().millisecondsSinceEpoch));
+  static int getRemainingTimeFromNowTS(int endTimestamp) {
+    //Get both times and adjust to datetime
+    DateTime endTime = DateTime.fromMillisecondsSinceEpoch(endTimestamp);
+    DateTime curTime = DateTime.fromMillisecondsSinceEpoch(
+        DateTime.now().millisecondsSinceEpoch);
+
+    //Substract dates using duration to get remaining time
+    Duration tempEndTime = Duration(
+        hours: endTime.hour, minutes: endTime.minute, seconds: endTime.second);
+    Duration tempCurrTime = Duration(
+        hours: curTime.hour, minutes: curTime.minute, seconds: curTime.second);
+    print(tempEndTime.inMilliseconds - tempCurrTime.inMilliseconds);
+
+    return tempEndTime.inMilliseconds - tempCurrTime.inMilliseconds;
   }
+
+  /*
 
   ///Returns the total minutes from now given list
   static int getTotalMinutesFromNow(List<String> splitEndTime) {
@@ -60,6 +73,7 @@ class DateHelper {
         Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute);
     return endTime.inMinutes - curTime.inMinutes;
   }
+  */
 
   //Uses a default date (month, year, day) as base to find out if time (hh:mm) is valid
   ///Valid time when the user enters 10 minutes earlier, on time,

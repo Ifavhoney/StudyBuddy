@@ -6,7 +6,7 @@ class GlobalTimeHelper extends StatefulWidget {
   final EdgeInsets margin;
   final Color color;
   final TextStyle textStyle;
-  
+
   ///Timer in milliseconds
   final int timerInMs;
 
@@ -27,12 +27,12 @@ class _GlobalTimeHelperState extends State<GlobalTimeHelper> {
     super.initState();
 
     _timeHelper = Get.find<TimeHelper>();
-    _timeHelper.init(widget.timerInMs);
+    _timeHelper.init(widget.timerInMs, context);
   }
 
   @override
   void dispose() {
-    _timeHelper.reset();
+    _timeHelper.reset(context);
     super.dispose();
   }
 

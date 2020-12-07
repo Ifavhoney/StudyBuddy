@@ -27,11 +27,11 @@ class _SearchingViewState extends State<SearchingView> {
 
   _asyncInitState() async {
     //If it gets to this point, then the user is not in the awaiting list
+
     await _searchController.initState(context);
-    await _searchController.addUserToAwaiting(
-      AwaitingModel(hasMatched: false, timer: 15, user: Config.user.email),
-    );
+    print("i come here after my matching process");
   }
+  
 
   @override
   Widget build(BuildContext context) {

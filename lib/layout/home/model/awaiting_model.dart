@@ -5,6 +5,7 @@ class AwaitingModel {
   String key;
   String user;
   int timer;
+  int priority;
   bool hasMatched;
 
   AwaitingModel({this.user, this.timer, this.hasMatched});
@@ -15,6 +16,7 @@ class AwaitingModel {
       : this.user = value["user"],
         this.hasMatched = value["hasMatched"],
         this.timer = value["timer"],
+        this.priority = value["priority"],
         this.key = key;
 
 //Sends Data back to firebase in JSON format
@@ -23,6 +25,7 @@ class AwaitingModel {
       "user": this.user,
       "hasMatched": this.hasMatched,
       "timer": this.timer,
+      "priority": DateTime.now().millisecondsSinceEpoch
     };
   }
 }
