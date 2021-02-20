@@ -11,6 +11,7 @@ import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+//https://medium.com/flutter-community/how-to-start-with-flutter-firebase-and-cloud-functions-1d1aa38c4d82
 class SearchController {
   static final SearchController _instance = SearchController.internal();
   SearchController.internal();
@@ -22,6 +23,7 @@ class SearchController {
   DatabaseReference _searchRef;
   DatabaseReference _searchAwaitingRef;
   DatabaseReference _searchConfirmedRef;
+  DatabaseReference _searchChannelsRef;
 
   //initialize Refs
   Future<void> initSearchRefs() async {
@@ -30,16 +32,40 @@ class SearchController {
     // DateHelper.currentDayInString();
     _searchConfirmedRef = _searchRef.child("Confirmed").child("2020-08-14");
     _searchAwaitingRef = _searchRef.child("Awaiting").child("2020-08-14");
+    _searchChannelsRef = _searchRef.child("Channel").child("2020-08-14");
+
     await _checkRefStatus();
   }
 
   //Initialize Methods, and listeners
   Future<void> initState(BuildContext context) async {
     await initSearchRefs();
-    await addUserToAwaiting(
-        AwaitingModel(hasMatched: false, timer: 3, user: Config.user.email));
 
-    _searchAwaitingRef.onValue.listen((event) {
+    TransactionResult transactionResult;
+
+    //creates channel
+    _searchConfirmedRef.onChildAdded.listen((event) async {
+      print(event.snapshot.value);
+      //print("hiiii");
+      transactionResult = await _searchChannelsRef
+          .runTransaction((MutableData mutableData) async {
+        mutableData.value = (mutableData.value ?? 0) + 1;
+
+        return mutableData;
+      });
+      if (transactionResult.committed) {
+        //print("committed");
+      }
+    });
+    await getByKey(_searchAwaitingRef, "hasMatched", false)
+        .then((DataSnapshot snapshot) {
+      print(snapshot.value.toString());
+      if (snapshot.value == null)
+        addUserToAwaiting(AwaitingModel(
+            hasMatched: false, timer: 3, user: Config.user.email));
+    });
+
+    _searchAwaitingRef.onValue.listen((event) async {
       Map<dynamic, dynamic> map = event.snapshot.value;
       if (map != null) {
         map.forEach((key, value) async {
@@ -54,40 +80,81 @@ class SearchController {
                 .child(awaitingModel.key)
                 .set(awaitingModel.toJson());
 
-            //Finds un matched user & set to true to lock matching process
-            //if there is no key, then it just ignores
+            addUserToAwaiting(AwaitingModel(
+                hasMatched: true, timer: 3, user: Config.user.email));
+            return;
+          }
+        });
+      } else {
+        await addUserToAwaiting(AwaitingModel(
+            hasMatched: false, timer: 3, user: Config.user.email));
+      }
+
+/*
+
+
+            
+*/
+
+      /*
             getByKey(_searchAwaitingRef, "user", Config.user.email)
                 .then((DataSnapshot snapshot) async {
-              print(Config.user.email);
-              Map<dynamic, dynamic> map = snapshot.value;
-              if (map != null) {
-                map.forEach((key, value) async {
-                  AwaitingModel awaitingModel =
-                      AwaitingModel.fromJson(key, value);
-                  awaitingModel.hasMatched = true;
-                  await _searchAwaitingRef
-                      .child(awaitingModel.key)
-                      .set(awaitingModel.toJson());
-                });
-              }
+              AwaitingModel userModel = AwaitingModel.fromJson(key, value);
+              print(
+                  "OTHER PRIORITY IS is " + awaitingModel.priority.toString());
 
-              ConfirmedModel confirmedModel = ConfirmedModel(
-                  timer: awaitingModel.timer,
-                  users: [awaitingModel.user, Config.user.email],
-                  channelName: Random().nextInt(100000));
-              await _addUsersToConfirmed(confirmedModel);
+              print("priority is " + userModel.priority.toString());
+              print("USER is " + Config.user.email);
+
+             
+            });
+            */
+      /*
+            
+              */
+
 /*
               Navigator.of(context).pushReplacementNamed(ChatView.routeName,
                   arguments: ChatArgs(
                       channel: confirmedModel.channelName,
                       fromView: SearchingView.routeName));
-                      */
+              
             });
-          }
+                    */
+    });
+
+    _searchAwaitingRef.onChildAdded.listen((event) async {
+      Map<dynamic, dynamic> map = event.snapshot.value;
+      AwaitingModel awaitingModel = AwaitingModel.fromJson("", map);
+      //one user is going to initiate child added
+      if (awaitingModel.hasMatched && Config.user.email == awaitingModel.user) {
+        //print("comes here");
+        await getByKey(_searchAwaitingRef, "hasMatched", true)
+            .then((DataSnapshot snapshot) async {
+          Map<dynamic, dynamic> map = snapshot.value;
+          map.forEach((key, value) async {
+            AwaitingModel userModel = AwaitingModel.fromJson(key, value);
+
+            if (userModel.user != awaitingModel.user) {
+              _searchChannelsRef.limitToFirst(1).once().then((value) {
+                int channel = (value.value ?? 0) + 1;
+                print("i come here once right?");
+
+                ConfirmedModel confirmedModel = ConfirmedModel(
+                    timer: awaitingModel.timer,
+                    users: [userModel.user, awaitingModel.user],
+                    channelName: channel);
+                _addUsersToConfirmed(confirmedModel);
+                deleteUserFromSearch(awaitingModel);
+                awaitingModel.user = userModel.user;
+                deleteUserFromSearch(awaitingModel);
+              });
+
+              print("confirmed!");
+            }
+          });
         });
       }
-    }, onError: (Object o) {
-      //do something
     });
   }
 
@@ -109,30 +176,58 @@ class SearchController {
         .limitToFirst(1)
         .once()
         .then((value) => DebugHelper.green("FB: Home/Search/Confirmed/Date"));
+
+    await _searchConfirmedRef
+        .limitToFirst(1)
+        .once()
+        .then((value) => DebugHelper.green("FB: Home/Search/Confirmed/Date"));
+
+    await _searchChannelsRef
+        .limitToFirst(1)
+        .once()
+        .then((value) => DebugHelper.green("FB: Home/Search/Confirmed/Date"));
   }
 
   Future<DataSnapshot> getByKey(
-          DatabaseReference reference, String key, String value) =>
+          DatabaseReference reference, String key, dynamic value) =>
       reference.orderByChild(key).equalTo(value).once();
 
-  Future<void> checkIfInConfirmed(BuildContext context) async {
-    await _searchConfirmedRef.once().then((DataSnapshot snapshot) {
-      Map<dynamic, dynamic> map = snapshot.value;
-      if (map != null) {
-        map.forEach((key, value) async {
-          ConfirmedModel confirmedModel = ConfirmedModel.fromJson(key, value);
-          if (confirmedModel.users.contains(Config.user.email)) {
-            print("user exists in here");
-            /*
+  Future<bool> checkIfInConfirmed() async {
+    bool userIsHere = false;
+
+    await _searchConfirmedRef.once().then((DataSnapshot snapshot) async {
+      String value = snapshot.value.toString();
+
+      if ((value.contains(Config.user.email))) {
+        userIsHere = true;
+        //_searchConfirmedRef.push().set(confirmedModel.toJson());
+
+        /*
             Navigator.of(context).pushReplacementNamed(ChatView.routeName,
                 arguments: ChatArgs(
                     channel: confirmedModel.channelName,
                     fromView: SearchingView.routeName));
                     */
-          }
+        //   _searchConfirmedRef.push().set(confirmedModel.toJson());
+      } else {
+        //This user did not finish session
+      }
+    });
+    print("User is here" + userIsHere.toString());
+    return userIsHere;
+  }
+
+  Future<AwaitingModel> checkIfAwaiting() async {
+    AwaitingModel awaitingModel;
+    await _searchAwaitingRef.limitToFirst(1).once().then((snapshot) {
+      Map<dynamic, dynamic> map = snapshot.value;
+      if (map != null) {
+        map.forEach((key, value) async {
+          awaitingModel = AwaitingModel.fromJson(key, value);
         });
       }
     });
+    return awaitingModel;
   }
 
   Future<void> addUserToAwaiting(AwaitingModel awaitingModel) async {
@@ -146,21 +241,33 @@ class SearchController {
   }
 
   Future<void> deleteUserFromSearch(AwaitingModel awaitingModel) async {
-    //needs to be implemented
-    //await _searchAwaitingRef.child(awaitingModel.key).remove();
     print("delete model" + awaitingModel.user);
     await _searchAwaitingRef.child(awaitingModel.key).remove();
   }
 
   Future<void> _addUsersToConfirmed(ConfirmedModel confirmedModel) async {
-    await _searchConfirmedRef.once().then((DataSnapshot snapshot) {
+    _searchConfirmedRef.push().set(confirmedModel.toJson());
+
+/*
+    await _searchConfirmedRef.once().then((DataSnapshot snapshot) async {
       String value = snapshot.value.toString();
+      print("value is here");
+      print(value.toString());
 
       if (!(value.contains(Config.user.email))) {
-        _searchConfirmedRef.push().set(confirmedModel.toJson());
+        //_searchConfirmedRef.push().set(confirmedModel.toJson());
+
+        /*
+            Navigator.of(context).pushReplacementNamed(ChatView.routeName,
+                arguments: ChatArgs(
+                    channel: confirmedModel.channelName,
+                    fromView: SearchingView.routeName));
+                    */
+        //   _searchConfirmedRef.push().set(confirmedModel.toJson());
       } else {
         //This user did not finish session
       }
     });
+      */
   }
 }

@@ -7,11 +7,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthController implements BaseAuthModel {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final Firestore _firebaseStore = Firestore.instance;
+  final FirebaseFirestore _firebaseStore = FirebaseFirestore.instance;
 
   Future<bool> checkUserExists(String email) async {
-    final snapshot =
-        await _firebaseStore.collection("Users").document(email).get();
+    final snapshot = await _firebaseStore.collection("Users").doc(email).get();
     if (snapshot.exists) {
       /*How to get primitive value of a future */
       return Future.value(true);
@@ -21,26 +20,21 @@ class AuthController implements BaseAuthModel {
   }
 
   @override
-  Future<FirebaseUser> getCurrentUser() async {
-    FirebaseUser user = await _firebaseAuth.currentUser().catchError((error) {
-      return null;
-    });
-    Config.user = user;
-    return user;
+  Future<User> getCurrentUser() async {
+    Config.user = _firebaseAuth.currentUser;
+    return Config.user;
   }
 
   @override
   Future<void> sendEmailVerification() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    return user.sendEmailVerification();
+    return _firebaseAuth.currentUser.sendEmailVerification();
   }
 
   @override
   Future<String> signInWithEmail(String email, String password) async {
-    AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
+    UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
-    FirebaseUser user = result.user;
-    return user.uid;
+    return result.user.uid;
   }
 
   @override
@@ -55,10 +49,10 @@ class AuthController implements BaseAuthModel {
 
   @override
   Future<String> signUpWithPassword(String email, String password) async {
-    AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
+    UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
     //Current User part of firebase android documentation
-    FirebaseUser user = result.user;
+    User user = result.user;
     return user.uid;
   }
 
@@ -66,14 +60,14 @@ class AuthController implements BaseAuthModel {
     GoogleSignIn googleSignIn = GoogleSignIn();
 
     if (await googleSignIn.isSignedIn() == true) {
-      print("already signed in" + (await _firebaseAuth.currentUser()).uid);
+      print("already signed in" + (_firebaseAuth.currentUser).uid);
     } else {
       await googleSignIn.signIn().then((account) async {
         //Get info from google
         GoogleSignInAuthentication googleAuth = await account.authentication;
 
         //Get user's credentials (get access to more information)
-        AuthCredential credential = GoogleAuthProvider.getCredential(
+        AuthCredential credential = GoogleAuthProvider.credential(
             accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
         await _firebaseAuth.signInWithCredential(credential);

@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 //Needs work after first release
 class Config {
-  static FirebaseUser user;
+  static User user;
+
   static String deviceInformation;
   static bool autoLogin;
   static String typeOfLogin;

@@ -5,7 +5,7 @@ abstract class BaseAuthModel {
   /*Docs say it returns a string */
   Future<String> signInWithEmail(String email, String password);
   Future<String> signUpWithPassword(String email, String password);
-  Future<FirebaseUser> getCurrentUser();
+  Future<User> getCurrentUser();
   Future<void> sendEmailVerification();
   Future<void> signOut();
   Future<void> signInWithGoogle();

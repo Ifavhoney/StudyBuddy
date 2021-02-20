@@ -29,9 +29,7 @@ class _SearchingViewState extends State<SearchingView> {
     //If it gets to this point, then the user is not in the awaiting list
 
     await _searchController.initState(context);
-    print("i come here after my matching process");
   }
-  
 
   @override
   Widget build(BuildContext context) {

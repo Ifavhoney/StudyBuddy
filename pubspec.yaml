@@ -27,15 +27,19 @@ dependencies:
   animations: ^1.1.1
   ansicolor: ^1.0.2
   google_sign_in: ^4.1.1
-  firebase_auth: ^0.15.2
-  firebase_database: ^3.1.1
   agora_rtc_engine: ^1.0.5
   get: ^3.22.2
   permission_handler: ^5.0.1
   intl: ^0.16.0
-  flutter_screenutil: ^1.1.0
 
-  cloud_firestore: ^0.13.0+1
+  #firebase 
+  firebase_database: ^5.0.0
+  firebase_auth: ^0.19.0
+  flutter_screenutil: ^1.1.0
+  firebase_core : ^0.6.0
+
+  cloud_functions: ^0.8.0
+  cloud_firestore: ^0.15.0
 
 
 

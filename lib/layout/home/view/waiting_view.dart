@@ -23,7 +23,7 @@ class _WaitingViewState extends State<WaitingView> {
   Future<void> _asyncInitState() async {
     SearchController searchController = new SearchController();
     searchController.initSearchRefs();
-    await searchController.checkIfInConfirmed(context);
+    await searchController.checkIfInConfirmed();
   }
 
   @override
