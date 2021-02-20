@@ -4,8 +4,10 @@ import 'package:buddy/global/config/config.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/animation/global_flashing_circle.dart';
 import 'package:buddy/global/widgets/static/global_trademark_text.dart';
-import 'package:buddy/layout/home/controller/search_controller.dart';
+import 'package:buddy/layout/home/controller/search_controller2.dart';
+//import 'package:buddy/layout/home/controller/search_controller.dart';
 import 'package:buddy/layout/home/model/awaiting_model.dart';
+import 'package:buddy/layout/home/view/waiting_view.dart';
 
 import 'package:flutter/material.dart';
 
@@ -67,9 +69,18 @@ class _SearchingViewState extends State<SearchingView> {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Align(
             alignment: Alignment.bottomLeft,
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: AppTheme.searchingViewIcons["arrowBack"],
-            )),
+            child: IconButton(
+                onPressed: () {
+                  _searchController
+                      .deleteUserByEmail(Config.user.email)
+                      .whenComplete(() {
+                    Navigator.of(context)
+                        .pushReplacementNamed(WaitingView.routeName);
+                  });
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: AppTheme.searchingViewIcons["arrowBack"],
+                ))),
       ));
 }

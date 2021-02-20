@@ -1,3 +1,5 @@
+import 'package:buddy/example/mycustomform.dart';
+import 'package:buddy/example/user_dashboard.dart';
 import 'package:buddy/global/config/config.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
@@ -13,7 +15,6 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  print("comes here");
   await Config.init();
   runApp(MyApp());
 }
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       home: MaterialApp(
           theme: AppTheme.mainTheme,
-          home: Config.user == null ? LoginView() : LoginView(),
+          home: Config.user == null ? UserDashboard() : LoginView(),
           routes: {
             LoginView.routeName: (ctx) => LoginView(),
             WaitingView.routeName: (ctx) => WaitingView(),
