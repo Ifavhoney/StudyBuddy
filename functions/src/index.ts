@@ -5,6 +5,21 @@ require("firebase/database");
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
+const config = {
+    apiKey: "AIzaSyDAVQKetyGYOocSnqL-5UomtfltVtQrbq0",
+    authDomain: "studybuddy-a39ca.firebaseapp.com",
+    databaseURL: "https://studybuddy-a39ca.firebaseio.com",
+    projectId: "studybuddy-a39ca",
+    storageBucket: "studybuddy-a39ca.appspot.com",
+    messagingSenderId: "610079262652",
+    appId: "1:610079262652:web:20b1c7e7d4fda3da0e0db9"
+};
+
+let database = firebase.initializeApp(config).database()
+//let date = new Date().toISOString().slice(0, 10)
+let searchRef = "Home/Search/Awaiting/" + "2020-08-14" + "/";
+let channelRef = "Home/Search/Awaiting/" + "2020-08-14" + "/";
+
 
 
 /*
@@ -28,40 +43,84 @@ export const randomNumber = functions.https.onRequest((request, response) => {
 // Get a reference to the database service
 
 
-const config = {
-    apiKey: "AIzaSyDAVQKetyGYOocSnqL-5UomtfltVtQrbq0",
-    authDomain: "studybuddy-a39ca.firebaseapp.com",
-    databaseURL: "https://studybuddy-a39ca.firebaseio.com",
-    projectId: "studybuddy-a39ca",
-    storageBucket: "studybuddy-a39ca.appspot.com",
-    messagingSenderId: "610079262652",
-    appId: "1:610079262652:web:20b1c7e7d4fda3da0e0db9"
-};
-
-
-
-let database = firebase.initializeApp(config).database()
-let searchRef = "Home/Search/Awaiting";
 
 
 
 //finds one user
 
+
 export const matchTest = function (user: string) {
     //check everyonee is true or is the only person there
-    database.ref(searchRef).get().then((function (snapshot) {
+    //find user's id
+    let ref = database.ref(searchRef)
+    let array: any = []
+    ref.get().then((async function (snapshot) {
         if (snapshot.exists()) {
-            console.log("i exist")
+
+            snapshot.forEach((child: any) => array.push(child))
+
+            for (const _ of array) {
+                snapshot = _ as firebase.database.DataSnapshot;
+                // key will be "ada" the first time and "alan" the second time
+                let key: string = (snapshot.key) as string;
+                // childData will be the actual contents of the child
+                let childData = snapshot.val()
+
+
+                let hasMatched = childData["hasMatched"]
+                let currUser = childData["user"]
+
+                if (hasMatched == false && currUser != user) {
+
+                    await _delete(ref, await _findKeyByEmail(ref, user))
+                    await _delete(ref, key);
+
+
+
+
+                }
+            }
+
+
 
         }
         else {
-            console.log("no data")
         }
     }))
 
 }
 
-matchTest("usr");
+export const _incrementChannel = function (): number {
+
+}
+export const _delete = function (ref: firebase.database.Reference, key: string): string {
+    ref.child(key).remove();
+    return key;
+}
+
+export const _findKeyByEmail = async function (ref: firebase.database.Reference, user: string): Promise<string> {
+    let key: string = "";
+    console.log(user)
+    await ref.get().then((function (snapshot) {
+
+        if (snapshot.exists()) {
+            snapshot.forEach(function (snapshot) {
+
+                let childData = snapshot.val()
+                if (user == childData["user"]) {
+                    key = (snapshot.key) as string
+                }
+            });
+        }
+
+    }))
+    if (key == "")
+        console.log("user: " + user + " does not exist")
+    return key;
+
+}
+matchTest("nuthsaid5@gmail.com");
+
 
 // export const match = functions.database.ref(searchRef + '/{date}/{id}')
 //     .onCreate((snapshot, context) => {
