@@ -18,7 +18,9 @@ const config = {
 let database = firebase.initializeApp(config).database()
 //let date = new Date().toISOString().slice(0, 10)
 let searchRef = "Home/Search/Awaiting/" + "2020-08-14" + "/";
-let channelRef = "Home/Search/Awaiting/" + "2020-08-14" + "/";
+//__searchChannelsRef = _searchRef.child("Channel").child("2020-08-14");
+
+let channelRef = "Home/Search/Channel/" + "2020-08-14" + "/";
 
 
 
@@ -62,7 +64,7 @@ export const matchTest = function (user: string) {
             for (const _ of array) {
                 snapshot = _ as firebase.database.DataSnapshot;
                 // key will be "ada" the first time and "alan" the second time
-                let key: string = (snapshot.key) as string;
+                //let key: string = (snapshot.key) as string;
                 // childData will be the actual contents of the child
                 let childData = snapshot.val()
 
@@ -71,9 +73,10 @@ export const matchTest = function (user: string) {
                 let currUser = childData["user"]
 
                 if (hasMatched == false && currUser != user) {
-
-                    await _delete(ref, await _findKeyByEmail(ref, user))
-                    await _delete(ref, key);
+                    console.log("???")
+                    await _incrementChannel()
+                    // await _delete(ref, await _findKeyByEmail(ref, user))
+                    // await _delete(ref, key);
 
 
 
@@ -91,6 +94,19 @@ export const matchTest = function (user: string) {
 }
 
 export const _incrementChannel = function (): number {
+    let channelNum: number = 0
+
+    database.ref(channelRef).transaction((post) => {
+        if (post == null) {
+            return { "id": channelNum }
+        }
+        else {
+            channelNum = (post.id as number) + 1
+            return { "id": channelNum }
+        }
+
+    })
+    return channelNum
 
 }
 export const _delete = function (ref: firebase.database.Reference, key: string): string {
