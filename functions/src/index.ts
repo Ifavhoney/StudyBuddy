@@ -24,7 +24,9 @@ let searchRef: string = "Home/Search/";
 let searchAwaitingRef: string = searchRef + "Awaiting/" + "2020-08-14/";
 //__searchChannelsRef = _awaitingRef.child("Channel").child("2020-08-14");
 
-let searchChannelRef: string = searchRef + "Channel/" + "2020-08-14/";
+let searchChannelCountRef: string = searchRef + "Count/Channel/" + "2020-08-14/";
+let searchAwaitingCountRef: string = searchRef + "Count/Awaiting/" + "2020-08-14/";
+
 
 let searchConfirmedRef: string = searchRef + "Confirmed/" + "2020-08-14/";
 
@@ -56,19 +58,23 @@ export const randomNumber = functions.https.onRequest((request, response) => {
 //finds one user
 
 
-export const matchTest = function (randUser: string, randKey: string) {
+export const matchTest = async function (randUser: string, randKey: string) {
     //check everyonee is true or is the only person there
     //find user's id
+    console.log("enters here")
     let awaitingRef = database.ref(searchAwaitingRef)
     let confirmdRef = database.ref(searchConfirmedRef)
-    let channelRef = database.ref(searchChannelRef)
+    let channeCountRef = database.ref(searchChannelCountRef)
 
+    let awaitingCountRef = database.ref(searchAwaitingCountRef)
 
     let array: any = []
-    awaitingRef.get().then((async function (snapshot) {
+
+    await awaitingRef.get().then((async function (snapshot) {
         if (snapshot.exists()) {
 
             snapshot.forEach((child: any) => array.push(child))
+            console.log(array.length());
 
             for (const _ of array) {
                 snapshot = _ as firebase.database.DataSnapshot;
@@ -77,16 +83,20 @@ export const matchTest = function (randUser: string, randKey: string) {
 
                 let hasMatched = childData["hasMatched"]
                 let currUser = childData["user"]
+                console.log(currUser);
+                console.log("rana user is " + randUser.toString())
+                console.log(hasMatched.toString())
+
 
 
 
                 if (hasMatched == false && currUser != randUser) {
-                    let channelNum: number = await _updateRef(channelRef)
-
+                    console.log("comes in hasmatched")
                     await _delete(awaitingRef, randKey)
                     await _delete(awaitingRef, (snapshot.key) as string);
-                    await _updateRef(awaitingRef, false);
-                    await _updateRef(awaitingRef, false);
+                    let channelNum: number = await _updateRef(channeCountRef)
+                    await _updateRef(awaitingCountRef, false);
+                    await _updateRef(awaitingCountRef, false);
 
                     await _add(confirmdRef, {
                         users: [randUser, currUser],
@@ -98,14 +108,17 @@ export const matchTest = function (randUser: string, randKey: string) {
                 }
             }
         }
+        else {
+            console.log("snapshot does not exist")
+        }
 
     }))
 }
 
 
-export const _updateRef = function (ref: firebase.database.Reference, increment = true): number {
-    let num: number = 0
-    ref.transaction((post) => {
+export const _updateRef = async function (ref: firebase.database.Reference, increment = true): Promise<number> {
+    let num: number = 1
+    await ref.transaction((post) => {
         if (post == null) {
             return { "id": num }
         }
@@ -114,11 +127,14 @@ export const _updateRef = function (ref: firebase.database.Reference, increment 
                 num = (post.id as number) + 1
             else
                 num = (post.id as number) - 1
-
+            console.log("stops here?? " + num.toString());
             return { "id": num }
         }
 
     })
+    console.log("comes here?? and is " + num.toString())
+
+
     return num
 
 }
@@ -155,7 +171,7 @@ export const _findKeyByEmail = async function (ref: firebase.database.Reference,
 
 }
 
-//matchTest("nuthsaid5@gmail.com");
+//matchTest("jason@defhacks.co", "-MUfCEytViFua68CH7dY");
 export const _findRandomUser = async function (ref: firebase.database.Reference): Promise<Record<string, string>> {
     let user: Record<string, string> = {}
     await ref.limitToFirst(1).get().then((async function (snapshot) {
@@ -172,14 +188,21 @@ export const _findRandomUser = async function (ref: firebase.database.Reference)
     }))
     return user;
 }
-_findRandomUser(database.ref(searchAwaitingRef));
 
-export const match = functions.database.ref(searchAwaitingRef)
+
+
+//_updateRef(database.ref(searchAwaitingCountRef));
+//firecast jason$ firebase deploy --only functions
+//ts-node index.ts
+export const match = functions.database.ref(searchAwaitingRef + "{documentId}")
     .onCreate(async (snapshot, context) => {
-        let awaitingRef = database.ref(searchAwaitingRef)
-        let num: number = await _updateRef(awaitingRef)
+        let awaitingCountRef = database.ref(searchAwaitingCountRef)
+        let num: number = await _updateRef(awaitingCountRef)
+        console.log(num)
         if (num % 2 == 0) {
+            console.log("is here " + num.toString())
             let r: Record<string, string> = await _findRandomUser(database.ref(searchAwaitingRef))
+            console.log(r)
             await matchTest(r["email"], r["key"]);
 
         }
