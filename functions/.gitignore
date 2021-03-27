@@ -8,4 +8,4 @@ typings/
 # Node.js dependency directory
 node_modules/
 
-/global/refs/keys.ts
+functions/src/global/keys.ts
