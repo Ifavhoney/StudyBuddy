@@ -6,54 +6,41 @@ require("firebase/storage");
 require("firebase/database");
 
 
-export const matchTest = async function (randUser: string, randKey: string) {
+
+
+const onCreate = async function () {
+    let num: number = await Global.updateRef(Global.awaitingCountRef)
+
+    if (num % 2 == 0) {
+        let r: Record<string, string> = await Global.findRandomUser(Global.awaitingRef);
+        await _matchBothUsers(r["email"], r["key"]);
+
+    }
+
+
+}
+const _matchBothUsers = async function (randUser: string, randKey: string) {
     //check everyonee is true or is the only person there
     //find user's id
-    console.log("enters here")
-    let awaitingRef = database.ref(searchAwaitingRef)
-    let confirmdRef = database.ref(searchConfirmedRef)
-    let channeCountRef = database.ref(searchChannelCountRef)
-
-    let awaitingCountRef = database.ref(searchAwaitingCountRef)
-
-
     let array: any = []
     await Global.awaitingRef.get().then((async function (snapshot) {
         if (snapshot.exists()) {
-            console.log(snapshot.toJSON())
             snapshot.forEach((child) => { array.push(child) });
 
-            console.log(array.length)
             for (const _ of array) {
                 snapshot = _ as firebase.database.DataSnapshot;
 
                 let childData = snapshot.val()
-
                 let hasMatched = childData["hasMatched"]
-                let currUser = childData["user"]
-                console.log(currUser);
-                console.log("rana user is " + randUser.toString())
-                console.log(hasMatched.toString())
+                let snapshotUser = childData["user"];
+
+                if (hasMatched == false && snapshotUser != randUser) {
 
 
-
-
-                if (hasMatched == false && currUser != randUser) {
-                    console.log("comes in hasmatched")
-                    await _delete(awaitingRef, randKey)
-                    await _delete(awaitingRef, (snapshot.key) as string);
-                    let channelNum: number = await _updateRef(channeCountRef)
-                    await _updateRef(awaitingCountRef, false);
-                    await _updateRef(awaitingCountRef, false);
-
-                    await _add(confirmdRef, {
-                        users: [randUser, currUser],
-                        timer: childData["timer"],
-                        channel: channelNum
-                    })
-
-
+                    _match(randUser, randKey, childData["user"], (snapshot.key as string), childData["timer"])
+                    break;
                 }
+
             }
         }
         else {
@@ -62,3 +49,29 @@ export const matchTest = async function (randUser: string, randKey: string) {
 
     }))
 }
+
+
+
+
+
+const _match = async function (randUser: string, randKey: string, snapshotUser: string, snapshotKey: string, timer: number) {
+
+    if (snapshotUser != randUser) {
+        Global.delete(Global.awaitingRef, randKey);
+        Global.delete(Global.awaitingRef, snapshotKey);
+
+        let channelNum: number = await Global.updateRef(Global.channeCountRef);
+
+        Global.updateRef(Global.awaitingCountRef, false); Global.updateRef(Global.awaitingCountRef, false);
+        Global.add(Global.confirmdRef, {
+            users: [randUser, snapshotUser],
+            timer: timer,
+            channel: channelNum,
+        })
+    }
+
+
+}
+
+export const matchUser = onCreate();
+

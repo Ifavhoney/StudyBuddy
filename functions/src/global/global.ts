@@ -10,6 +10,7 @@ require("firebase/database");
 class Global {
 
     private _config: Record<string, string>;
+    private static _instance: Global;
 
     //Search Refs
     private _awaitingRef: firebase.database.Reference;
@@ -42,6 +43,12 @@ class Global {
         this._awaitingCountRef = database.ref(searchRefs.awaitingCountRefStr);
 
     }
+
+    public static get Instance() {
+        // Do you need arguments? Make it a regular static method instead.
+        return this._instance || (this._instance = new this());
+    }
+
     public add(ref: firebase.database.Reference, value: any): void { ref.push().set(value) };
     public delete(ref: firebase.database.Reference, key: string) {
         ref.child(key).remove();
@@ -90,8 +97,6 @@ class Global {
         return key;
 
     }
-
-
     public async findRandomUser(ref: firebase.database.Reference): Promise<Record<string, string>> {
         let user: Record<string, string> = {}
         await ref.limitToFirst(1).get().then((async function (snapshot) {
@@ -108,4 +113,5 @@ class Global {
     }
 }
 
-export default new Global();
+
+export default Global.Instance
