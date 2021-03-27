@@ -1,6 +1,5 @@
-
 import * as functions from 'firebase-functions';
-
+import Keys from './global/keys'
 import firebase from "firebase/app";
 require("firebase/auth");
 require("firebase/storage");
@@ -9,25 +8,21 @@ require("firebase/database");
 // // https://firebase.google.com/docs/functions/typescript
 //
 const config = {
-    apiKey: "AIzaSyDAVQKetyGYOocSnqL-5UomtfltVtQrbq0",
-    authDomain: "studybuddy-a39ca.firebaseapp.com",
-    databaseURL: "https://studybuddy-a39ca.firebaseio.com",
-    projectId: "studybuddy-a39ca",
-    storageBucket: "studybuddy-a39ca.appspot.com",
-    messagingSenderId: "610079262652",
-    appId: "1:610079262652:web:20b1c7e7d4fda3da0e0db9"
+    apiKey: Keys.APIKEY,
+    authDomain: Keys.AUTHDOMAIN,
+    databaseURL: Keys.DATABASEURL,
+    projectId: Keys.PROJECTID,
+    storageBucket: Keys.STORAGEBUCKET,
+    messagingSenderId: Keys.MESSAGINGSENDERID,
+    appId: Keys.APPID
 };
 
 let database = firebase.initializeApp(config).database()
 //let date = new Date().toISOString().slice(0, 10)
 let searchRef: string = "Home/Search/";
 let searchAwaitingRef: string = searchRef + "Awaiting/" + "2020-08-14/";
-//__searchChannelsRef = _awaitingRef.child("Channel").child("2020-08-14");
-
 let searchChannelCountRef: string = searchRef + "Count/Channel/" + "2020-08-14/";
 let searchAwaitingCountRef: string = searchRef + "Count/Awaiting/" + "2020-08-14/";
-
-
 let searchConfirmedRef: string = searchRef + "Confirmed/" + "2020-08-14/";
 
 
@@ -72,10 +67,10 @@ export const matchTest = async function (randUser: string, randKey: string) {
 
     await awaitingRef.get().then((async function (snapshot) {
         if (snapshot.exists()) {
+            console.log(snapshot.toJSON())
+            snapshot.forEach((child) => { array.push(child) });
 
-            snapshot.forEach((child: any) => array.push(child))
-            console.log(array.length());
-
+            console.log(array.length)
             for (const _ of array) {
                 snapshot = _ as firebase.database.DataSnapshot;
 
@@ -127,24 +122,17 @@ export const _updateRef = async function (ref: firebase.database.Reference, incr
                 num = (post.id as number) + 1
             else
                 num = (post.id as number) - 1
-            console.log("stops here?? " + num.toString());
             return { "id": num }
         }
 
     })
-    console.log("comes here?? and is " + num.toString())
-
 
     return num
 
 }
 
-
-
-export const _add = function (ref: firebase.database.Reference, value: any): void {
-    ref.set(value)
-}
-export const _delete = function (ref: firebase.database.Reference, key: string): string {
+export const _add = (ref: firebase.database.Reference, value: any) => ref.push().set(value)
+export const _delete = (ref: firebase.database.Reference, key: string): string => {
     ref.child(key).remove();
     return key;
 }
@@ -171,7 +159,6 @@ export const _findKeyByEmail = async function (ref: firebase.database.Reference,
 
 }
 
-//matchTest("jason@defhacks.co", "-MUfCEytViFua68CH7dY");
 export const _findRandomUser = async function (ref: firebase.database.Reference): Promise<Record<string, string>> {
     let user: Record<string, string> = {}
     await ref.limitToFirst(1).get().then((async function (snapshot) {
@@ -184,12 +171,14 @@ export const _findRandomUser = async function (ref: firebase.database.Reference)
 
         });
 
-
     }))
     return user;
 }
 
 
+
+
+//matchTest("jason@defhacks.co", "-MWo_LwLHUXtldMEUdrw");
 
 //_updateRef(database.ref(searchAwaitingCountRef));
 //firecast jason$ firebase deploy --only functions
@@ -201,6 +190,7 @@ export const match = functions.database.ref(searchAwaitingRef + "{documentId}")
         console.log(num)
         if (num % 2 == 0) {
             console.log("is here " + num.toString())
+
             let r: Record<string, string> = await _findRandomUser(database.ref(searchAwaitingRef))
             console.log(r)
             await matchTest(r["email"], r["key"]);
