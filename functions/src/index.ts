@@ -2,6 +2,7 @@
 
 import * as functions from 'firebase-functions';
 import { matchUser } from './function/match_user'
+//import global from './global/global';
 import SearchRefs from './global/refs/search_refs'
 
 require("firebase/auth");
@@ -17,4 +18,6 @@ require("firebase/database");
 
 export const onCreateMatchUser = functions.database.ref(SearchRefs.awaitingRefStr + "{documentId}")
     .onCreate(async (snapshot, context) => { matchUser });
+
+
 
