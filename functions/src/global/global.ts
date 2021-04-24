@@ -1,5 +1,4 @@
 
-import Keys from './keys';
 import searchRefs from './refs/search_refs';
 import firebase from "firebase/app";
 require("firebase/auth");
@@ -7,50 +6,23 @@ require("firebase/storage");
 require("firebase/database");
 
 
-
 class Global {
 
-    private _config: Record<string, string>;
-    private static _instance: Global;
 
-    //Search Refs
-    private _awaitingRef: firebase.database.Reference;
-    private _confirmdRef: firebase.database.Reference;
-    private _channeCountRef: firebase.database.Reference;
-    private _awaitingCountRef: firebase.database.Reference;
+    private _database: any;
 
+    get awaitingRef(): firebase.database.Reference { return this._database.ref(searchRefs.awaitingRefStr); }
+    get confirmdRef(): firebase.database.Reference { return this._database.ref(searchRefs.confirmedRefStr) }
+    get channeCountRef(): firebase.database.Reference { return this._database.ref(searchRefs.channelCountRefStr); }
+    get awaitingCountRef(): firebase.database.Reference { return this._database.ref(searchRefs.awaitingCountRefStr); }
+    get matchCountRef(): firebase.database.Reference { return this._database.ref(searchRefs.matchCountRefStr); }
 
-    get config(): Record<string, string> { return this._config }
-    get awaitingRef(): firebase.database.Reference { return this._awaitingRef }
-    get confirmdRef(): firebase.database.Reference { return this._confirmdRef }
-    get channeCountRef(): firebase.database.Reference { return this._channeCountRef }
-    get awaitingCountRef(): firebase.database.Reference { return this._awaitingCountRef }
-
-
-    //Constructor that initializes Config, and default refs
-    constructor() {
-        this._config = {
-            apiKey: Keys.APIKEY,
-            authDomain: Keys.AUTHDOMAIN,
-            databaseURL: Keys.DATABASEURL,
-            projectId: Keys.PROJECTID,
-            storageBucket: Keys.STORAGEBUCKET,
-            messagingSenderId: Keys.MESSAGINGSENDERID,
-            appId: Keys.APPID
-        };
-        let database = firebase.initializeApp(this._config).database()
-
-        this._awaitingRef = database.ref(searchRefs.awaitingRefStr);
-        this._confirmdRef = database.ref(searchRefs.confirmedRefStr);
-        this._channeCountRef = database.ref(searchRefs.channelCountRefStr);
-        this._awaitingCountRef = database.ref(searchRefs.awaitingCountRefStr);
-
+    public set database(fun: any) {
+        console.log("coms here");
+        this._database = fun;
     }
 
-    public static get Instance() {
-        // Do you need arguments? Make it a regular static method instead.
-        return this._instance || (this._instance = new this());
-    }
+
 
     public async add(ref: firebase.database.Reference, value: any): Promise<string | null> {
         let key: string | null = await ref.push().key ?? "";
@@ -67,6 +39,7 @@ class Global {
 
     public async updateRef(ref: firebase.database.Reference, increment = true): Promise<number> {
         let num: number = 1
+       
         await ref.transaction((post) => {
             if (post == null) {
                 return { "id": num }
@@ -122,12 +95,12 @@ class Global {
 
 
     public async delay(r: Function, m: number): Promise<void> {
-        await setTimeout(r(), 60000 * m);
+        await setTimeout((() => { r() }), 60000 * m);
     }
 
 
 }
 
 
-export default Global.Instance
+export default new Global();
 

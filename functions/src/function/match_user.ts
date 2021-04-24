@@ -1,16 +1,16 @@
 import Global from "../global/global";
 import firebase from "firebase/app";
-require("firebase/auth");
-require("firebase/storage");
-require("firebase/database");
 
+import SearchRefs from '../global/refs/search_refs';
 
+export const matchUser = async function (database: firebase.database.Database, ch: String) {
 
-
-const onCreate = async function () {
-    let num: number = await Global.updateRef(Global.awaitingCountRef)
+    console.log(ch);
+    let num: number = await Global.updateRef(database.ref(SearchRefs.awaitingCountRefStr))
     console.log("num is " + num.toString());
     if (num % 2 == 0) {
+
+        console.log("are u working>?");
         let r: Record<string, string> = await Global.findRandomUser(Global.awaitingRef);
 
         await _matchBothUsers(r["email"], r["key"]);
@@ -18,7 +18,13 @@ const onCreate = async function () {
     }
 
 
+
 }
+
+
+
+
+
 const _matchBothUsers = async function (randUser: string, randKey: string) {
     //check everyonee is true or is the only person there
     //find user's id
@@ -68,24 +74,16 @@ const _match = async function (randUser: string, randKey: string, snapshotUser: 
             console.log(key?.toString());
             if (key == null)
                 return;
-            console.log("found key " + key.toString());
 
-
-            await Global.delay(function () {
+            Global.delay(function () {
 
                 Global.delete(Global.confirmdRef, key);
-            }, 1);
+                Global.updateRef(Global.channeCountRef, false);
+                Global.updateRef(Global.matchCountRef, true);
 
-
-            // await setTimeout(function () {
-            //     console.log('Test');
-            //     "test"
-            // }, 1000);
-            //1000 = 1 second
+            }, timer);
 
         })
-
-
 
     }
 
@@ -93,4 +91,3 @@ const _match = async function (randUser: string, randKey: string, snapshotUser: 
 
 
 
-export const matchUser = onCreate();
