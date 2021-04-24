@@ -4,21 +4,17 @@
 import * as functions from 'firebase-functions';
 import SearchRefs from './global/refs/search_refs'
 import Keys from "./global/keys";
-//import Global from './global/global';
 import firebase from "firebase/app";
 
-//matchTest("jason@defhacks.co", "-MWo_LwLHUXtldMEUdrw");
-
-//_updateRef(database.ref(searchAwaitingCountRef));
-//firecast jason$ firebase deploy --only functions
-//ts-node index.ts
-
-//find a way to enter firebase wizard (init emulators) and choose db & functions
-//firebase emuulators:start
-// npm build before releasing, and then deploy
 
 
-//    console.log(num.toString());
+//tsc - w
+//find a way to enter firebase init emulators and choose db & functions
+//firebase emulators:start
+
+//Deploy: firecast jason$ firebase deploy --only functions
+
+
 firebase.initializeApp({
     apiKey: Keys.APIKEY,
     authDomain: Keys.AUTHDOMAIN,
@@ -30,20 +26,10 @@ firebase.initializeApp({
 })
 
 
-
-
+let matchUser = require("./function/match_user");
 
 
 export const onCreateMatchUser = functions.database.ref(SearchRefs.awaitingRefStr + "{documentId}")
-    .onCreate(async (snapshot, context) => {
-        //   let num: number = await Global.updateRef(Global.awaitingCountRef)
-
-        let matchUser = require("./function/match_user");
-        matchUser.matchUser(firebase.database(), "hii");
-
-        console.log("ugh")
-
-
-    });
+    .onCreate(async (snapshot, context) => { matchUser.onCreate(); });
 
 

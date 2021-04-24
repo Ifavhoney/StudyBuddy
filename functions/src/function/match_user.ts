@@ -1,29 +1,20 @@
 import Global from "../global/global";
 import firebase from "firebase/app";
 
-import SearchRefs from '../global/refs/search_refs';
 
-export const matchUser = async function (database: firebase.database.Database, ch: String) {
+export const onCreate = async function () {
 
-    console.log(ch);
-    let num: number = await Global.updateRef(database.ref(SearchRefs.awaitingCountRefStr))
-    console.log("num is " + num.toString());
+    let num: number = await Global.updateRef(Global.awaitingCountRef);
+
     if (num % 2 == 0) {
 
-        console.log("are u working>?");
         let r: Record<string, string> = await Global.findRandomUser(Global.awaitingRef);
 
         await _matchBothUsers(r["email"], r["key"]);
 
     }
 
-
-
 }
-
-
-
-
 
 const _matchBothUsers = async function (randUser: string, randKey: string) {
     //check everyonee is true or is the only person there
@@ -49,6 +40,7 @@ const _matchBothUsers = async function (randUser: string, randKey: string) {
             }
         }
         else {
+
             console.log("snapshot does not exist")
         }
 

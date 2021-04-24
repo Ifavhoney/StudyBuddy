@@ -9,18 +9,12 @@ require("firebase/database");
 class Global {
 
 
-    private _database: any;
 
-    get awaitingRef(): firebase.database.Reference { return this._database.ref(searchRefs.awaitingRefStr); }
-    get confirmdRef(): firebase.database.Reference { return this._database.ref(searchRefs.confirmedRefStr) }
-    get channeCountRef(): firebase.database.Reference { return this._database.ref(searchRefs.channelCountRefStr); }
-    get awaitingCountRef(): firebase.database.Reference { return this._database.ref(searchRefs.awaitingCountRefStr); }
-    get matchCountRef(): firebase.database.Reference { return this._database.ref(searchRefs.matchCountRefStr); }
-
-    public set database(fun: any) {
-        console.log("coms here");
-        this._database = fun;
-    }
+    get awaitingRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.awaitingRefStr); }
+    get confirmdRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.confirmedRefStr) }
+    get channeCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.channelCountRefStr); }
+    get awaitingCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.awaitingCountRefStr); }
+    get matchCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.matchCountRefStr); }
 
 
 
@@ -39,7 +33,7 @@ class Global {
 
     public async updateRef(ref: firebase.database.Reference, increment = true): Promise<number> {
         let num: number = 1
-       
+
         await ref.transaction((post) => {
             if (post == null) {
                 return { "id": num }
