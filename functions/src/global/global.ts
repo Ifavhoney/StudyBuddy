@@ -8,15 +8,11 @@ require("firebase/database");
 
 class Global {
 
-
-
     get awaitingRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.awaitingRefStr); }
     get confirmdRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.confirmedRefStr) }
     get channeCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.channelCountRefStr); }
     get awaitingCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.awaitingCountRefStr); }
     get matchCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.matchCountRefStr); }
-
-
 
     public async add(ref: firebase.database.Reference, value: any): Promise<string | null> {
         let key: string | null = await ref.push().key ?? "";
@@ -87,14 +83,11 @@ class Global {
         return user;
     }
 
-
-    public async delay(r: Function, m: number): Promise<void> {
-        await setTimeout((() => { r() }), 60000 * m);
+    public async delay(r: Function, ms: number): Promise<void> {
+        await setTimeout((() => { r() }), ms);
     }
 
-
 }
-
 
 export default new Global();
 

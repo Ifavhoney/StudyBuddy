@@ -33,8 +33,7 @@ const _matchBothUsers = async function (randUser: string, randKey: string) {
 
                 if (hasMatched == false && snapshotUser != randUser) {
 
-                    _match(randUser, randKey, childData["user"], (snapshot.key as string), childData["timer"])
-
+                    _match(randUser, randKey, childData["user"], (snapshot.key as string), childData["timer"] * 60000)
                     break;
                 }
             }
@@ -58,28 +57,47 @@ const _match = async function (randUser: string, randKey: string, snapshotUser: 
         let channelNum: number = await Global.updateRef(Global.channeCountRef);
 
         Global.updateRef(Global.awaitingCountRef, false); Global.updateRef(Global.awaitingCountRef, false);
-        Global.add(Global.confirmdRef, {
+
+        let confirmedObject: Record<any, any> = {
             users: [randUser, snapshotUser],
             timer: timer,
             channel: channelNum,
-        }).then(async (key) => {
+        }
+        Global.add(Global.confirmdRef, confirmedObject).then(async (key) => {
             console.log(key?.toString());
             if (key == null)
                 return;
+            let timer: number = confirmedObject["timer"]
+            let intervalMs: number = 10000;
+            let interval: any = setInterval(function () {
+                timer -= intervalMs
+                confirmedObject["timer"] = timer;
+                Global.confirmdRef.child(key).update(confirmedObject)
+            }, intervalMs)
+
+
 
             Global.delay(function () {
-
+                clearInterval(interval);
                 Global.delete(Global.confirmdRef, key);
                 Global.updateRef(Global.channeCountRef, false);
                 Global.updateRef(Global.matchCountRef, true);
 
             }, timer);
 
+
         })
 
     }
 
 }
+/*
 
+const _udateConfirmedTimer = async function (ref: firebase.database.Reference, jsonObject: Object) {
+    setInterval(function () {
+        jsonObject.
+        ref.update(jsonObject)
+    }, 10000)
+}*/
 
 
