@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-class DateHelper {
+class BookingHelper {
   ///Returns Datetime.now() in yyyy-MM-dd string format
   static String currentDayInString() =>
       DateFormat("yyyy-MM-dd").format(DateTime.now());

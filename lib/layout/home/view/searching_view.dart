@@ -72,7 +72,7 @@ class _SearchingViewState extends State<SearchingView> {
             child: IconButton(
                 onPressed: () {
                   _searchController
-                      .deleteUserByEmail(Config.user.email)
+                      .removeFromAwaiting(Config.user.email)
                       .whenComplete(() {
                     Navigator.of(context)
                         .pushReplacementNamed(WaitingView.routeName);

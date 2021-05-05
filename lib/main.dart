@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       home: MaterialApp(
           theme: AppTheme.mainTheme,
-          home: Config.user == null ? UserDashboard() : LoginView(),
+          home: Config.user == null ? LoginView() : LoginView(),
           routes: {
             LoginView.routeName: (ctx) => LoginView(),
             WaitingView.routeName: (ctx) => WaitingView(),
@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
                             fromView: args.fromView,
                             timerInMs: args.timerInMs,
                             users: args.users,
+                            fbKey: args.fbKey,
                           ));
                 }
             }

@@ -1,6 +1,4 @@
-import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/config.dart';
-import 'package:buddy/global/helper/date_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_time_helper.dart';
 import 'package:buddy/layout/chat/controller/chat_controller.dart';
@@ -19,12 +17,13 @@ class ChatView extends StatefulWidget {
   final String fromView;
   final int timerInMs;
   final List<String> users;
-  const ChatView({
-    @required this.fromView,
-    @required this.channel,
-    @required this.timerInMs,
-    @required this.users,
-  });
+  final String fbKey;
+  const ChatView(
+      {@required this.fromView,
+      @required this.channel,
+      @required this.timerInMs,
+      @required this.users,
+      @required this.fbKey});
 
   @override
   _ChatViewState createState() => _ChatViewState();
@@ -40,26 +39,15 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     super.initState();
-
     _asyncInitState();
   }
 
   _asyncInitState() async {
     await _chatController
-        .initState(context, widget.fromView, widget.channel)
+        .initState(context, widget.fromView, widget.channel, widget.fbKey)
         .whenComplete(() {
       setState(() {});
     });
-
-    /*
-    SearchController.internal().s
-    await _chatController
-        .initState(context, widget.fromView, widget.channel)
-        .whenComplete(() {
-      setState(() {});
-    });
-
-    */
   }
 
   @override
@@ -83,8 +71,7 @@ class _ChatViewState extends State<ChatView> {
                     GlobalTimeHelper(
                         margin: EdgeInsets.only(top: 100.h),
                         color: Colors.white,
-                        timerInMs: DateHelper.getRemainingTimeFromNowTS(
-                            widget.timerInMs),
+                        timerInMs: widget.timerInMs,
                         textStyle: AppTheme.sfProText.subtitle1),
                     //  _chatPeople(),
                   ]),
@@ -107,18 +94,19 @@ class _ChatViewState extends State<ChatView> {
                                   shrinkWrap: true,
                                   controller: _scrollController,
                                   itemCount: _chatController.list.length,
-                                  itemBuilder: (context, i) => Column(
-                                        children: <Widget>[
-                                          ChatMessage(
-                                            isOwn: Config.user.email ==
-                                                _chatController.list[i].email,
-                                            people: Person(),
-                                            text:
-                                                _chatController.list[i].message,
-                                          ),
-                                          SizedBox(height: 40.h),
-                                        ],
-                                      )))),
+                                  itemBuilder: (context, i) {
+                                    return Column(
+                                      children: <Widget>[
+                                        ChatMessage(
+                                          isOwn: Config.user.email ==
+                                              _chatController.list[i].email,
+                                          people: Person(),
+                                          text: _chatController.list[i].message,
+                                        ),
+                                        SizedBox(height: 40.h),
+                                      ],
+                                    );
+                                  }))),
                       ChatTextField(
                         editingController: _editingController,
                         focusNode: _focusNode,

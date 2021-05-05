@@ -9,35 +9,28 @@ class TimeHelper extends GetxController {
   Timer secondaryTimer = Timer(Duration.zero, () {});
   int min = 0;
   int second = 0;
-  int count = 0;
 
-  void init(int milliSeconds, BuildContext context) {
+  void init(int milliSeconds) {
     if (milliSeconds < 1000) {
       print("here??");
-      reset(context, forceBack: true);
+      reset(Get.context, forceBack: true);
     }
-    print("milliseconds is " + milliSeconds.toString());
-    min = (milliSeconds / (1000 * 60)).floor();
 
+    print("milliseconds is " + milliSeconds.toString());
+    min = (milliSeconds / (1000 * 60)).ceil();
     primaryTimer =
         Timer.periodic(Duration(milliseconds: 1000 * 60), (Timer timer) {
-      min = (milliSeconds / (1000 * 60)).floor();
-
       DebugHelper.red("min is " + min.toString());
+
       if (min <= 1) {
         primaryTimer.cancel();
         second = 60;
-        _startSecondaryTimer(context);
+        _startSecondaryTimer(Get.context);
       } else {
         min = min - 1;
       }
       update();
     });
-  }
-
-  incrementCount() {
-    count++;
-    update();
   }
 
   void _startSecondaryTimer(BuildContext context) {
@@ -55,13 +48,13 @@ class TimeHelper extends GetxController {
   void reset(BuildContext context, {bool forceBack = false}) async {
     if (forceBack == true) {
       print("forceback");
-     // Future.delayed(Duration.zero, () => Navigator.of(context).pop());
+      // Future.delayed(Duration.zero, () => Navigator.of(context).pop());
     }
 
     if (primaryTimer.isActive == false) {
-      print("coming here ");
+      // print("coming here ");
       secondaryTimer.cancel();
-      Get.back();
+      //  Get.back();
     }
     if (primaryTimer.isActive) {
       print("nope, coming here instead");

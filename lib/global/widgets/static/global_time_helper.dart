@@ -27,7 +27,7 @@ class _GlobalTimeHelperState extends State<GlobalTimeHelper> {
     super.initState();
 
     _timeHelper = Get.find<TimeHelper>();
-    _timeHelper.init(widget.timerInMs, context);
+    _timeHelper.init(widget.timerInMs);
   }
 
   @override
@@ -42,7 +42,7 @@ class _GlobalTimeHelperState extends State<GlobalTimeHelper> {
         margin: widget.margin,
         child: GetBuilder<TimeHelper>(
           builder: (_) => Text(
-              (_timeHelper.primaryTimer?.isActive == true
+              (_.primaryTimer?.isActive == true
                   ? "${_timeHelper.min}\m"
                   : "${_timeHelper.second}\s"),
               style: widget.textStyle.copyWith(

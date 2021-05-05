@@ -17,12 +17,14 @@ class ChatController {
 
   //Childs in our database
   DatabaseReference _chatSearchRef;
+  DatabaseReference _searchConfirmedRef;
 
   //other
   List<ChatModel> list = new List();
 
   //initialize Refs
-  Future<void> initChatRefs(String fromView, int channelName) async {
+  Future<void> initChatRefs(
+      String fromView, int channelName, String fbKey) async {
     if (SearchingView.routeName == fromView) {
       _chatSearchRef = FirebaseDatabase.instance
           .reference()
@@ -31,23 +33,29 @@ class ChatController {
           .child("2020-08-14")
           .child(channelName.toString())
           .child("Messages");
-    }
 
-    await _checkRefStatus(fromView);
+      _searchConfirmedRef = FirebaseDatabase.instance
+          .reference()
+          .child("Home")
+          .child("Search")
+          .child("Confirmed")
+          .child("2020-08-14")
+          .child(fbKey);
+    }
   }
 
   //Initialize Refs, and listeners
-  Future<void> initState(
-      BuildContext context, String fromView, int channelName) async {
-    await initChatRefs(fromView, channelName);
-
+  Future<void> initState(BuildContext context, String fromView, int channelName,
+      String fbKey) async {
+    await initChatRefs(fromView, channelName, fbKey);
+    //   _loadPrevMessages();
     if (SearchingView.routeName == fromView) {
-      await _chatSearchRef.once().then((DataSnapshot snapshot) {
-        _sortMessages(snapshot.value);
-      });
       //Any changes that happens is refreshed is cleaned and re-added to
-      _chatSearchRef.onValue.listen((Event event) {
-        _sortMessages(event.snapshot.value);
+      _chatSearchRef
+          .orderByChild("timestamp")
+          .onChildAdded
+          .listen((Event event) {
+        list.add(ChatModel.fromJson(event.snapshot.value));
       });
     }
   }
@@ -59,29 +67,10 @@ class ChatController {
     return _chatSearchRef;
   }
 
-  Future<void> _checkRefStatus(String fromView) async {
-    if (SearchingView.routeName == fromView) {
-      await _chatSearchRef
-          .limitToFirst(1)
-          .once()
-          .then((value) => DebugHelper.green("FB: Chat/Search/Date/Messages"));
-    }
-  }
-
   void _sortMessages(dynamic value) {
-    list = new List();
-
     Map<dynamic, dynamic> map = value;
-
-    if (map != null) {
-      map.forEach((key, value) {
-        // print(value);
-
-        list.add(ChatModel.fromJson(value));
-      });
-
-      list.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    }
+    print(map);
+    list = new List();
   }
 
   Future<void> sendMessage(String message, String fromView) async {

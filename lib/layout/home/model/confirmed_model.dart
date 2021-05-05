@@ -1,5 +1,3 @@
-import 'package:buddy/global/helper/date_helper.dart';
-
 class ConfirmedModel {
   String key;
   List<String> users;
@@ -15,19 +13,15 @@ class ConfirmedModel {
   ConfirmedModel.fromJson(String key, dynamic value)
       : this.users = List<String>.from(value["users"]),
         this.timer = value["timer"],
-        this.beginTimeStamp = value["beginTimeStamp"],
-        this.endTimeStamp = value["endTimeStamp"],
-        this.channelName = value["channelName"],
+        this.channelName = value["channel"],
         this.key = key;
 
 //Sends Data back to firebase in JSON format
   toJson() {
     return {
       "users": this.users,
-      "channelName": this.channelName,
+      "channel": this.channelName,
       "timer": this.timer,
-      "beginTimeStamp": DateTime.now().millisecondsSinceEpoch,
-      "endTimeStamp": this.endTimeStamp
     };
   }
 }

@@ -37,9 +37,11 @@ dependencies:
   firebase_auth: ^0.19.0
   flutter_screenutil: ^1.1.0
   firebase_core : ^0.6.0
-
   cloud_functions: ^0.8.0
   cloud_firestore: ^0.15.0
+
+  countdown_flutter: ^0.1.2
+
 
 
 

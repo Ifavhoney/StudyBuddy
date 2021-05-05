@@ -1,13 +1,13 @@
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/config.dart';
-import 'package:cloud_functions/cloud_functions.dart';
+import 'package:buddy/layout/chat/args/chat_args.dart';
+import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:buddy/layout/home/model/awaiting_model.dart';
 import 'package:buddy/layout/home/model/confirmed_model.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
-import 'package:get/get.dart';
 
 class SearchController {
   //Singleton ensures one instance of a class to ever be created
@@ -22,7 +22,7 @@ class SearchController {
   DatabaseReference _searchRef;
   DatabaseReference _searchAwaitingRef;
   DatabaseReference _searchConfirmedRef;
-  DatabaseReference _searchChannelsRef;
+  DatabaseReference _searchAwaitingCountRef;
 
   //initialize Refs
   Future<void> initSearchRefs() async {
@@ -31,27 +31,34 @@ class SearchController {
     // DateHelper.currentDayInString();
     _searchConfirmedRef = _searchRef.child("Confirmed").child("2020-08-14");
     _searchAwaitingRef = _searchRef.child("Awaiting").child("2020-08-14");
-    _searchChannelsRef = _searchRef.child("Channel").child("2020-08-14");
-    await _checkRefStatus();
+
+    _searchAwaitingCountRef = _searchRef
+        .child("Count")
+        .child("Awaiting")
+        .child("2020-08-14")
+        .child("id");
   }
-  //Home/Search/Awaiting/
 
   Future<void> initState(BuildContext context) async {
     initSearchRefs();
-    addUserToAwaiting();
-    //call cloud function that adds user
-    //if the user is already in, it ignores entry
-    //on call? whaat do i pass in?
-    //Stream listener for confirmed
 
-    // await _matchUser();
+    _searchAwaitingCountRef.keepSynced(true);
+
     _searchConfirmedRef.onChildAdded.listen((event) async {
-      await _searchChannelsRef.runTransaction((MutableData mutableData) async {
-        mutableData.value = (mutableData.value ?? 0) + 1;
-        return mutableData;
-      });
-      //This is where you would redirect the user
+      if (event.snapshot.value.toString().contains(Config.user.email)) {
+        DebugHelper.red(event.snapshot.value.toString());
+        ConfirmedModel confirmedModel =
+            ConfirmedModel.fromJson(event.snapshot.key, event.snapshot.value);
+        Navigator.of(context).pushNamed(ChatView.routeName,
+            arguments: ChatArgs(
+                channel: 1,
+                fromView: SearchingView.routeName,
+                timerInMs: confirmedModel.timer,
+                users: confirmedModel.users,
+                fbKey: confirmedModel.key));
+      }
     });
+    addUserToAwaiting();
   }
 
   Future<void> addUserToAwaiting() async {
@@ -70,62 +77,21 @@ class SearchController {
           DatabaseReference reference, String key, dynamic value) =>
       reference.orderByChild(key).equalTo(value).once();
 
-  Future<void> deleteUserByEmail(String email) async {
+  Future<void> removeFromAwaiting(String email) async {
+    _searchAwaitingCountRef.reference().runTransaction((mutable) async {
+      mutable.value -= 1;
+      return mutable;
+    });
+
     await getByKey(_searchAwaitingRef, "user", email)
         .then((DataSnapshot snapshot) {
-      snapshot.value.forEach((key, value) {
-        _searchAwaitingRef.child(key).remove();
+      snapshot.value.forEach((key, value) async {
+        await _searchAwaitingRef.child(key).remove();
+
         return;
       });
     });
   }
 
-  Future<String> _matchUser() async {
-    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('hello',
-        options: HttpsCallableOptions(timeout: Duration(seconds: 5)));
-    try {
-      final HttpsCallableResult result = await callable.call(
-        <String, dynamic>{
-          'message': "ssss",
-        },
-      );
-      DebugHelper.red("All good!!");
-      // DebugHelper.red(result.data['response']);
-
-    } catch (e) {
-      print('caught generic exception');
-      print(e);
-    }
-    return "";
-  }
-
-  //functions
   DatabaseReference getReference() => _searchRef;
-
-  Future<void> _checkRefStatus() async {
-    await _searchRef
-        .limitToFirst(1)
-        .once()
-        .then((value) => DebugHelper.green("FB: Home/Search"));
-
-    await _searchAwaitingRef
-        .limitToFirst(1)
-        .once()
-        .then((value) => DebugHelper.green("FB: Home/Search/Awaiting/Date"));
-
-    await _searchConfirmedRef
-        .limitToFirst(1)
-        .once()
-        .then((value) => DebugHelper.green("FB: Home/Search/Confirmed/Date"));
-
-    await _searchConfirmedRef
-        .limitToFirst(1)
-        .once()
-        .then((value) => DebugHelper.green("FB: Home/Search/Confirmed/Date"));
-
-    await _searchChannelsRef
-        .limitToFirst(1)
-        .once()
-        .then((value) => DebugHelper.green("FB: Home/Search/Confirmed/Date"));
-  }
 }

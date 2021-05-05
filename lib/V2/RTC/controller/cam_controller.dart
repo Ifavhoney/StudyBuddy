@@ -1,12 +1,10 @@
 import 'package:buddy/V2/RTC/model/cam_model.dart';
 import 'package:buddy/V2/RTC/view/cam_view.dart';
-import 'package:buddy/global/helper/date_helper.dart';
 
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CamController {
-  static List<String> dates = DateHelper.days(7);
   static bool foundTime = false;
 
   static Future<void> toWebcam(
