@@ -1,7 +1,7 @@
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_bottom_navigation_bar.dart';
-import 'package:buddy/layout/home/controller/search_controller.dart';
+import 'package:buddy/layout/home/controller/search_controller2.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +23,7 @@ class _WaitingViewState extends State<WaitingView> {
   Future<void> _asyncInitState() async {
     SearchController searchController = new SearchController();
     searchController.initSearchRefs();
-    await searchController.checkIfInConfirmed();
+    await searchController.checkIfInConfirmed(context);
   }
 
   @override

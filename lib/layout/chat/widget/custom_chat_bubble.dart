@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+
+///Custom chat bubble, if this is your own, it'll be blue, otherwse grey
 class CustomChatBubble extends CustomPainter {
   CustomChatBubble({@required this.isOwn});
 

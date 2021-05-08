@@ -7,34 +7,18 @@ class GlobalTimeHelper extends StatefulWidget {
   final Color color;
   final TextStyle textStyle;
 
-  ///Timer in milliseconds
-  final int timerInMs;
-
-  GlobalTimeHelper(
-      {@required this.margin,
-      @required this.color,
-      @required this.textStyle,
-      @required this.timerInMs});
+  GlobalTimeHelper({
+    @required this.margin,
+    @required this.color,
+    @required this.textStyle,
+  });
 
   @override
   _GlobalTimeHelperState createState() => _GlobalTimeHelperState();
 }
 
 class _GlobalTimeHelperState extends State<GlobalTimeHelper> {
-  TimeHelper _timeHelper;
-  @override
-  void initState() {
-    super.initState();
-
-    _timeHelper = Get.find<TimeHelper>();
-    _timeHelper.init(widget.timerInMs);
-  }
-
-  @override
-  void dispose() {
-    _timeHelper.reset(context);
-    super.dispose();
-  }
+  TimeHelper _timeHelper = Get.find<TimeHelper>();
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:buddy/global/config/config.dart';
+import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_time_helper.dart';
 import 'package:buddy/layout/chat/controller/chat_controller.dart';
@@ -9,6 +10,7 @@ import 'package:buddy/layout/chat/widget/generic_body.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class ChatView extends StatefulWidget {
   static const String routeName = "/chat_view";
@@ -39,10 +41,12 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     super.initState();
+
     _asyncInitState();
   }
 
   _asyncInitState() async {
+    Get.find<TimeHelper>().initAsync(widget.timerInMs, context);
     await _chatController
         .initState(context, widget.fromView, widget.channel, widget.fbKey)
         .whenComplete(() {
@@ -71,7 +75,6 @@ class _ChatViewState extends State<ChatView> {
                     GlobalTimeHelper(
                         margin: EdgeInsets.only(top: 100.h),
                         color: Colors.white,
-                        timerInMs: widget.timerInMs,
                         textStyle: AppTheme.sfProText.subtitle1),
                     //  _chatPeople(),
                   ]),
@@ -136,6 +139,7 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
+  /*
   Widget _chatPeople() => Align(
       alignment: Alignment.topRight,
       child: Container(
@@ -147,4 +151,5 @@ class _ChatViewState extends State<ChatView> {
               scrollDirection: Axis.horizontal,
               physics: NeverScrollableScrollPhysics(),
               children: <Widget>[Person()])));
+              */
 }

@@ -1,5 +1,6 @@
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/config.dart';
+import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/layout/chat/args/chat_args.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:buddy/layout/home/model/awaiting_model.dart';
 import 'package:buddy/layout/home/model/confirmed_model.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
+import 'package:get/get.dart';
 
-class SearchController {
+class SearchController extends GetxController {
   //Singleton ensures one instance of a class to ever be created
   static final SearchController _instance = SearchController.internal();
   SearchController.internal();
@@ -23,6 +25,7 @@ class SearchController {
   DatabaseReference _searchAwaitingRef;
   DatabaseReference _searchConfirmedRef;
   DatabaseReference _searchAwaitingCountRef;
+  String confirmedKey;
 
   //initialize Refs
   Future<void> initSearchRefs() async {
@@ -43,22 +46,58 @@ class SearchController {
     initSearchRefs();
 
     _searchAwaitingCountRef.keepSynced(true);
+    matchingListener(context);
+    addUserToAwaiting();
+  }
 
+  Future<void> matchingListener(BuildContext context) async {
     _searchConfirmedRef.onChildAdded.listen((event) async {
       if (event.snapshot.value.toString().contains(Config.user.email)) {
         DebugHelper.red(event.snapshot.value.toString());
         ConfirmedModel confirmedModel =
             ConfirmedModel.fromJson(event.snapshot.key, event.snapshot.value);
-        Navigator.of(context).pushNamed(ChatView.routeName,
-            arguments: ChatArgs(
-                channel: 1,
-                fromView: SearchingView.routeName,
-                timerInMs: confirmedModel.timer,
-                users: confirmedModel.users,
-                fbKey: confirmedModel.key));
+        toChatView(context, confirmedModel);
       }
     });
-    addUserToAwaiting();
+  }
+
+  Future<void> checkIfInConfirmed(BuildContext context) async {
+    await _searchConfirmedRef.once().then((DataSnapshot snapshot) async {
+      String value = snapshot.value.toString();
+
+      if ((value.contains(Config.user.email))) {
+        snapshot.value.forEach((key, value) async {
+          ConfirmedModel confirmedModel = ConfirmedModel.fromJson(key, value);
+          if (confirmedModel.users.contains(Config.user.email))
+            toChatView(context, confirmedModel);
+        });
+      } else {
+        return;
+      }
+    });
+  }
+
+  Future<void> toChatView(BuildContext context, ConfirmedModel confirmedModel) {
+    confirmedKey = confirmedModel.key;
+    return Navigator.of(context).pushNamed(ChatView.routeName,
+        arguments: ChatArgs(
+            channel: 1,
+            fromView: SearchingView.routeName,
+            timerInMs: confirmedModel.timer,
+            users: confirmedModel.users,
+            fbKey: confirmedModel.key));
+  }
+
+  Future<void> initCount() async {
+    TimeHelper timeHelper = Get.find<TimeHelper>();
+
+    _searchConfirmedRef
+        .child(confirmedKey)
+        .onChildChanged
+        .listen((event) async {
+      timeHelper.asyncMilliseconds.value = event.snapshot.value;
+    });
+    print(timeHelper.asyncMilliseconds.value);
   }
 
   Future<void> addUserToAwaiting() async {

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/config.dart';
 import 'package:buddy/layout/chat/models/chat_model.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
@@ -17,7 +16,6 @@ class ChatController {
 
   //Childs in our database
   DatabaseReference _chatSearchRef;
-  DatabaseReference _searchConfirmedRef;
 
   //other
   List<ChatModel> list = new List();
@@ -34,13 +32,13 @@ class ChatController {
           .child(channelName.toString())
           .child("Messages");
 
-      _searchConfirmedRef = FirebaseDatabase.instance
-          .reference()
-          .child("Home")
-          .child("Search")
-          .child("Confirmed")
-          .child("2020-08-14")
-          .child(fbKey);
+      // _searchConfirmedRef = FirebaseDatabase.instance
+      //     .reference()
+      //     .child("Home")
+      //     .child("Search")
+      //     .child("Confirmed")
+      //     .child("2020-08-14")
+      //     .child(fbKey);
     }
   }
 
