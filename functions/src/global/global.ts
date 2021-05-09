@@ -10,6 +10,7 @@ class Global {
 
     get awaitingRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.awaitingRefStr); }
     get confirmdRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.confirmedRefStr) }
+    get chatRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.chatRefStr) }
     get channeCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.channelCountRefStr); }
     get awaitingCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.awaitingCountRefStr); }
     get matchCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.matchCountRefStr); }

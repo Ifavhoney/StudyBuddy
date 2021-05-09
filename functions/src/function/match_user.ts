@@ -77,13 +77,20 @@ const _match = async function (randUser: string, randKey: string, snapshotUser: 
 
 
 
+
+
             Global.delay(function () {
                 clearInterval(interval);
                 Global.delete(Global.confirmdRef, key);
+
+                Global.delete(Global.chatRef.child(channelNum.toString()), "Messages");
+
                 Global.updateRef(Global.channeCountRef, false);
                 Global.updateRef(Global.matchCountRef, true);
 
             }, timer);
+
+
 
 
         })
