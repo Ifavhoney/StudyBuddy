@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 class TimeHelper extends GetxController {
   Timer primaryTimer = Timer(Duration.zero, () {});
   Timer secondaryTimer = Timer(Duration.zero, () {});
+
   SearchController _searchController = new SearchController();
 
   int min = 0;
@@ -26,6 +27,7 @@ class TimeHelper extends GetxController {
     asyncMilliseconds.value = milliSeconds;
     await _searchController.initCount();
     min = Duration(milliseconds: milliSeconds).inMinutes;
+
     update();
 
     primaryTimer =
@@ -35,7 +37,7 @@ class TimeHelper extends GetxController {
         second = Duration(milliseconds: asyncMilliseconds.value).inSeconds;
         _startSecondaryTimer(context);
       } else {
-        min = (asyncMilliseconds.value / (1000 * 60)).ceil();
+        min = Duration(milliseconds: asyncMilliseconds.value).inMinutes;
       }
       update();
     });
@@ -76,8 +78,6 @@ class TimeHelper extends GetxController {
 
   void reset(BuildContext context, {bool forceBack = false}) async {
     secondaryTimer.cancel();
-    Navigator.of(context).pushReplacementNamed(WaitingView.routeName);
-
     update();
   }
 }

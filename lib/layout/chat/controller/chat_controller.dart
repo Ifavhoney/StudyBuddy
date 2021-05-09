@@ -18,7 +18,7 @@ class ChatController {
   DatabaseReference _chatSearchRef;
 
   //other
-  List<ChatModel> list = new List();
+  List<ChatModel> list;
 
   //initialize Refs
   Future<void> initChatRefs(
@@ -31,21 +31,15 @@ class ChatController {
           .child("2020-08-14")
           .child(channelName.toString())
           .child("Messages");
-
-      // _searchConfirmedRef = FirebaseDatabase.instance
-      //     .reference()
-      //     .child("Home")
-      //     .child("Search")
-      //     .child("Confirmed")
-      //     .child("2020-08-14")
-      //     .child(fbKey);
     }
   }
 
   //Initialize Refs, and listeners
   Future<void> initState(BuildContext context, String fromView, int channelName,
       String fbKey) async {
+    list = new List<ChatModel>();
     await initChatRefs(fromView, channelName, fbKey);
+  
     //   _loadPrevMessages();
     if (SearchingView.routeName == fromView) {
       //Any changes that happens is refreshed is cleaned and re-added to
@@ -63,12 +57,6 @@ class ChatController {
       return _chatSearchRef;
     }
     return _chatSearchRef;
-  }
-
-  void _sortMessages(dynamic value) {
-    Map<dynamic, dynamic> map = value;
-    print(map);
-    list = new List();
   }
 
   Future<void> sendMessage(String message, String fromView) async {

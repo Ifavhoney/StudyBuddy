@@ -2,6 +2,7 @@ import 'package:buddy/global/config/config.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_time_helper.dart';
+import 'package:buddy/layout/chat/args/chat_args.dart';
 import 'package:buddy/layout/chat/controller/chat_controller.dart';
 import 'package:buddy/layout/chat/widget/chat_message.dart';
 import 'package:buddy/layout/chat/widget/chat_textfield.dart';
@@ -15,18 +16,6 @@ import 'package:get/get.dart';
 class ChatView extends StatefulWidget {
   static const String routeName = "/chat_view";
 
-  final int channel;
-  final String fromView;
-  final int timerInMs;
-  final List<String> users;
-  final String fbKey;
-  const ChatView(
-      {@required this.fromView,
-      @required this.channel,
-      @required this.timerInMs,
-      @required this.users,
-      @required this.fbKey});
-
   @override
   _ChatViewState createState() => _ChatViewState();
 }
@@ -35,9 +24,13 @@ class _ChatViewState extends State<ChatView> {
   TextEditingController _editingController = TextEditingController();
   ChatController _chatController = new ChatController();
 
+  final ChatArgs chatArgs = Get.arguments["chatArgs"];
+
   ScrollController _scrollController = new ScrollController();
   FocusNode _focusNode = FocusNode();
   bool _iskeyboardShowing;
+
+  TimeHelper timeHelper = Get.find<TimeHelper>();
   @override
   void initState() {
     super.initState();
@@ -46,12 +39,19 @@ class _ChatViewState extends State<ChatView> {
   }
 
   _asyncInitState() async {
-    Get.find<TimeHelper>().initAsync(widget.timerInMs, context);
+    timeHelper.initAsync(chatArgs.timerInMs, context);
     await _chatController
-        .initState(context, widget.fromView, widget.channel, widget.fbKey)
+        .initState(context, chatArgs.fromView, chatArgs.channel, chatArgs.fbKey)
         .whenComplete(() {
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    timeHelper.primaryTimer?.cancel();
+    timeHelper.secondaryTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -90,7 +90,7 @@ class _ChatViewState extends State<ChatView> {
                       Expanded(
                           child: StreamBuilder(
                               stream: _chatController
-                                  .getReference(widget.fromView)
+                                  .getReference(chatArgs.fromView)
                                   .onValue,
                               initialData: [],
                               builder: (ctx, snapshot) => ListView.builder(
@@ -128,7 +128,7 @@ class _ChatViewState extends State<ChatView> {
                         },
                         onSubmitted: (String value) async {
                           await _chatController.sendMessage(
-                              value, widget.fromView);
+                              value, chatArgs.fromView);
                           _editingController.clear();
                         },
                       ),

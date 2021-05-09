@@ -46,6 +46,7 @@ dependencies:
   countdown_flutter: ^0.1.2
 
 
+  route_observer_mixin: ^1.3.0
 
 
 

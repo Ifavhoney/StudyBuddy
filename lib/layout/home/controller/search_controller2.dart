@@ -3,6 +3,7 @@ import 'package:buddy/global/config/config.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/layout/chat/args/chat_args.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
+import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -79,13 +80,14 @@ class SearchController extends GetxController {
 
   Future<void> toChatView(BuildContext context, ConfirmedModel confirmedModel) {
     confirmedKey = confirmedModel.key;
-    return Navigator.of(context).pushNamed(ChatView.routeName,
-        arguments: ChatArgs(
-            channel: 1,
-            fromView: SearchingView.routeName,
-            timerInMs: confirmedModel.timer,
-            users: confirmedModel.users,
-            fbKey: confirmedModel.key));
+    return Get.offNamed(ChatView.routeName, arguments: {
+      "chatArgs": ChatArgs(
+          channel: confirmedModel.channelName,
+          fromView: SearchingView.routeName,
+          timerInMs: confirmedModel.timer,
+          users: confirmedModel.users,
+          fbKey: confirmedModel.key)
+    });
   }
 
   Future<void> initCount() async {
@@ -97,7 +99,14 @@ class SearchController extends GetxController {
         .listen((event) async {
       timeHelper.asyncMilliseconds.value = event.snapshot.value;
     });
-    print(timeHelper.asyncMilliseconds.value);
+
+    _searchConfirmedRef
+        .child(confirmedKey)
+        .onChildRemoved
+        .listen((event) async {
+      print("hiiii");
+      Get.offNamed(WaitingView.routeName);
+    });
   }
 
   Future<void> addUserToAwaiting() async {
@@ -117,18 +126,20 @@ class SearchController extends GetxController {
       reference.orderByChild(key).equalTo(value).once();
 
   Future<void> removeFromAwaiting(String email) async {
-    _searchAwaitingCountRef.reference().runTransaction((mutable) async {
-      mutable.value -= 1;
-      return mutable;
-    });
-
     await getByKey(_searchAwaitingRef, "user", email)
         .then((DataSnapshot snapshot) {
-      snapshot.value.forEach((key, value) async {
-        await _searchAwaitingRef.child(key).remove();
-
-        return;
-      });
+      if (snapshot.value != null) {
+        snapshot.value.forEach((key, value) async {
+          if (value["user"] == email) {
+            await _searchAwaitingRef.child(key).remove();
+            _searchAwaitingCountRef.reference().runTransaction((mutable) async {
+              mutable.value -= 1;
+              return mutable;
+            });
+            return;
+          }
+        });
+      }
     });
   }
 

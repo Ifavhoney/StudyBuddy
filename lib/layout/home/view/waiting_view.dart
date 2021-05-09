@@ -4,6 +4,7 @@ import 'package:buddy/global/widgets/static/global_bottom_navigation_bar.dart';
 import 'package:buddy/layout/home/controller/search_controller2.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 ///@LastModifiedBy: Jason NGuessan
 class WaitingView extends StatefulWidget {
@@ -45,7 +46,7 @@ class _WaitingViewState extends State<WaitingView> {
   }
 
   Widget _search() => GestureDetector(
-        onTap: () => Navigator.of(context).pushNamed(SearchingView.routeName),
+        onTap: () => Get.to(SearchingView()),
         child: Center(
           child: GlobalBoxContainer(
             boxShape: BoxShape.circle,

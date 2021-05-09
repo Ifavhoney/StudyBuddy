@@ -7,6 +7,8 @@ import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:buddy/layout/home/controller/search_controller2.dart';
 //import 'package:buddy/layout/home/controller/search_controller.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
+import 'package:get/get.dart';
+import 'package:route_observer_mixin/route_observer_mixin.dart';
 
 import 'package:flutter/material.dart';
 
@@ -18,13 +20,44 @@ class SearchingView extends StatefulWidget {
   _SearchingViewState createState() => _SearchingViewState();
 }
 
-class _SearchingViewState extends State<SearchingView> {
+class _SearchingViewState extends State<SearchingView>
+    with WidgetsBindingObserver, RouteAware, RouteObserverMixin {
   SearchController _searchController = new SearchController();
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     _asyncInitState();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didPop() {
+    super.didPop();
+    _searchController.removeFromAwaiting(Config.user.email);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    switch (state) {
+      case AppLifecycleState.inactive:
+        _toWaitingView();
+        break;
+      case AppLifecycleState.paused:
+        _toWaitingView();
+        break;
+
+      default:
+        print("i am back");
+    }
   }
 
   _asyncInitState() async {
@@ -53,8 +86,8 @@ class _SearchingViewState extends State<SearchingView> {
   }
 
   Widget _mascot() => GestureDetector(
-        onTap: () => CamController.toWebcam(
-            CamModel(channelName: "1", endTime: "09:15"), context),
+        // onTap: () => CamController.toWebcam(
+        //     CamModel(channelName: "1", endTime: "09:15"), context),
         child: Center(
           child: Image.asset(
             "assets/images/mascot.png",
@@ -69,17 +102,15 @@ class _SearchingViewState extends State<SearchingView> {
         child: Align(
             alignment: Alignment.bottomLeft,
             child: IconButton(
-                onPressed: () {
-                  _searchController
-                      .removeFromAwaiting(Config.user.email)
-                      .whenComplete(() {
-                    Navigator.of(context)
-                        .pushReplacementNamed(WaitingView.routeName);
-                  });
-                },
+                onPressed: _toWaitingView,
                 icon: Icon(
                   Icons.arrow_back_ios,
                   color: AppTheme.searchingViewIcons["arrowBack"],
                 ))),
       ));
+  void _toWaitingView() {
+    _searchController.removeFromAwaiting(Config.user.email).whenComplete(() {
+      Get.back();
+    });
+  }
 }
