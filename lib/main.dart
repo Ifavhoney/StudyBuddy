@@ -2,7 +2,6 @@ import 'package:buddy/global/config/config.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/layout/auth/view/login_view.dart';
-import 'package:buddy/layout/chat/args/chat_args.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
@@ -38,10 +37,6 @@ class MyApp extends StatelessWidget {
         GetPage(name: WaitingView.routeName, page: () => WaitingView()),
         GetPage(name: SearchingView.routeName, page: () => SearchingView()),
         GetPage(name: ChatView.routeName, page: () => ChatView()),
-
-        /*
- 
-        */
       ],
     );
   }

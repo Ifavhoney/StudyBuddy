@@ -97,7 +97,7 @@ class SearchController extends GetxController {
         .child(confirmedKey)
         .onChildChanged
         .listen((event) async {
-      timeHelper.asyncMilliseconds.value = event.snapshot.value;
+      timeHelper.asyncMilliseconds.value = event.snapshot.value - 8000;
     });
 
     _searchConfirmedRef

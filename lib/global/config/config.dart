@@ -1,7 +1,6 @@
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-//Needs work after first release
 class Config {
   static User user;
 
@@ -13,6 +12,12 @@ class Config {
   //e.g analytics, e.g auto login, type of login, phone device,inapp notifications etc
 
   static init() async {
+    autoLogin = false;
+    deviceInformation = "";
+    typeOfLogin = "";
     user = await AuthController().getCurrentUser();
+    if (user == null) {
+      autoLogin = false;
+    }
   }
 }
