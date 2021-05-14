@@ -235,6 +235,9 @@ PODS:
     - Firebase/Functions (= 7.3.0)
     - firebase_core
     - Flutter
+  - connectivity (0.0.1):
+    - Flutter
+    - Reachability
   - countdown_flutter (0.0.1):
     - Flutter
   - Firebase/Auth (7.3.0):
@@ -364,11 +367,13 @@ PODS:
   - "permission_handler (5.1.0+2)":
     - Flutter
   - PromisesObjC (1.2.12)
+  - Reachability (3.2)
 
 DEPENDENCIES:
   - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
+  - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - countdown_flutter (from `.symlinks/plugins/countdown_flutter/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -402,6 +407,7 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - PromisesObjC
+    - Reachability
 
 EXTERNAL SOURCES:
   agora_rtc_engine:
@@ -410,6 +416,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   cloud_functions:
     :path: ".symlinks/plugins/cloud_functions/ios"
+  connectivity:
+    :path: ".symlinks/plugins/connectivity/ios"
   countdown_flutter:
     :path: ".symlinks/plugins/countdown_flutter/ios"
   firebase_auth:
@@ -437,6 +445,7 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   cloud_firestore: e6e6147bb5a92fc178ba1f4db03fe7eac749c121
   cloud_functions: b4561212761577bc6529f56888a45a7f35836080
+  connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   countdown_flutter: 423a4cc24614ccb078c2ce4ac6739b1d85cbe98b
   Firebase: 26223c695fe322633274198cb19dca8cb7e54416
   firebase_auth: 90afaabf2e5f8219277caeb88567078ea20fb408
@@ -463,6 +472,7 @@ SPEC CHECKSUMS:
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
 PODFILE CHECKSUM: 1d6ac6867374056b859aa0d4752d0d6f47f8f85f
 

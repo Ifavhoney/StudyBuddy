@@ -1,4 +1,5 @@
 import 'package:buddy/global/config/config.dart';
+import 'package:buddy/global/config/device_config.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/layout/auth/view/login_view.dart';
@@ -21,6 +22,7 @@ void main() async {
 
   await Firebase.initializeApp();
   await Config.init();
+  DeviceConfig().init();
 
   runApp(RouteObserverProvider(child: MyApp()));
 }

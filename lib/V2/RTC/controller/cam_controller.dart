@@ -32,7 +32,6 @@ class CamController {
 
   static Future<void> _getCameraAndMic() async {
     await [
-      Permission.location,
       Permission.storage,
     ].request();
   }
