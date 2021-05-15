@@ -22,7 +22,6 @@ void main() async {
 
   await Firebase.initializeApp();
   await Config.init();
-  DeviceConfig().init();
 
   runApp(RouteObserverProvider(child: MyApp()));
 }
@@ -32,6 +31,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       theme: AppTheme.mainTheme,
+      onReady: () {
+        DeviceConfig().init();
+      },
       home: Config.user == null ? LoginView() : WaitingView(),
       initialRoute: WaitingView.routeName,
       getPages: [

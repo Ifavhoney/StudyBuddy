@@ -7,23 +7,24 @@ import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-///Platform
-///Screen Size
-///Permission
-///Network
+///iPhone 8 Plus <= MID >= iPhone X
+/// 736 <= MID >= 812
+
+enum ScreenSize { Small, Mid, Large }
 
 class DeviceConfig extends GetxController {
-  GetPlatform platform = GetPlatform();
+  bool platform;
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
   ConnectivityResult network;
   PermissionInfoModel permissionInfoModel;
-
-
+  ScreenSize screenSize;
 
   //Large
   void init() {
+    reset();
     _initPermission();
     _initConnectivity();
+    initScreenSize();
     update();
   }
 
@@ -45,9 +46,22 @@ class DeviceConfig extends GetxController {
     _connectivitySubscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
+      print(result.toString());
       network = result;
       update();
     });
+  }
+
+  void initScreenSize() {
+    if (Get.context.isPhone) {
+      double height = Get.context.height;
+      if (height < 736)
+        screenSize = ScreenSize.Small;
+      else if (height >= 736 && height <= 812)
+        screenSize = ScreenSize.Mid;
+      else
+        screenSize = ScreenSize.Large;
+    }
   }
 
   void updatePermission(PermissionInfoModel permissionInfoModel) {
@@ -60,35 +74,4 @@ class DeviceConfig extends GetxController {
     permissionInfoModel = null;
     platform = null;
   }
-
-  /*
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  String _connectionStatus = 'Unknown';
-
-  void init() {
-    initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-  }
-
-  void dispose() {
-    _connectivitySubscription.cancel();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-
-
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    switch (result) {
-      case ConnectivityResult.wifi:
-      case ConnectivityResult.mobile:
-      case ConnectivityResult.none:
-        setState(() => _connectionStatus = result.toString());
-        break;
-      default:
-        setState(() => _connectionStatus = 'Failed to get connectivity.');
-        break;
-    }
-  }
-  */
 }
