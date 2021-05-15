@@ -1,13 +1,13 @@
 class AppConfig {
   //General
-  String appName = "Bored";
-  String termsAndConditions = "";
-  String websiteUrl = "";
+  static String appName = "Bored";
+  static String termsAndConditions = "";
+  static String websiteUrl = "";
 
   //Social Media
-  String facebookUrl = "";
-  String twitterUrl = "";
-  String youtubeUrl = "";
-  String instagramUrl = "";
-  String gitHubUrl = "";
+  static String facebookUrl = "";
+  static String twitterUrl = "";
+  static String youtubeUrl = "";
+  static String instagramUrl = "";
+  static String gitHubUrl = "";
 }

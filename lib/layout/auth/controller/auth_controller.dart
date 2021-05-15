@@ -1,5 +1,4 @@
 import 'package:buddy/debug/debug_helper.dart';
-import 'package:buddy/global/config/config.dart';
 import 'package:buddy/layout/auth/model/base_auth_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,10 +20,7 @@ class AuthController implements BaseAuthModel {
 
   @override
   Future<User> getCurrentUser() async {
-    //  FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
-    Config.user = _firebaseAuth.currentUser;
-    return Config.user;
+    return _firebaseAuth.currentUser;
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:buddy/global/config/config.dart';
+import 'package:buddy/global/global.dart';
 import 'package:buddy/layout/chat/models/chat_model.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -39,7 +39,7 @@ class ChatController {
       String fbKey) async {
     list = new List<ChatModel>();
     await initChatRefs(fromView, channelName, fbKey);
-  
+
     //   _loadPrevMessages();
     if (SearchingView.routeName == fromView) {
       //Any changes that happens is refreshed is cleaned and re-added to
@@ -62,7 +62,7 @@ class ChatController {
   Future<void> sendMessage(String message, String fromView) async {
     if (SearchingView.routeName == fromView) {
       await _chatSearchRef.push().set(ChatModel(
-            email: Config.user.email,
+            email: Global.email,
             message: message,
           ).toJson());
     }

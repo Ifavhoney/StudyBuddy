@@ -1,4 +1,4 @@
-import 'package:buddy/global/config/config.dart';
+import 'package:buddy/global/global.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_time_helper.dart';
@@ -101,7 +101,7 @@ class _ChatViewState extends State<ChatView> {
                                     return Column(
                                       children: <Widget>[
                                         ChatMessage(
-                                          isOwn: Config.user.email ==
+                                          isOwn: Global.email ==
                                               _chatController.list[i].email,
                                           people: Person(),
                                           text: _chatController.list[i].message,

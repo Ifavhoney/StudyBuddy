@@ -1,5 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 
-///Checks wether user is logged in 
-///What they logged in with 
-///If they completed the profile 
-//
+class UserConfig extends GetxController {
+  User user;
+  bool completedProfile;
+  bool isReady;
+
+  init() {
+    isReady = false;
+    user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      Get.snackbar("Sign in", "Hi Buddy! Please sign in",
+          snackPosition: SnackPosition.TOP);
+    }
+    isReady = true;
+    update();
+  }
+}

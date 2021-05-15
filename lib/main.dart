@@ -1,5 +1,7 @@
-import 'package:buddy/global/config/config.dart';
+import 'package:buddy/global/config/app_config.dart';
 import 'package:buddy/global/config/device_config.dart';
+import 'package:buddy/global/config/user_config.dart';
+import 'package:buddy/global/global.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/layout/auth/view/login_view.dart';
@@ -18,10 +20,7 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  Get.put(TimeHelper());
-
   await Firebase.initializeApp();
-  await Config.init();
 
   runApp(RouteObserverProvider(child: MyApp()));
 }
@@ -29,13 +28,24 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Get.put(TimeHelper());
+    Get.put(UserConfig());
+    Get.put(DeviceConfig());
+
+    Global.userConfig.init();
     return GetMaterialApp(
       theme: AppTheme.mainTheme,
-      onReady: () {
-        DeviceConfig().init();
-      },
-      home: Config.user == null ? LoginView() : WaitingView(),
-      initialRoute: WaitingView.routeName,
+      onReady: () => Global.deviceConfig.init(),
+      home: GetBuilder<UserConfig>(
+        builder: (bloc) {
+          return !bloc.isReady
+              ? Container()
+              : bloc.user == null
+                  ? LoginView()
+                  : WaitingView();
+        },
+      ),
+      title: AppConfig.appName,
       getPages: [
         GetPage(name: LoginView.routeName, page: () => LoginView()),
         GetPage(name: WaitingView.routeName, page: () => WaitingView()),

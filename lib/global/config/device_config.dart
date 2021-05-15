@@ -2,18 +2,15 @@ import 'dart:async';
 
 import 'package:buddy/global/models/permission_info_model.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 ///iPhone 8 Plus <= MID >= iPhone X
-/// 736 <= MID >= 812
 
 enum ScreenSize { Small, Mid, Large }
 
 class DeviceConfig extends GetxController {
-  bool platform;
+  bool isIos = GetPlatform.isIOS;
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
   ConnectivityResult network;
   PermissionInfoModel permissionInfoModel;
@@ -72,6 +69,6 @@ class DeviceConfig extends GetxController {
   void reset() {
     _connectivitySubscription?.cancel();
     permissionInfoModel = null;
-    platform = null;
+    screenSize = null;
   }
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:buddy/debug/debug_helper.dart';
-import 'package:buddy/global/config/config.dart';
+import 'package:buddy/global/global.dart';
 import 'package:buddy/layout/chat/args/chat_args.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/home/model/awaiting_model.dart';
@@ -61,8 +61,8 @@ class SearchController {
         .then((DataSnapshot snapshot) {
       print(snapshot.value.toString());
       if (snapshot.value == null)
-        addUserToAwaiting(AwaitingModel(
-            hasMatched: false, timer: 3, user: Config.user.email));
+        addUserToAwaiting(
+            AwaitingModel(hasMatched: false, timer: 3, user: Global.email));
     });
 
     _searchAwaitingRef.onValue.listen((event) async {
@@ -72,7 +72,7 @@ class SearchController {
           AwaitingModel awaitingModel = AwaitingModel.fromJson(key, value);
 
           if (awaitingModel.hasMatched == false &&
-              awaitingModel.user != Config.user.email) {
+              awaitingModel.user != Global.email) {
             //Finds un matched user & set to true to lock matching process
 
             awaitingModel.hasMatched = true;
@@ -80,14 +80,14 @@ class SearchController {
                 .child(awaitingModel.key)
                 .set(awaitingModel.toJson());
 
-            addUserToAwaiting(AwaitingModel(
-                hasMatched: true, timer: 3, user: Config.user.email));
+            addUserToAwaiting(
+                AwaitingModel(hasMatched: true, timer: 3, user: Global.email));
             return;
           }
         });
       } else {
-        await addUserToAwaiting(AwaitingModel(
-            hasMatched: false, timer: 3, user: Config.user.email));
+        await addUserToAwaiting(
+            AwaitingModel(hasMatched: false, timer: 3, user: Global.email));
       }
 
 /*
@@ -97,14 +97,14 @@ class SearchController {
 */
 
       /*
-            getByKey(_searchAwaitingRef, "user", Config.user.email)
+            getByKey(_searchAwaitingRef, "user",Global.email)
                 .then((DataSnapshot snapshot) async {
               AwaitingModel userModel = AwaitingModel.fromJson(key, value);
               print(
                   "OTHER PRIORITY IS is " + awaitingModel.priority.toString());
 
               print("priority is " + userModel.priority.toString());
-              print("USER is " + Config.user.email);
+              print("USER is " +Global.email);
 
              
             });
@@ -127,7 +127,7 @@ class SearchController {
       Map<dynamic, dynamic> map = event.snapshot.value;
       AwaitingModel awaitingModel = AwaitingModel.fromJson("", map);
       //one user is going to initiate child added
-      if (awaitingModel.hasMatched && Config.user.email == awaitingModel.user) {
+      if (awaitingModel.hasMatched && Global.email == awaitingModel.user) {
         //print("comes here");
         await getByKey(_searchAwaitingRef, "hasMatched", true)
             .then((DataSnapshot snapshot) async {
@@ -198,7 +198,7 @@ class SearchController {
     await _searchConfirmedRef.once().then((DataSnapshot snapshot) async {
       String value = snapshot.value.toString();
 
-      if ((value.contains(Config.user.email))) {
+      if ((value.contains(Global.email))) {
         userIsHere = true;
         //_searchConfirmedRef.push().set(confirmedModel.toJson());
 
@@ -234,7 +234,7 @@ class SearchController {
     await _searchAwaitingRef.once().then((DataSnapshot snapshot) {
       String value = snapshot.value.toString();
 
-      if (!(value.contains(Config.user.email))) {
+      if (!(value.contains(Global.email))) {
         _searchAwaitingRef.push().set(awaitingModel.toJson());
       }
     });
@@ -254,7 +254,7 @@ class SearchController {
       print("value is here");
       print(value.toString());
 
-      if (!(value.contains(Config.user.email))) {
+      if (!(value.contains(Global.email))) {
         //_searchConfirmedRef.push().set(confirmedModel.toJson());
 
         /*

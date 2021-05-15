@@ -85,7 +85,7 @@ class _ChatViewState extends State<ChatView> {
                                 return Column(
                                   children: <Widget>[
                                     ChatMessage(
-                                      isOwn: Config.user.email == list[i].email,
+                                      isOwn:Global.email == list[i].email,
                                       people: Person(),
                                       text:
                                           "Whether it is Snapchat, Twitter, Facebook, tual characters matters. ",
@@ -309,7 +309,7 @@ class SearchController {
           AwaitingModel awaitingModel = AwaitingModel.fromJson(key, value);
 
           if (awaitingModel.hasMatched == false &&
-              awaitingModel.user != Config.user.email) {
+              awaitingModel.user !=Global.email) {
             //This way we can prevent duplicate
 
             awaitingModel.hasMatched = true;
@@ -321,7 +321,7 @@ class SearchController {
             //if there is no key, then it just ignores
             // await deleteUsersFromAwaiting(awaitingModel);
 
-            await getByKey(_searchAwaitingRef, "user", Config.user.email)
+            await getByKey(_searchAwaitingRef, "user",Global.email)
                 .then((DataSnapshot snapshot) async {
               Map<dynamic, dynamic> map = snapshot.value;
               if (map != null) {
@@ -339,12 +339,12 @@ class SearchController {
                   timer: awaitingModel.timer,
                   endTimeStamp:
                       DateHelper.getEndTimeInTimestamp(awaitingModel.timer),
-                  users: [awaitingModel.user, Config.user.email],
+                  users: [awaitingModel.user,Global.email],
                   channelName: Random().nextInt(100000));
 
               await _addUsersToConfirmed(confirmedModel);
 
-              print("ARE YOU COMING HERE??????????????" + Config.user.email);
+              print("ARE YOU COMING HERE??????????????" +Global.email);
 
               print("ARE YOU COMING HERE??????????????" +
                   confirmedModel.channelName.toString());
@@ -355,7 +355,7 @@ class SearchController {
                       channel: confirmedModel.channelName,
                       fromView: SearchingView.routeName,
                       timerInMs: confirmedModel.endTimeStamp,
-                      users: [awaitingModel.user, Config.user.email]));
+                      users: [awaitingModel.user,Global.email]));
 
                       */
             });
@@ -363,7 +363,7 @@ class SearchController {
         });
       } else {
         await addUserToAwaiting(
-          AwaitingModel(hasMatched: false, timer: 3, user: Config.user.email),
+          AwaitingModel(hasMatched: false, timer: 3, user:Global.email),
         );
         print("i am the first user ");
       }
@@ -402,7 +402,7 @@ class SearchController {
       if (map != null) {
         map.forEach((key, value) async {
           ConfirmedModel confirmedModel = ConfirmedModel.fromJson(key, value);
-          if (confirmedModel.users.contains(Config.user.email)) {
+          if (confirmedModel.users.contains(Global.email)) {
             if (DateHelper.getRemainingTimeFromNowTS(
                     confirmedModel.endTimeStamp) <
                 0) {
@@ -411,7 +411,7 @@ class SearchController {
 
             DebugHelper.red(
                 "(CHECK IF IN CONFIRMED) ARE YOU COMING HERE??????????????" +
-                    Config.user.email);
+                   Global.email);
 
             DebugHelper.red(
                 "(CHECK IF IN CONFIRMED) ARE YOU COMING HERE??????????????" +
@@ -435,7 +435,7 @@ class SearchController {
     await _searchAwaitingRef.once().then((DataSnapshot snapshot) {
       String value = snapshot.value.toString();
 
-      if (!(value.contains(Config.user.email))) {
+      if (!(value.contains(Global.email))) {
         _searchAwaitingRef.push().set(awaitingModel.toJson());
       }
     });
@@ -443,7 +443,7 @@ class SearchController {
 
   Future<void> deleteUsersFromAwaiting(AwaitingModel awaitingModel) async {
     await _searchAwaitingRef.child(awaitingModel.key).remove();
-    //  getByKey(_searchAwaitingRef, "user", Config.user.email).then((value) => null)
+    //  getByKey(_searchAwaitingRef, "user",Global.email).then((value) => null)
 
     /*
     for (int i = 0; i < users.length; i++) {
@@ -467,8 +467,8 @@ class SearchController {
   Future<void> _addUsersToConfirmed(ConfirmedModel confirmedModel) async {
     await _searchConfirmedRef.once().then((DataSnapshot snapshot) {
       String value = snapshot.value.toString();
-      if (!(value.contains(Config.user.email))) {
-        print(Config.user.email + "  doesn't exist in confirm");
+      if (!(value.contains(Global.email))) {
+        print(Global.email + "  doesn't exist in confirm");
         _searchConfirmedRef.push().set(confirmedModel.toJson());
       } else {
         //This user did not finish session

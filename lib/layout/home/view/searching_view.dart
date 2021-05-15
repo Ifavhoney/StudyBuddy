@@ -1,6 +1,6 @@
 import 'package:buddy/V2/RTC/controller/cam_controller.dart';
 import 'package:buddy/V2/RTC/model/cam_model.dart';
-import 'package:buddy/global/config/config.dart';
+import 'package:buddy/global/global.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/animation/global_flashing_circle.dart';
 import 'package:buddy/global/widgets/static/global_trademark_text.dart';
@@ -40,7 +40,7 @@ class _SearchingViewState extends State<SearchingView>
   @override
   void didPop() {
     super.didPop();
-    _searchController.removeFromAwaiting(Config.user.email);
+    _searchController.removeFromAwaiting(Global.email);
   }
 
   @override
@@ -109,7 +109,7 @@ class _SearchingViewState extends State<SearchingView>
                 ))),
       ));
   void _toWaitingView() {
-    _searchController.removeFromAwaiting(Config.user.email).whenComplete(() {
+    _searchController.removeFromAwaiting(Global.email).whenComplete(() {
       Get.back();
     });
   }

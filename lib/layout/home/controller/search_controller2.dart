@@ -1,5 +1,5 @@
 import 'package:buddy/debug/debug_helper.dart';
-import 'package:buddy/global/config/config.dart';
+import 'package:buddy/global/global.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/layout/chat/args/chat_args.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
@@ -12,7 +12,7 @@ import 'package:buddy/layout/home/model/confirmed_model.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:get/get.dart';
 
-class SearchController extends GetxController {
+class SearchController {
   //Singleton ensures one instance of a class to ever be created
   static final SearchController _instance = SearchController.internal();
   SearchController.internal();
@@ -53,7 +53,7 @@ class SearchController extends GetxController {
 
   Future<void> matchingListener(BuildContext context) async {
     _searchConfirmedRef.onChildAdded.listen((event) async {
-      if (event.snapshot.value.toString().contains(Config.user.email)) {
+      if (event.snapshot.value.toString().contains(Global.email)) {
         DebugHelper.red(event.snapshot.value.toString());
         ConfirmedModel confirmedModel =
             ConfirmedModel.fromJson(event.snapshot.key, event.snapshot.value);
@@ -66,10 +66,10 @@ class SearchController extends GetxController {
     await _searchConfirmedRef.once().then((DataSnapshot snapshot) async {
       String value = snapshot.value.toString();
 
-      if ((value.contains(Config.user.email))) {
+      if ((value.contains(Global.email))) {
         snapshot.value.forEach((key, value) async {
           ConfirmedModel confirmedModel = ConfirmedModel.fromJson(key, value);
-          if (confirmedModel.users.contains(Config.user.email))
+          if (confirmedModel.users.contains(Global.email))
             toChatView(context, confirmedModel);
         });
       } else {
@@ -111,11 +111,11 @@ class SearchController extends GetxController {
 
   Future<void> addUserToAwaiting() async {
     AwaitingModel awaitingModel =
-        AwaitingModel(hasMatched: false, timer: 3, user: Config.user.email);
+        AwaitingModel(hasMatched: false, timer: 3, user: Global.email);
     await _searchAwaitingRef.once().then((DataSnapshot snapshot) {
       String value = snapshot.value.toString();
 
-      if (!(value.contains(Config.user.email))) {
+      if (!(value.contains(Global.email))) {
         _searchAwaitingRef.push().set(awaitingModel.toJson());
       }
     });
