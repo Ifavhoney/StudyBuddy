@@ -9,7 +9,6 @@ class Person extends StatelessWidget {
   Person({this.child, this.containerColor});
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
     return Padding(
       padding: EdgeInsets.fromLTRB(10.h, 40.h, 40.w, 40.h),
       child: GlobalBoxContainer(

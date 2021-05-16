@@ -41,7 +41,7 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
+    ScreenUtil().init(context);
     _iskeyboardShowing =
         MediaQuery.of(context).viewInsets.bottom > 0 ? true : false;
 

@@ -11,9 +11,13 @@ import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:buddy/layout/home/view/welcome_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:route_observer_mixin/route_observer_mixin.dart';
+
+import 'layout/orrin/navigation.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,29 +38,44 @@ class MyApp extends StatelessWidget {
     Get.put(DeviceConfig());
 
     Global.userConfig.init();
-    return GetMaterialApp(
-      theme: AppTheme().mainTheme,
-      onReady: () => Global.deviceConfig.init(),
-      home: GetBuilder<UserConfig>(
-        builder: (bloc) {
-          return WelcomeView();
+    return ScreenUtilInit(
+        builder: () => GetMaterialApp(
+              theme: AppTheme().mainTheme,
+              onReady: () => Global.deviceConfig.init(),
+              builder: (context, widget) {
+                return MediaQuery(
+                    //Setting font does not change with system font size
+                    data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                    child: widget);
+              },
+              home: GetBuilder<UserConfig>(
+                builder: (bloc) {
+                  //  print(10.sp);
+                  print(0.5.sw);
 
-          /*
+                  //Images, icons, height, padding etc use .sw or height
+                  //for fontsizes normal .sp
+                  print(ScreenUtil().screenWidth);
+
+                  return BottomNavigatorPage();
+
+                  /*
            !bloc.isReady
               ? Container()
               : bloc.user == null
                   ? LoginView()
                   : WaitingView();
                   */
-        },
-      ),
-      title: AppConfig.appName,
-      getPages: [
-        GetPage(name: LoginView.routeName, page: () => LoginView()),
-        GetPage(name: WaitingView.routeName, page: () => WaitingView()),
-        GetPage(name: SearchingView.routeName, page: () => SearchingView()),
-        GetPage(name: ChatView.routeName, page: () => ChatView()),
-      ],
-    );
+                },
+              ),
+              title: AppConfig.appName,
+              getPages: [
+                GetPage(name: LoginView.routeName, page: () => LoginView()),
+                GetPage(name: WaitingView.routeName, page: () => WaitingView()),
+                GetPage(
+                    name: SearchingView.routeName, page: () => SearchingView()),
+                GetPage(name: ChatView.routeName, page: () => ChatView()),
+              ],
+            ));
   }
 }

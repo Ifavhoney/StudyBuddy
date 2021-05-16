@@ -13,14 +13,13 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
     return _message();
   }
 
   Widget _message() {
     if (isOwn) {
       return Container(
-        margin: EdgeInsets.only(left: ScreenUtil.screenWidthDp / 7),
+        margin: EdgeInsets.only(left: ScreenUtil().screenWidth / 7),
         padding: EdgeInsets.fromLTRB(10.h, 0.h, 40.w, 0.h),
         alignment: Alignment.bottomRight,
         child: Row(
@@ -43,7 +42,7 @@ class ChatMessage extends StatelessWidget {
       );
     } else {
       return Container(
-        margin: EdgeInsets.only(right: ScreenUtil.screenWidthDp / 7),
+        margin: EdgeInsets.only(right: ScreenUtil().screenWidth / 7),
         alignment: Alignment.bottomLeft,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,

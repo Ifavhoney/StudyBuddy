@@ -56,7 +56,6 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
     _iskeyboardShowing =
         MediaQuery.of(context).viewInsets.bottom > 0 ? true : false;
 
@@ -119,7 +118,7 @@ class _ChatViewState extends State<ChatView> {
                               _scrollController.hasClients) {
                             _scrollController.animateTo(
                               _scrollController.position.maxScrollExtent +
-                                  ScreenUtil.screenHeightDp / 2,
+                                  ScreenUtil().screenHeight / 2,
                               curve: Curves.easeOut,
                               duration: const Duration(milliseconds: 200),
                             );

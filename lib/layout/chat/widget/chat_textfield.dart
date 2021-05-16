@@ -14,7 +14,6 @@ class ChatTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
     return Container(
       padding: EdgeInsets.all(30.w),
       width: MediaQuery.of(context).size.width,

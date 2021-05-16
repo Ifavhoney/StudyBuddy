@@ -21,9 +21,8 @@ class GenericBody extends StatefulWidget {
 class _GenericBodyState extends State<GenericBody> {
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
     return Container(
-      height: ScreenUtil.screenHeightDp,
+      height: ScreenUtil().screenHeight,
       child: Stack(
         children: <Widget>[
           Container(

@@ -30,49 +30,49 @@ class AppTheme {
   );
 
   ///<summary>
-  ///Headline1: 80px, bold
+  ///Headline1: 80sp, bold
   ///
-  ///headline2: 40px, bold
+  ///headline2: 40sp, bold
   ///
-  ///headline3: 26px, bold
+  ///headline3: 26sp, bold
   ///
-  ///headline4: 24px, bold
+  ///headline4: 24sp, bold
   ///
-  ///headline5: 20px, bold
+  ///headline5: 20sp, bold
   ///
-  ///headline6: 18px
+  ///headline6: 18sp
   ///
-  ///subtitle1: 16px
+  ///subtitle1: 16sp
   ///
-  ///subtitle2: 12px
+  ///subtitle2: 12sp
   ///
   ///</summary>
   TextTheme segoeUi = Fonts.segoeUi;
 
   ///<summary>
-  ///headline2: 40px, bold
+  ///headline2: 40sp, bold
 
-  ///headline4: 24px, bold
+  ///headline4: 24sp, bold
   ///
-  ///headline5: 22px, bold
+  ///headline5: 22sp, bold
   ///
-  ///headline6: 18px
+  ///headline6: 18sp
   ///
-  ///subtitle1: 16px
+  ///subtitle1: 16sp
   ///
-  ///bodyText1: 14px
+  ///bodyText1: 14sp
   ///
-  ///subtitle2: 12px
+  ///subtitle2: 12sp
   ///</summary>
   TextTheme sfProText = Fonts.sfProText;
 
   ///<summary>
   ///
-  ///headline3: 26px, bold
+  ///headline3: 26sp, bold
   ///
-  ///bodyText1: 14px, bold
+  ///bodyText1: 14sp, bold
   ///
-  ///subtitle2: 10px
+  ///subtitle2: 10sp
   ///</summary>
   TextTheme nexa = Fonts.nexa;
 
