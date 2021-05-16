@@ -8,6 +8,7 @@ import 'package:buddy/layout/auth/view/login_view.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
+import 'package:buddy/layout/home/view/welcome_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -34,11 +35,11 @@ class MyApp extends StatelessWidget {
 
     Global.userConfig.init();
     return GetMaterialApp(
-      theme: AppTheme.mainTheme,
+      theme: AppTheme().mainTheme,
       onReady: () => Global.deviceConfig.init(),
       home: GetBuilder<UserConfig>(
         builder: (bloc) {
-          return LoginView();
+          return WelcomeView();
 
           /*
            !bloc.isReady

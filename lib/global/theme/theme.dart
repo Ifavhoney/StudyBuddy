@@ -17,7 +17,7 @@ class AppTheme {
   ///
   ///cardColor: Color(0xFFB9D1FF)
   ///</summary>
-  static ThemeData mainTheme = ThemeData(
+  ThemeData mainTheme = ThemeData(
     backgroundColor: Colors.white,
     accentColor: Color(0xFFF8FAFF),
     cardColor: Color(0xFFB9D1FF),
@@ -47,7 +47,7 @@ class AppTheme {
   ///subtitle2: 12px
   ///
   ///</summary>
-  static TextTheme segoeUi = Fonts.segoeUi;
+  TextTheme segoeUi = Fonts.segoeUi;
 
   ///<summary>
   ///headline2: 40px, bold
@@ -64,7 +64,7 @@ class AppTheme {
   ///
   ///subtitle2: 12px
   ///</summary>
-  static TextTheme sfProText = Fonts.sfProText;
+  TextTheme sfProText = Fonts.sfProText;
 
   ///<summary>
   ///
@@ -74,17 +74,17 @@ class AppTheme {
   ///
   ///subtitle2: 10px
   ///</summary>
-  static TextTheme nexa = Fonts.nexa;
+  TextTheme nexa = Fonts.nexa;
 
   ///<summary>
   ///{}
   ///</summary>
-  static Map<String, Color> homeViewIcons = IconColors.homeView;
+  Map<String, Color> homeViewIcons = IconColors.homeView;
 
   ///<summary>
   ///"arrowBack": Color(0xFFE1C2EB)
   ///</summary>
-  static Map<String, Color> loginViewIcons = IconColors.loginView;
+  Map<String, Color> loginViewIcons = IconColors.loginView;
 
   ///<summary>
   ///
@@ -92,7 +92,7 @@ class AppTheme {
   ///
   ///"add": Color(0xFF707070)
   ///</summary>
-  static Map<String, Color> signupViewIcons = IconColors.signupView;
+  Map<String, Color> signupViewIcons = IconColors.signupView;
 
   ///<summary>
   ///
@@ -100,7 +100,7 @@ class AppTheme {
   ///
   ///"add": Color(0xFF707070)
   ///</summary>
-  static Map<String, Color> preferenceViewIcons = IconColors.preferencesView;
+  Map<String, Color> preferenceViewIcons = IconColors.preferencesView;
 
   ///<summary>
   ///
@@ -116,7 +116,7 @@ class AppTheme {
   ///
   ///end": Color(0xFFD0021B)
   ///</summary>
-  static Map<String, Color> camViewIcons = IconColors.camView;
+  Map<String, Color> camViewIcons = IconColors.camView;
 
   ///<summary>
   ///
@@ -128,7 +128,7 @@ class AppTheme {
   ///
   ///"add": Color(0xFF504DE5)
   ///</summary>
-  static Map<String, Color> audioViewIcons = IconColors.audioView;
+  Map<String, Color> audioViewIcons = IconColors.audioView;
 
   ///<summary>
   ///
@@ -142,26 +142,26 @@ class AppTheme {
   ///
   ///"search": Color(0xFFC6C6C6)
   ///</summary>
-  static Map<String, Color> friendViewIcons = IconColors.friendView;
+  Map<String, Color> friendViewIcons = IconColors.friendView;
 
   ///<summary>
   ///
   ///"logout": Color(0xFF504DE5)
   ///
   ///</summary>
-  static Map<String, Color> settingsViewIcons = IconColors.settingsView;
+  Map<String, Color> settingsViewIcons = IconColors.settingsView;
 
   ///<summary>
   ///
   ///"search": Color(0xFF737BCE)
   ///</summary>
-  static Map<String, Color> waitingViewIcons = IconColors.waitingView;
+  Map<String, Color> waitingViewIcons = IconColors.waitingView;
 
   ///<summary>
   ///
   ///"arrowBack": Color(0xFFE1C2EB)
   ///</summary>
-  static Map<String, Color> searchingViewIcons = IconColors.searchingView;
+  Map<String, Color> searchingViewIcons = IconColors.searchingView;
 
   ///<summary>
   ///
@@ -171,6 +171,5 @@ class AppTheme {
   ///
   ///"search": Color(0xFF8BB1FB)
   ///</summary>
-  static Map<String, Color> bottomNavigationBarIcons =
-      IconColors.bottomNavigationBar;
+  Map<String, Color> bottomNavigationBarIcons = IconColors.bottomNavigationBar;
 }

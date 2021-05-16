@@ -64,8 +64,8 @@ class _GlobalBottomNavigationBarState extends State<GlobalBottomNavigationBar> {
             icon: Icon(
               icon,
               color: _currentIndex == index
-                  ? AppTheme.bottomNavigationBarIcons["active"]
-                  : AppTheme.bottomNavigationBarIcons["inactive"],
+                  ? AppTheme().bottomNavigationBarIcons["active"]
+                  : AppTheme().bottomNavigationBarIcons["inactive"],
               size: 35,
             ),
             onPressed: () {
@@ -94,8 +94,8 @@ class _GlobalBottomNavigationBarState extends State<GlobalBottomNavigationBar> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: _currentIndex == 1
-                              ? AppTheme.bottomNavigationBarIcons["active"]
-                              : AppTheme.bottomNavigationBarIcons["search"],
+                              ? AppTheme().bottomNavigationBarIcons["active"]
+                              : AppTheme().bottomNavigationBarIcons["search"],
                           boxShadow: [
                             BoxShadow(
                                 color: Colors.black,
@@ -125,7 +125,7 @@ class _GlobalBottomNavigationBarState extends State<GlobalBottomNavigationBar> {
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppTheme.bottomNavigationBarIcons["active"],
+              color: AppTheme().bottomNavigationBarIcons["active"],
             ),
             child: Text("  "),
           ),

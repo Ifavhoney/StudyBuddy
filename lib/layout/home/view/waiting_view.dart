@@ -57,7 +57,7 @@ class _WaitingViewState extends State<WaitingView> {
               child: Icon(
                 Icons.search,
                 size: 45,
-                color: AppTheme.waitingViewIcons["search"].withOpacity(0.8),
+                color: AppTheme().waitingViewIcons["search"].withOpacity(0.8),
               ),
             ),
           ),

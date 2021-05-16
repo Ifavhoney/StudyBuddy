@@ -12,7 +12,9 @@ class GlobalTrademarkText extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Text("Buddy",
-            style: AppTheme.nexa.bodyText1
+            style: AppTheme()
+                .nexa
+                .bodyText1
                 .apply(color: color == null ? Color(0xFFB9D1FF) : color)),
       ),
     );

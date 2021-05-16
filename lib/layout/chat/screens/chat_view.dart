@@ -75,7 +75,7 @@ class _ChatViewState extends State<ChatView> {
                     GlobalTimeHelper(
                         margin: EdgeInsets.only(top: 100.h),
                         color: Colors.white,
-                        textStyle: AppTheme.sfProText.subtitle1),
+                        textStyle: AppTheme().sfProText.subtitle1),
                     //  _chatPeople(),
                   ]),
               isKeyboardShowing: _iskeyboardShowing,

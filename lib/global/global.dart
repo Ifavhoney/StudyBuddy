@@ -13,7 +13,7 @@ class Global {
   static Keys keys;
 
   //Information regarding Our AppTheme
-  static AppTheme appTheme;
+  static AppTheme appTheme = AppTheme();
 
   ///Information regarding The App
   static AppConfig appConfig;
