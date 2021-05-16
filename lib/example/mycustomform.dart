@@ -72,6 +72,5 @@ class _MyCustomFormState extends State<MyCustomForm> {
       print('caught generic exception');
       print(e);
     }
-    
   }
 }

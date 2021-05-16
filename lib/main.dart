@@ -38,11 +38,15 @@ class MyApp extends StatelessWidget {
       onReady: () => Global.deviceConfig.init(),
       home: GetBuilder<UserConfig>(
         builder: (bloc) {
-          return !bloc.isReady
+          return LoginView();
+
+          /*
+           !bloc.isReady
               ? Container()
               : bloc.user == null
                   ? LoginView()
                   : WaitingView();
+                  */
         },
       ),
       title: AppConfig.appName,

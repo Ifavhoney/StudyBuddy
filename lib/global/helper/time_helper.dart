@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/layout/home/controller/search_controller2.dart';
-import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
