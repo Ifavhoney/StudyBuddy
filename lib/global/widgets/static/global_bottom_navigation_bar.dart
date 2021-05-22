@@ -40,12 +40,15 @@ class _GlobalBottomNavigationBarState extends State<GlobalBottomNavigationBar> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         _icon(Icons.settings, 0),
+
+                        //   _icon(Icons.power_settings_new, 0),
+
                         Container(),
                         Container(),
                         Container(),
                         Container(),
                         _icon(Icons.people, 2),
-                        _icon(Icons.today, 3)
+                        // _icon(Icons.today, 3)
                       ],
                     ),
                   ),

@@ -11,6 +11,8 @@ class GlobalBoxContainer extends StatelessWidget {
   final double containerWidth;
   final Color containerColor;
   final BoxShape boxShape;
+  final BorderRadiusGeometry borderRadius;
+  final EdgeInsetsGeometry padding;
 
   const GlobalBoxContainer(
       {Key key,
@@ -19,6 +21,8 @@ class GlobalBoxContainer extends StatelessWidget {
       this.containerColor = Colors.white,
       this.boxShape = BoxShape.rectangle,
       this.boxShadow,
+      this.borderRadius,
+      this.padding = EdgeInsets.zero,
       this.child})
       : super(key: key);
   @override
@@ -26,8 +30,12 @@ class GlobalBoxContainer extends StatelessWidget {
     return Container(
         height: containerHeight,
         width: containerWidth,
+        padding: padding,
         decoration: BoxDecoration(
-            shape: boxShape, color: containerColor, boxShadow: [boxShadow]),
+            borderRadius: borderRadius,
+            shape: boxShape,
+            color: containerColor,
+            boxShadow: [boxShadow]),
         child: child);
   }
 }
