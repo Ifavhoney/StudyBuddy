@@ -1,9 +1,10 @@
-import 'package:buddy/layout/orrin/screens/Login.dart';
-import 'package:buddy/layout/orrin/screens/intro.dart';
+import 'package:buddy/V2/other/login_view_2.dart';
+import 'package:buddy/V2/other/messages.dart';
+import 'package:buddy/V2/other/register.dart';
+import 'package:buddy/V2/other/sizeConfig.dart';
+import 'package:buddy/layout/auth/view/welcome_view.dart';
 import 'package:buddy/layout/orrin/screens/maintenance.dart';
-import 'package:buddy/layout/orrin/screens/messages.dart';
-import 'package:buddy/layout/orrin/screens/register.dart';
-import 'package:buddy/layout/orrin/sharedWidgets/sizeConfig.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -15,8 +16,8 @@ class BottomNavigatorPage extends StatefulWidget {
 class _BottomNavigatorPageState extends State<BottomNavigatorPage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
-    IntroPage(),
-    Login(),
+    WelcomeView(),
+    LoginView2(),
     Register(),
     Maintenance(),
     MessageList()

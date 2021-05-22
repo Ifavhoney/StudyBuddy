@@ -1,9 +1,8 @@
+import 'package:buddy/V2/other/sizeConfig.dart';
 import 'package:buddy/layout/orrin/sharedWidgets/mascotImage.dart';
-import 'package:buddy/layout/orrin/sharedWidgets/sizeConfig.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 
-class Login extends StatelessWidget {
+class GroupLoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

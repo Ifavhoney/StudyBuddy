@@ -1,4 +1,4 @@
-import 'package:buddy/layout/orrin/sharedWidgets/sizeConfig.dart';
+import 'package:buddy/V2/other/sizeConfig.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
