@@ -4,11 +4,10 @@ import 'package:buddy/global/config/user_config.dart';
 import 'package:buddy/global/global.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
-import 'package:buddy/layout/auth/view/login_view.dart';
+import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
-import 'package:buddy/layout/home/view/welcome_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,8 +15,13 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:route_observer_mixin/route_observer_mixin.dart';
 
-import 'layout/orrin/navigation.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import 'example/animation/spin_kit_animation.dart';
+import 'global/widgets/animation/spinner/global_spinner.dart';
+import 'layout/auth/view/welcome_view.dart';
+import 'layout/nav_page/spner_chld_nav.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,9 +42,12 @@ class MyApp extends StatelessWidget {
     Get.put(DeviceConfig());
 
     Global.userConfig.init();
+    AuthController().signOut();
+
     return ScreenUtilInit(
         builder: () => GetMaterialApp(
               theme: AppTheme().mainTheme,
+              color: AppTheme().mainTheme.backgroundColor,
               onReady: () => Global.deviceConfig.init(),
               builder: (context, widget) {
                 return MediaQuery(
@@ -50,27 +57,15 @@ class MyApp extends StatelessWidget {
               },
               home: GetBuilder<UserConfig>(
                 builder: (bloc) {
-                  //  print(10.sp);
-                  print(0.5.sw);
-
-                  //Images, icons, height, padding etc use .sw or height
-                  //for fontsizes normal .sp
-                  print(ScreenUtil().screenWidth);
-
-                  return BottomNavigatorPage();
-
-                  /*
-           !bloc.isReady
-              ? Container()
-              : bloc.user == null
-                  ? LoginView()
-                  : WaitingView();
-                  */
+                  return SpnerChldNav(
+                    isReady: bloc.isReady,
+                    child: bloc.user == null ? WelcomeView() : WaitingView(),
+                  );
                 },
               ),
               title: AppConfig.appName,
               getPages: [
-                GetPage(name: LoginView.routeName, page: () => LoginView()),
+                // GetPage(name: LoginView.routeName, page: () => LoginView()),
                 GetPage(name: WaitingView.routeName, page: () => WaitingView()),
                 GetPage(
                     name: SearchingView.routeName, page: () => SearchingView()),
