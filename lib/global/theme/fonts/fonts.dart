@@ -1,9 +1,29 @@
+import 'package:buddy/global/config/device_config.dart';
+import 'package:buddy/global/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 ///@LastModifiedBy: Jason NGuessan
 class Fonts {
-  static TextTheme segoeUi = TextTheme(
+  ///<summary>
+  ///Headline1: 80sp, bold
+  ///
+  ///headline2: 40sp, bold
+  ///
+  ///headline3: 26sp, bold
+  ///
+  ///headline4: 24sp, bold
+  ///
+  ///headline5: 20sp, bold
+  ///
+  ///headline6: 18sp
+  ///
+  ///subtitle1: 16sp
+  ///
+  ///subtitle2: 12sp
+  ///
+  ///</summary>
+  TextTheme segoeUi = TextTheme(
     headline1: TextStyle(
       fontSize: 80.sp,
       fontFamily: "Segoe UI",
@@ -30,11 +50,11 @@ class Fonts {
       fontWeight: FontWeight.bold,
     ),
     headline6: TextStyle(
-      fontSize: 18.sp,
+      fontSize: 18.sp - deviceSize(),
       fontFamily: "Segoe UI",
     ),
     subtitle1: TextStyle(
-      fontSize: 16.sp,
+      fontSize: 16.sp - deviceSize(),
       fontFamily: "Segoe UI",
     ),
     subtitle2: TextStyle(
@@ -43,7 +63,22 @@ class Fonts {
     ),
   );
 
-  static TextTheme sfProText = TextTheme(
+  ///<summary>
+  ///headline2: 40sp, bold
+
+  ///headline4: 24sp, bold
+  ///
+  ///headline5: 22sp, bold
+  ///
+  ///headline6: 18sp
+  ///
+  ///subtitle1: 16sp
+  ///
+  ///bodyText1: 14sp
+  ///
+  ///subtitle2: 12sp
+  ///</summary>
+  TextTheme sfProText = TextTheme(
     headline2: TextStyle(
       fontSize: 40.sp,
       fontFamily: "SfProText",
@@ -77,7 +112,16 @@ class Fonts {
     ),
   );
 
-  static TextTheme nexa = TextTheme(
+  ///<summary>
+  ///
+  ///headline3: 26sp, bold
+  ///
+  ///bodyText1: 14sp, bold
+  ///
+  ///subtitle2: 10sp
+  ///</summary>
+
+  TextTheme nexa = TextTheme(
     headline3: TextStyle(
       fontSize: 26.sp,
       fontFamily: "Nexa",
@@ -93,4 +137,20 @@ class Fonts {
       fontFamily: "Nexa",
     ),
   );
+
+  static double deviceSize() {
+    switch (Global.deviceConfig.screenSize) {
+      case ScreenSize.Small:
+        return 3.sp;
+        break;
+      case ScreenSize.Mid:
+        return 2.sp;
+        break;
+      case ScreenSize.Large:
+        return 1.sp;
+        break;
+    }
+
+    return 0;
+  }
 }

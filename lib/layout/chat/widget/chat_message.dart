@@ -1,3 +1,4 @@
+import 'package:buddy/global/global.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/layout/chat/widget/custom_chat_bubble.dart';
 import 'package:buddy/layout/chat/widget/person.dart';
@@ -32,10 +33,11 @@ class ChatMessage extends StatelessWidget {
                   child: Container(
                       padding: EdgeInsets.fromLTRB(30.w, 40.h, 20.w, 40.h),
                       child: Text(text,
-                          style: AppTheme().sfProText.bodyText1.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 0.2)))),
+                          style: Global.appTheme.fonts.sfProText.bodyText1
+                              .copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: 0.2)))),
             ),
           ],
         ),
@@ -56,10 +58,11 @@ class ChatMessage extends StatelessWidget {
                 child: Container(
                     padding: EdgeInsets.fromLTRB(30.w, 40.h, 20.w, 40.h),
                     child: Text(text,
-                        style: AppTheme().sfProText.bodyText1.copyWith(
-                            color: Colors.black.withOpacity(0.7),
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 0.2))),
+                        style: Global.appTheme.fonts.sfProText.bodyText1
+                            .copyWith(
+                                color: Colors.black.withOpacity(0.7),
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.2))),
               ),
             )
           ],

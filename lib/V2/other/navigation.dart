@@ -1,12 +1,14 @@
 import 'package:buddy/V2/other/login_view_2.dart';
 import 'package:buddy/V2/other/messages.dart';
-import 'package:buddy/V2/other/register.dart';
 import 'package:buddy/V2/other/sizeConfig.dart';
+import 'package:buddy/layout/auth/view/register_view.dart';
 import 'package:buddy/layout/auth/view/welcome_view.dart';
 import 'package:buddy/layout/orrin/screens/maintenance.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+
+import 'group_login_view.dart';
 
 class BottomNavigatorPage extends StatefulWidget {
   @override
@@ -17,10 +19,10 @@ class _BottomNavigatorPageState extends State<BottomNavigatorPage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     WelcomeView(),
-    LoginView2(),
-    Register(),
+    GroupLoginView(),
+    SignupView(),
     Maintenance(),
-    MessageList()
+    // MessageList()
   ];
 
   void SelectPage(int index) {

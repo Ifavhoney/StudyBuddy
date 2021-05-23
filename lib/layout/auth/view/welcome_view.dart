@@ -29,7 +29,7 @@ class WelcomeView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             AutoSizeText("Hello Buddy!",
-                style: Global.appTheme.segoeUi.headline2),
+                style: Global.appTheme.fonts.segoeUi.headline2),
             MascotImage(size: 0.5.sh),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 0.05.sw),
@@ -50,12 +50,13 @@ class WelcomeView extends StatelessWidget {
                           ),
                         ),
                         AutoSizeText('Sign in with Google',
-                            style: Global.appTheme.sfProText.headline6.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: Global
-                                        .appTheme.sfProText.headline6.fontSize +
-                                    2.sp,
-                                color: Colors.black))
+                            style: Global.appTheme.fonts.sfProText.headline6
+                                .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Global.appTheme.fonts.sfProText
+                                            .headline6.fontSize +
+                                        2.sp,
+                                    color: Colors.black))
                       ]),
                     ),
                     onPressed: () {

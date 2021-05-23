@@ -74,4 +74,12 @@ class AuthController implements BaseAuthModel {
       });
     }
   }
+
+  @override
+  Future<String> signUp(String email, String password) async {
+    UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email, password: password);
+    //Current User part of firebase android documentation
+    return result.user.uid;
+  }
 }

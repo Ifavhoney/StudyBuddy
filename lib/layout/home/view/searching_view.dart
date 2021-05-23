@@ -105,7 +105,7 @@ class _SearchingViewState extends State<SearchingView>
                 onPressed: _toWaitingView,
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: AppTheme().searchingViewIcons["arrowBack"],
+                  color: Global.appTheme.iconColors.searchingView["arrowBack"],
                 ))),
       ));
   void _toWaitingView() {

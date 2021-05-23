@@ -1,3 +1,4 @@
+import 'package:buddy/global/global.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_trademark_text.dart';
@@ -67,8 +68,8 @@ class _GlobalBottomNavigationBarState extends State<GlobalBottomNavigationBar> {
             icon: Icon(
               icon,
               color: _currentIndex == index
-                  ? AppTheme().bottomNavigationBarIcons["active"]
-                  : AppTheme().bottomNavigationBarIcons["inactive"],
+                  ? Global.appTheme.iconColors.bottomNavigationBar["active"]
+                  : Global.appTheme.iconColors.bottomNavigationBar["inactive"],
               size: 35,
             ),
             onPressed: () {
@@ -97,8 +98,10 @@ class _GlobalBottomNavigationBarState extends State<GlobalBottomNavigationBar> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: _currentIndex == 1
-                              ? AppTheme().bottomNavigationBarIcons["active"]
-                              : AppTheme().bottomNavigationBarIcons["search"],
+                              ? Global.appTheme.iconColors
+                                  .bottomNavigationBar["active"]
+                              : Global.appTheme.iconColors
+                                  .bottomNavigationBar["search"],
                           boxShadow: [
                             BoxShadow(
                                 color: Colors.black,
@@ -128,7 +131,7 @@ class _GlobalBottomNavigationBarState extends State<GlobalBottomNavigationBar> {
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppTheme().bottomNavigationBarIcons["active"],
+              color: Global.appTheme.iconColors.bottomNavigationBar["active"],
             ),
             child: Text("  "),
           ),

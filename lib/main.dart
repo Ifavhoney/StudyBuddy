@@ -18,6 +18,7 @@ import 'package:route_observer_mixin/route_observer_mixin.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import 'V2/other/navigation.dart';
 import 'example/animation/spin_kit_animation.dart';
 import 'global/widgets/animation/spinner/global_spinner.dart';
 import 'layout/auth/view/welcome_view.dart';
@@ -50,19 +51,24 @@ class MyApp extends StatelessWidget {
               color: AppTheme().mainTheme.backgroundColor,
               onReady: () => Global.deviceConfig.init(),
               builder: (context, widget) {
+                
                 return MediaQuery(
                     //Setting font does not change with system font size
                     data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
                     child: widget);
               },
-              home: GetBuilder<UserConfig>(
+              home: BottomNavigatorPage(),
+
+              /*
+               GetBuilder<UserConfig>(
                 builder: (bloc) {
                   return SpnerChldNav(
                     isReady: bloc.isReady,
-                    child: bloc.user == null ? WelcomeView() : WaitingView(),
+                    child:  bloc.user == null ? WelcomeView() : WaitingView(),
                   );
                 },
               ),
+              */
               title: AppConfig.appName,
               getPages: [
                 // GetPage(name: LoginView.routeName, page: () => LoginView()),

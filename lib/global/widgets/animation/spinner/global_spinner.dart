@@ -9,15 +9,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 ///Fade through, no relatonsh
 class GlobalSpinner extends StatelessWidget {
   static const routeName = '/spinner';
+  final double height;
+  final double width;
 
   final Widget child;
-  const GlobalSpinner({this.child});
+  const GlobalSpinner({this.child, this.height, this.width});
 
   @override
   Widget build(BuildContext context) {
     return child != null
         ? Stack(
-            children: [AbsorbPointer(child: child), _spinner()],
+            children: [
+              Align(
+                  alignment: Alignment.center,
+                  child: AbsorbPointer(child: child)),
+              _spinner()
+            ],
           )
         : Stack(
             children: [
@@ -33,9 +40,9 @@ class GlobalSpinner extends StatelessWidget {
       alignment: align,
       child: SpinKitRing(
         color: Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1),
-        size: 0.1.sh,
+        size: height ?? 0.1.sh,
         duration: Duration(milliseconds: 900),
-        lineWidth: 0.02.sw,
+        lineWidth: width ?? 0.02.sw,
       ),
     );
   }

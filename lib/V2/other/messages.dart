@@ -4,12 +4,14 @@ import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+/*
 class MessageList extends StatefulWidget {
   @override
   _MessageListState createState() => _MessageListState();
 }
 
 class _MessageListState extends State<MessageList> {
+
   final List<User> getUsers = User.userList();
 
   Widget userCard(User user, BuildContext context) {
@@ -166,4 +168,7 @@ class _MessageListState extends State<MessageList> {
       ),
     );
   }
+
 }
+
+  */

@@ -54,7 +54,7 @@ class LoginView2 extends StatelessWidget {
                             child: Icon(FontAwesomeIcons.google),
                           ),
                           AutoSizeText('Sign in with Google',
-                              style: Global.appTheme.sfProText.bodyText1
+                              style: Global.appTheme.fonts.sfProText.bodyText1
                                   .copyWith(fontWeight: FontWeight.bold))
                         ]),
                       )),

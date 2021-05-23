@@ -1,3 +1,4 @@
+import 'package:buddy/global/global.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_bottom_navigation_bar.dart';
@@ -57,7 +58,8 @@ class _WaitingViewState extends State<WaitingView> {
               child: Icon(
                 Icons.search,
                 size: 45,
-                color: AppTheme().waitingViewIcons["search"].withOpacity(0.8),
+                color: Global.appTheme.iconColors.waitingView["search"]
+                    .withOpacity(0.8),
               ),
             ),
           ),
