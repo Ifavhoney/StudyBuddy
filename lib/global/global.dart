@@ -16,7 +16,7 @@ class Global {
   static AppTheme appTheme = AppTheme();
 
   ///Information regarding The App
-  static AppConfig appConfig;
+  static AppConfig appConfig = AppConfig();
 
   ///Information regarding ScreenSize, Platform, Netwok, Permission
   static DeviceConfig deviceConfig = Get.find<DeviceConfig>();

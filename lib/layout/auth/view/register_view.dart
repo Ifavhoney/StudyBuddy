@@ -2,12 +2,14 @@ import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buddy/V2/other/sizeConfig.dart';
 import 'package:buddy/global/global.dart';
+import 'package:buddy/global/helper/html_helper.dart';
 import 'package:buddy/global/helper/upload_helper.dart';
 import 'package:buddy/global/theme/fonts/fonts.dart';
 import 'package:buddy/global/widgets/static/global_app_bar.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_snack_bar.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
+import 'package:buddy/layout/auth/widget/copywriting_popup.dart';
 import 'package:buddy/layout/auth/widget/fullScreenSnackBar.dart';
 import 'package:buddy/layout/orrin/model/user.dart';
 import 'package:country_pickers/country.dart';
@@ -162,9 +164,10 @@ class _SignupViewState extends State<SignupView> {
                               barrierDismissible: true,
                               reverseTransitionDuration:
                                   Duration(milliseconds: 10),
-                              transitionDuration: Duration(microseconds: 100)),
+                              transitionDuration:
+                                  Duration(microseconds: 100000)),
                           builder: (context) {
-                            return LoginView();
+                            return CopyWritingPopup();
                           });
                     },
                   ),

@@ -12,8 +12,9 @@ class GlobalSpinner extends StatelessWidget {
   final double height;
   final double width;
 
+  final Color color;
   final Widget child;
-  const GlobalSpinner({this.child, this.height, this.width});
+  const GlobalSpinner({this.child, this.height, this.width, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,8 @@ class GlobalSpinner extends StatelessWidget {
     return Align(
       alignment: align,
       child: SpinKitRing(
-        color: Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1),
+        color: color ??
+            Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1),
         size: height ?? 0.1.sh,
         duration: Duration(milliseconds: 900),
         lineWidth: width ?? 0.02.sw,

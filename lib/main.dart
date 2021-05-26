@@ -51,7 +51,6 @@ class MyApp extends StatelessWidget {
               color: AppTheme().mainTheme.backgroundColor,
               onReady: () => Global.deviceConfig.init(),
               builder: (context, widget) {
-                
                 return MediaQuery(
                     //Setting font does not change with system font size
                     data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
@@ -69,7 +68,7 @@ class MyApp extends StatelessWidget {
                 },
               ),
               */
-              title: AppConfig.appName,
+              title: Global.appConfig.appName,
               getPages: [
                 // GetPage(name: LoginView.routeName, page: () => LoginView()),
                 GetPage(name: WaitingView.routeName, page: () => WaitingView()),
