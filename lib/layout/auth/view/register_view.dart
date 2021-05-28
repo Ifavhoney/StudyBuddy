@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buddy/V2/other/sizeConfig.dart';
+import 'package:buddy/global/config/user_config.dart';
 import 'package:buddy/global/global.dart';
 import 'package:buddy/global/helper/html_helper.dart';
 import 'package:buddy/global/helper/upload_helper.dart';
@@ -10,8 +11,6 @@ import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_snack_bar.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:buddy/layout/auth/widget/copywriting_popup.dart';
-import 'package:buddy/layout/auth/widget/fullScreenSnackBar.dart';
-import 'package:buddy/layout/orrin/model/user.dart';
 import 'package:country_pickers/country.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +18,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:country_pickers/country_pickers.dart';
+import 'package:get/get.dart';
 
 class SignupView extends StatefulWidget {
   @override
@@ -43,12 +44,21 @@ class _SignupViewState extends State<SignupView> {
 
 /*Consider implementing google sign in later */
   void createUser() async {
+   UserConfig userConfig =   Get.find<UserConfig>();
     final status = await AuthController().checkUserExists(email.text);
-
-    databaseReference
-        .collection("MainsUsers")
-        .doc(email.text)
-        .set({'fullName': fullName.text, "country": country, "avatar": image});
+    if (status) {
+      GlobalSnackBar.main("Seems like you've already registered!");
+      //userConfig.user = User()
+    } else {
+      print("did not register");
+    }
+    databaseReference.collection("Users").doc(email.text).set({
+      'fullName': fullName.text,
+      "country": country,
+      "avatar": image,
+      "questionaire": {},
+      "completedProfile": false
+    });
   }
 
   void nextPage() async {
@@ -84,7 +94,7 @@ class _SignupViewState extends State<SignupView> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     _formFields(),
-                    SizedBox(height: SizeConfig.safeBlockVertical * 6),
+                    SizedBox(height: SizeConfig.safeBlockVertical * 10),
                     _checked(),
                     Expanded(child: Container()),
                     _signUpBtn(),
@@ -114,7 +124,7 @@ class _SignupViewState extends State<SignupView> {
           ),
           child: Center(
             child: AutoSizeText("Sign up",
-                style: Global.appTheme.fonts.segoeUi.headline5.copyWith()),
+                style: Global.appTheme.fonts.segoeUi.headline5),
           ),
           padding: EdgeInsets.all(15.sp)),
       onPressed: () {
@@ -123,7 +133,10 @@ class _SignupViewState extends State<SignupView> {
         if (fullName.text.length > 0 &&
             email.text.length > 0 &&
             isValidEmail(email.text)) {
-          createUser();
+          if (_isChecked)
+            createUser();
+          else
+            GlobalSnackBar.main("Please accept the terms & Conditions");
         }
       },
     );
@@ -131,8 +144,9 @@ class _SignupViewState extends State<SignupView> {
 
   Widget _checked() {
     return Container(
-        width: SizeConfig.blockSizeHorizontal * 85,
+        padding: EdgeInsets.only(left: 0.06.sw),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             !_isChecked
                 ? AutoSizeText(
@@ -201,11 +215,14 @@ class _SignupViewState extends State<SignupView> {
                   Container(child: Icon(Icons.error)),
               placeHolder: (context, url) => Container(
                   width: 50, height: 50, child: CircularProgressIndicator()),
-              radius: 0.1.sh,
+              radius: 0.09.sh,
               backgroundColor: Colors.transparent,
               elevation: 0,
-              onTap: () {
-                UploadHelper.getImageUrl();
+              onTap: () async {
+                UploadHelper helper = await UploadHelper.getImageUrl();
+                image = helper.downloadLink;
+                setState(() {});
+                Logger().e(image);
               },
               cacheImage: true,
               showInitialTextAbovePicture: false),
@@ -216,7 +233,7 @@ class _SignupViewState extends State<SignupView> {
             alignment: Alignment.bottomRight,
             child: Icon(
               FontAwesomeIcons.fileUpload,
-              size: 0.035.sh,
+              size: 0.03.sh,
               color: Global.appTheme.iconColors.signupView["upload"],
             ),
           ),
@@ -230,9 +247,9 @@ class _SignupViewState extends State<SignupView> {
       children: [
         _container(
             child: TextFormField(
-          style: Fonts().segoeUi.headline6,
+          style: Global.appTheme.fonts.segoeUi.headline6,
           controller: email,
-          readOnly: true,
+          readOnly: false,
           keyboardType: TextInputType.emailAddress,
           decoration: mainInputDec("Email Address"),
           onSaved: (String value) {
@@ -246,10 +263,11 @@ class _SignupViewState extends State<SignupView> {
           },
         )),
 
-        SizedBox(height: SizeConfig.safeBlockVertical * 4),
+        SizedBox(height: SizeConfig.safeBlockVertical * 5),
         _container(
           child: TextFormField(
             controller: fullName,
+            style: Global.appTheme.fonts.segoeUi.headline6,
             keyboardType: TextInputType.text,
             decoration: mainInputDec("Full Name"),
             onSaved: (String value) {
@@ -260,7 +278,7 @@ class _SignupViewState extends State<SignupView> {
             },
           ),
         ),
-        SizedBox(height: SizeConfig.safeBlockVertical * 4),
+        SizedBox(height: SizeConfig.safeBlockVertical * 5),
 
         //Language
         //Age range
@@ -268,6 +286,7 @@ class _SignupViewState extends State<SignupView> {
 
         _container(
             child: TextFormField(
+          style: Global.appTheme.fonts.segoeUi.headline6,
           onTap: () {
             _openCupertinoCountryPicker();
           },

@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 ///@LastModifiedBy: Jason NGuessan
 ///Container with boxShape and BoxShadow
 class GlobalBoxContainer extends StatelessWidget {
-  @required
   final BoxShadow boxShadow;
-  @required
   final Widget child;
   final double containerHeight;
   final double containerWidth;
@@ -13,6 +11,7 @@ class GlobalBoxContainer extends StatelessWidget {
   final BoxShape boxShape;
   final BorderRadiusGeometry borderRadius;
   final EdgeInsetsGeometry padding;
+  final double borderWidth;
 
   const GlobalBoxContainer(
       {Key key,
@@ -20,10 +19,11 @@ class GlobalBoxContainer extends StatelessWidget {
       this.containerWidth,
       this.containerColor = Colors.white,
       this.boxShape = BoxShape.rectangle,
-      this.boxShadow,
+      @required this.boxShadow,
       this.borderRadius,
       this.padding = EdgeInsets.zero,
-      this.child})
+      this.borderWidth,
+      @required this.child})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -34,6 +34,7 @@ class GlobalBoxContainer extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: borderRadius,
             shape: boxShape,
+            border: borderWidth == null ? null : Border.all(width: borderWidth),
             color: containerColor,
             boxShadow: [boxShadow]),
         child: child);

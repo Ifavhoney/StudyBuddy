@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:buddy/global/models/permission_info_model.dart';
-import 'package:buddy/global/theme/fonts/fonts.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';

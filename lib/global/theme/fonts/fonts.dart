@@ -25,27 +25,27 @@ class Fonts {
   ///</summary>
   TextTheme segoeUi = TextTheme(
     headline1: TextStyle(
-      fontSize: 80.sp,
+      fontSize: 80.sp - deviceSize(),
       fontFamily: "Segoe UI",
       fontWeight: FontWeight.bold,
     ),
     headline2: TextStyle(
-      fontSize: 40.sp,
+      fontSize: 40.sp - deviceSize(),
       fontFamily: "Segoe UI",
       fontWeight: FontWeight.bold,
     ),
     headline3: TextStyle(
-      fontSize: 26.sp,
+      fontSize: 26.sp - deviceSize(),
       fontFamily: "Segoe UI",
       fontWeight: FontWeight.bold,
     ),
     headline4: TextStyle(
-      fontSize: 24.sp,
+      fontSize: 24.sp - deviceSize(),
       fontFamily: "Segoe UI",
       fontWeight: FontWeight.bold,
     ),
     headline5: TextStyle(
-      fontSize: 20.sp,
+      fontSize: 20.sp - deviceSize(),
       fontFamily: "Segoe UI",
       fontWeight: FontWeight.bold,
     ),
