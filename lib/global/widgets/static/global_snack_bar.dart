@@ -7,9 +7,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class GlobalSnackBar {
-  static void main(String message,
-      {SnackPosition snackPosition = SnackPosition.BOTTOM}) {
+  GlobalSnackBar(String message,
+      {SnackPosition snackPosition = SnackPosition.BOTTOM, int seconds = 3}) {
     double verticalHeight;
+
     switch (snackPosition) {
       case SnackPosition.TOP:
         verticalHeight = 0.001.sh;
@@ -17,11 +18,11 @@ class GlobalSnackBar {
       default:
         verticalHeight = 0.05.sh;
     }
-    return Get.rawSnackbar(
+    Get.rawSnackbar(
         backgroundColor: Colors.transparent,
         borderColor: Colors.transparent,
         borderWidth: 0.01.sw,
-        duration: Duration(seconds: 10),
+        duration: Duration(seconds: seconds),
         borderRadius: 0.sp,
         margin: EdgeInsets.symmetric(
             horizontal: 0.001.sw, vertical: verticalHeight),

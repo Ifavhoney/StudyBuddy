@@ -1,8 +1,16 @@
 class User {
-  static String fullName;
-  static String email;
-  static int age;
-  static String gender;
-  static String country;
-  static String avatar;
+  final String fullName;
+  final String email;
+  final int age;
+  final String gender;
+  final String country;
+  final String avatar;
+
+  User(
+      {this.fullName,
+      this.email,
+      this.age,
+      this.gender,
+      this.country,
+      this.avatar});
 }

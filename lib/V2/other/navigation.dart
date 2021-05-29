@@ -1,7 +1,7 @@
 import 'package:buddy/V2/other/login_view_2.dart';
 import 'package:buddy/V2/other/messages.dart';
 import 'package:buddy/V2/other/sizeConfig.dart';
-import 'package:buddy/layout/auth/view/register_view.dart';
+import 'package:buddy/layout/auth/view/signup_view.dart';
 import 'package:buddy/layout/auth/view/welcome_view.dart';
 import 'package:buddy/layout/orrin/screens/maintenance.dart';
 

@@ -1,8 +1,13 @@
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/layout/auth/model/base_auth_model.dart';
+import 'package:buddy/layout/auth/view/signup_view.dart';
+import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+enum AuthType { Google, Apple }
 
 class AuthController implements BaseAuthModel {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -70,9 +75,23 @@ class AuthController implements BaseAuthModel {
 
         await _firebaseAuth.signInWithCredential(credential);
         DebugHelper.green("user: " + account.email.toString());
+
         getCurrentUser();
+        redirectUser(AuthType.Google);
       });
     }
+  }
+
+  void redirectUser(AuthType authType) async {
+    await AuthController()
+        .checkUserExists(_firebaseAuth.currentUser.email)
+        .then((exists) {
+      if (exists)
+        Get.offNamed(WaitingView.routeName);
+      else
+        Get.offNamed(SignupView.routeName,
+            parameters: {"authType": authType.toString().split(".").last});
+    });
   }
 
   @override

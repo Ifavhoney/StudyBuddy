@@ -1,17 +1,18 @@
 import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buddy/V2/other/sizeConfig.dart';
-import 'package:buddy/global/config/user_config.dart';
+import 'package:buddy/global/config/device_config.dart';
 import 'package:buddy/global/global.dart';
-import 'package:buddy/global/helper/html_helper.dart';
 import 'package:buddy/global/helper/upload_helper.dart';
-import 'package:buddy/global/theme/fonts/fonts.dart';
+import 'package:buddy/global/widgets/animation/spinner/global_spinner.dart';
 import 'package:buddy/global/widgets/static/global_app_bar.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_snack_bar.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:buddy/layout/auth/widget/copywriting_popup.dart';
+import 'package:buddy/layout/nav_page/spner_chld_nav.dart';
 import 'package:country_pickers/country.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,9 +23,10 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:country_pickers/country_pickers.dart';
-import 'package:get/get.dart';
 
 class SignupView extends StatefulWidget {
+  static const String routeName = "/signup_view";
+
   @override
   _SignupViewState createState() => _SignupViewState();
 }
@@ -41,24 +43,33 @@ class _SignupViewState extends State<SignupView> {
   String image =
       "https://firebasestorage.googleapis.com/v0/b/studybuddy-a39ca.appspot.com/o/mascot.png?alt=media&token=a5f866a4-7a46-46b4-8044-a8e558fe08f5";
   String country = CountryPickerUtils.getCountryByIsoCode('US').name;
-
-/*Consider implementing google sign in later */
+  bool isReady = false;
   void createUser() async {
-   UserConfig userConfig =   Get.find<UserConfig>();
-    final status = await AuthController().checkUserExists(email.text);
-    if (status) {
-      GlobalSnackBar.main("Seems like you've already registered!");
-      //userConfig.user = User()
-    } else {
-      print("did not register");
-    }
     databaseReference.collection("Users").doc(email.text).set({
       'fullName': fullName.text,
       "country": country,
       "avatar": image,
       "questionaire": {},
+      "patform": Get.find<DeviceConfig>().isIos ? "IOS" : "Android",
+      "AuthType": Get.parameters["authType"],
       "completedProfile": false
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    asyncInitState();
+  }
+
+  asyncInitState() async {
+    User user = await AuthController().getCurrentUser();
+    email.text = user?.email;
+    if (user?.photoURL != null) image = user.photoURL;
+    isReady = true;
+
+    GlobalSnackBar("I applied Auto-fill, feel free to modify!", seconds: 6);
+    setState(() {});
   }
 
   void nextPage() async {
@@ -71,41 +82,43 @@ class _SignupViewState extends State<SignupView> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      resizeToAvoidBottomInset: false,
-      appBar: GlobalAppBar(),
-      body: Container(
-        height: SizeConfig.screenHeight,
-        width: SizeConfig.screenWidth,
-        padding: EdgeInsets.fromLTRB(0, 0.0.sh, 0, 0.02.sh),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _avatar(),
+    return !isReady
+        ? GlobalSpinner()
+        : Scaffold(
+            key: _scaffoldKey,
+            resizeToAvoidBottomInset: false,
+            appBar: GlobalAppBar(implyLeading: false, toolbarHeight: 0.03.sh),
+            body: Container(
+              height: SizeConfig.screenHeight,
+              width: SizeConfig.screenWidth,
+              padding: EdgeInsets.fromLTRB(0, 0.0.sh, 0, 0.07.sh),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _avatar(),
 
-            SizedBox(height: SizeConfig.safeBlockVertical * 6),
-            //FORM SECTION
-            Form(
-              key: _formKey,
-              child: Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    _formFields(),
-                    SizedBox(height: SizeConfig.safeBlockVertical * 10),
-                    _checked(),
-                    Expanded(child: Container()),
-                    _signUpBtn(),
-                  ],
-                ),
+                  SizedBox(height: SizeConfig.safeBlockVertical * 9),
+                  //FORM SECTION
+                  Form(
+                    key: _formKey,
+                    child: Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          _formFields(),
+                          SizedBox(height: SizeConfig.safeBlockVertical * 10),
+                          _checked(),
+                          Expanded(child: Container()),
+                          _signUpBtn(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   Widget _signUpBtn() {
@@ -136,7 +149,7 @@ class _SignupViewState extends State<SignupView> {
           if (_isChecked)
             createUser();
           else
-            GlobalSnackBar.main("Please accept the terms & Conditions");
+            GlobalSnackBar("Please accept the terms & Conditions");
         }
       },
     );
@@ -163,7 +176,7 @@ class _SignupViewState extends State<SignupView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InkWell(
-                    child: AutoSizeText('Terms and Conditions & Privacy Policy',
+                    child: AutoSizeText('I accept all the terms & conditions',
                         maxLines: 1,
                         style: TextStyle(
                           fontSize:
@@ -249,15 +262,15 @@ class _SignupViewState extends State<SignupView> {
             child: TextFormField(
           style: Global.appTheme.fonts.segoeUi.headline6,
           controller: email,
-          readOnly: false,
+          readOnly: true,
           keyboardType: TextInputType.emailAddress,
-          decoration: mainInputDec("Email Address"),
+          decoration: mainInputDec("Email Address", readOnly: true),
           onSaved: (String value) {
             print("submit");
             if (value.isEmpty) {
-              GlobalSnackBar.main("Email Cannot be empty");
+              GlobalSnackBar("Email Cannot be empty");
             } else if (!isValidEmail(value.trim())) {
-              GlobalSnackBar.main("Invalid Email");
+              GlobalSnackBar("Invalid Email");
             } else {}
             return null;
           },
@@ -272,7 +285,7 @@ class _SignupViewState extends State<SignupView> {
             decoration: mainInputDec("Full Name"),
             onSaved: (String value) {
               if (value.isEmpty) {
-                GlobalSnackBar.main("Full Name Cannot be empty");
+                GlobalSnackBar("Full Name Cannot be empty");
               }
               return null;
             },
@@ -333,13 +346,15 @@ class _SignupViewState extends State<SignupView> {
         ],
       );
 
-  InputDecoration mainInputDec(String text) {
+  InputDecoration mainInputDec(String text, {bool readOnly = false}) {
     return InputDecoration(
         errorStyle: TextStyle(color: Colors.transparent, fontSize: 0),
         focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(width: 0, color: Colors.transparent)),
         errorBorder: OutlineInputBorder(
             borderSide: BorderSide(width: 0, color: Colors.transparent)),
+        fillColor: !readOnly ? Colors.white : Color(0xFFDDC3EC),
+        filled: true,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(
               Radius.circular(SizeConfig.blockSizeVertical * 5.5)),

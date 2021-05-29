@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:buddy/global/global.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
+import 'package:buddy/layout/auth/view/signup_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:buddy/layout/orrin/sharedWidgets/mascotImage.dart';
 import 'package:flutter/material.dart';
@@ -60,9 +61,7 @@ class WelcomeView extends StatelessWidget {
                       ]),
                     ),
                     onPressed: () {
-                      AuthController().signInWithGoogle().whenComplete(() {
-                        Get.offNamed(WaitingView.routeName);
-                      });
+                      AuthController().signInWithGoogle();
                     },
                   ),
                 ],

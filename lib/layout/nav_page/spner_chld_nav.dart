@@ -9,7 +9,6 @@ class SpnerChldNav extends StatefulWidget {
   final bool isReady;
   final Widget child;
   SpnerChldNav({@required this.isReady, @required this.child});
-
   @override
   _SpnerChldNavState createState() => _SpnerChldNavState();
 }
