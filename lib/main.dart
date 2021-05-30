@@ -4,8 +4,10 @@ import 'package:buddy/global/global.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
+import 'package:buddy/layout/auth/controller/questionaire_bloc.dart';
 import 'package:buddy/layout/auth/view/preferences_view.dart';
 import 'package:buddy/layout/auth/view/signup_view.dart';
+import 'package:buddy/layout/auth/widget/questionaire.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
@@ -39,6 +41,8 @@ class MyApp extends StatelessWidget {
     Get.put(TimeHelper());
     Get.put(UserConfig());
     Get.put(DeviceConfig());
+    Get.put(QuestionaireBloc());
+    Get.put(PrevNav());
 
     Global.userConfig.init();
     AuthController().signOut();
