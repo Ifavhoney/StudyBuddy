@@ -116,6 +116,8 @@ class Fonts {
   ///
   ///headline3: 26sp, bold
   ///
+  ///headline6: 20sp, w700
+  ///
   ///bodyText1: 14sp, bold
   ///
   ///subtitle2: 10sp
@@ -126,6 +128,11 @@ class Fonts {
       fontSize: 26.sp,
       fontFamily: "Nexa",
       fontWeight: FontWeight.bold,
+    ),
+    headline6: TextStyle(
+      fontSize: 20.sp - deviceSize(),
+      fontFamily: "Nexa",
+      fontWeight: FontWeight.w700,
     ),
     bodyText1: TextStyle(
       fontSize: 14.sp,

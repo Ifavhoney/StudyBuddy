@@ -4,6 +4,7 @@ import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:flutter/material.dart';
 
 ///Welcome -> Waiting
+///Fade Through
 class WelcWaitNav extends StatefulWidget {
   const WelcWaitNav({Key key}) : super(key: key);
 

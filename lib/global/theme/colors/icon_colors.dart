@@ -28,12 +28,9 @@ class IconColors {
   ///<summary>
   ///
   ///"arrowBack": Color(0xFFFFFFFF)
-  ///
-  ///"add": Color(0xFF707070)
   ///</summary>
   Map<String, Color> preferencesView = {
-    "arrowBack": Color(0xFFFFFFFF),
-    "add": Color(0xFF707070),
+    "arrowBack": Color(0xFFE1C2EB),
   };
 
   ///<summary>

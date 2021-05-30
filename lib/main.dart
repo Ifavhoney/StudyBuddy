@@ -4,7 +4,7 @@ import 'package:buddy/global/global.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
-import 'package:buddy/layout/auth/view/questionaire.dart';
+import 'package:buddy/layout/auth/view/preferences_view.dart';
 import 'package:buddy/layout/auth/view/signup_view.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
@@ -56,7 +56,8 @@ class MyApp extends StatelessWidget {
               },
               home: GetBuilder<UserConfig>(
                 builder: (bloc) {
-                  return SpnerChldNav(isReady: bloc.isReady, child: Question01()
+                  return SpnerChldNav(
+                      isReady: bloc.isReady, child: PreferencesView()
                       //  bloc.user.email == null ? WelcomeView() : WaitingView(),
                       );
                 },

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 ///Transition from Spinner To Child
+///Fade Through
 class SpnerChldNav extends StatefulWidget {
   final bool isReady;
   final Widget child;
