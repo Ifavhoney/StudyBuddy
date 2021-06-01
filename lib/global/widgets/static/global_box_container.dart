@@ -12,6 +12,7 @@ class GlobalBoxContainer extends StatelessWidget {
   final BorderRadiusGeometry borderRadius;
   final EdgeInsetsGeometry padding;
   final double borderWidth;
+  final LinearGradient gradient;
 
   const GlobalBoxContainer(
       {Key key,
@@ -23,7 +24,8 @@ class GlobalBoxContainer extends StatelessWidget {
       this.borderRadius,
       this.padding = EdgeInsets.zero,
       this.borderWidth,
-      @required this.child})
+      @required this.child,
+      this.gradient})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class GlobalBoxContainer extends StatelessWidget {
         padding: padding,
         decoration: BoxDecoration(
             borderRadius: borderRadius,
+            gradient: gradient, //Color(0xFFDDC3EC), Color(0xFFB9D1FF),
             shape: boxShape,
             border: borderWidth == null ? null : Border.all(width: borderWidth),
             color: containerColor,

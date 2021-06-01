@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buddy/V2/other/sizeConfig.dart';
 import 'package:buddy/global/global.dart';
@@ -82,14 +79,13 @@ class _QuestionaireState extends State<Questionaire>
                             child: _progressSides(color: Colors.blue[200])),
                   );
                 } else {
-                  return _progressSides(
+                  return _progressMiddle(
                     color: widget.pageNum > i ? Colors.blue[200] : Colors.white,
-                    end: true,
                     child: widget.pageNum != i
                         ? Container()
                         : FadeTransition(
                             opacity: animation,
-                            child: _progressSides(color: Colors.blue[200])),
+                            child: _progressMiddle(color: Colors.blue[200])),
                   );
                 }
               })),
@@ -121,9 +117,15 @@ class _QuestionaireState extends State<Questionaire>
                   containerWidth: 0.65.sw,
                   borderRadius: BorderRadius.circular(40.sp),
                   boxShadow: BoxShadow(color: Colors.transparent),
-                  containerColor: Color(0xFF8CB2FC),
+                  containerColor: widget.pageNum < 3 ? Color(0xFF8CB2FC) : null,
+                  gradient: widget.pageNum < 3
+                      ? null
+                      : LinearGradient(
+                          colors: <Color>[Color(0xFFDDC3EC), Color(0xFFB9D1FF)],
+                        ),
                   child: Center(
-                    child: AutoSizeText("Next",
+                    child: AutoSizeText(
+                        widget.pageNum < 3 ? "Next" : "Complete",
                         style: Global.appTheme.fonts.segoeUi.headline5),
                   ),
                   padding: EdgeInsets.all(15.sp)),
@@ -133,10 +135,10 @@ class _QuestionaireState extends State<Questionaire>
                   return;
                 }
                 bloc.appendAns(widget.pageNum);
+                if (widget.pageNum > 3) {
+                  
+                }
                 Get.find<PrevNav>().nextPage();
-
-                print("selected option" + Get.find<PrevNav>().page.toString());
-                setState(() {});
               },
             ),
           ),

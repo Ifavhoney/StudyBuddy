@@ -4,17 +4,17 @@ import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 
-///Transition from Spinner To Child
+///Transition from Home Spinner To Child
 ///Fade Through
-class SpnerChldNav extends StatefulWidget {
+class HomeSpnerChldNav extends StatefulWidget {
   final bool isReady;
   final Widget child;
-  SpnerChldNav({@required this.isReady, @required this.child});
+  HomeSpnerChldNav({@required this.isReady, @required this.child});
   @override
-  _SpnerChldNavState createState() => _SpnerChldNavState();
+  _HomeSpnerChldNavState createState() => _HomeSpnerChldNavState();
 }
 
-class _SpnerChldNavState extends State<SpnerChldNav> {
+class _HomeSpnerChldNavState extends State<HomeSpnerChldNav> {
   int pageIndex = 0;
 
   @override

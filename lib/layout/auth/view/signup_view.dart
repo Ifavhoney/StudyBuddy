@@ -9,8 +9,9 @@ import 'package:buddy/global/widgets/static/global_app_bar.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_snack_bar.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
+import 'package:buddy/layout/auth/view/preferences_view.dart';
 import 'package:buddy/layout/auth/widget/copywriting_popup.dart';
-import 'package:buddy/layout/nav_page/spner_chld_nav.dart';
+import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
 import 'package:country_pickers/country.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,6 +46,19 @@ class _SignupViewState extends State<SignupView> {
   String country = CountryPickerUtils.getCountryByIsoCode('US').name;
   bool isReady = false;
   void createUser() async {
+    /*
+    showModal(
+        context: (context),
+        configuration: FadeScaleTransitionConfiguration(
+            barrierDismissible: true,
+            reverseTransitionDuration: Duration(milliseconds: 10),
+            transitionDuration: Duration(microseconds: 100000)),
+        builder: (context) {
+          return CopyWritingPopup();
+        });
+        */
+
+    /*
     databaseReference.collection("Users").doc(email.text).set({
       'fullName': fullName.text,
       "country": country,
@@ -54,6 +68,10 @@ class _SignupViewState extends State<SignupView> {
       "AuthType": Get.parameters["authType"],
       "completedProfile": false
     });
+    */
+
+    Get.to(ViewSpnerChldNav(
+        isReady: true, unRelatedView: true, ms: 400, child: PreferencesView()));
   }
 
   @override
@@ -68,7 +86,7 @@ class _SignupViewState extends State<SignupView> {
     if (user?.photoURL != null) image = user.photoURL;
     isReady = true;
 
-    GlobalSnackBar("I applied Auto-fill, feel free to modify!", seconds: 6);
+    GlobalSnackBar("I applied Auto-fill", seconds: 6);
     setState(() {});
   }
 

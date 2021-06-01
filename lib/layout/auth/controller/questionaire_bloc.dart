@@ -33,11 +33,6 @@ class QuestionaireBloc extends GetxController {
     },
   };
 
-  void nextPage() {
-    //pageIndex += 1;
-    update();
-  }
-
   updateSelection(int option) {
     selectedOption = option;
     update();

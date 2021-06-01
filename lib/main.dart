@@ -22,7 +22,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 import 'V2/other/navigation.dart';
 import 'layout/auth/view/welcome_view.dart';
-import 'layout/nav_page/spner_chld_nav.dart';
+import 'layout/nav_page/home_spner_chld_nav.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,10 +60,13 @@ class MyApp extends StatelessWidget {
               },
               home: GetBuilder<UserConfig>(
                 builder: (bloc) {
-                  return SpnerChldNav(
-                      isReady: bloc.isReady, child: PreferencesView()
-                      //  bloc.user.email == null ? WelcomeView() : WaitingView(),
-                      );
+                  return HomeSpnerChldNav(
+                    isReady: bloc.isReady,
+                    child:
+                        bloc.user.email == null ? WelcomeView() : WaitingView(),
+                    //Preferencesiews
+                    //  bloc.user.email == null ? WelcomeView() : WaitingView(),
+                  );
                 },
               ),
               title: Global.appConfig.appName,

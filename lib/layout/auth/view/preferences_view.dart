@@ -1,14 +1,6 @@
-import 'dart:async';
-
 import 'package:animations/animations.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:buddy/V2/other/sizeConfig.dart';
-import 'package:buddy/global/global.dart';
 import 'package:buddy/global/widgets/static/global_app_bar.dart';
-import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/layout/auth/widget/questionaire.dart';
-import 'package:buddy/layout/auth/widget/questionaire01.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -47,7 +39,7 @@ class _PreferencesViewState extends State<PreferencesView>
             children: <Widget>[
               Expanded(
                 child: PageTransitionSwitcher(
-                    duration: const Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 500),
                     reverse: false,
                     transitionBuilder: (
                       Widget child,

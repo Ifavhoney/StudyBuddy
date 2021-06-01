@@ -6,7 +6,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-///Fade through, no relatonsh
 class GlobalSpinner extends StatelessWidget {
   static const routeName = '/spinner';
   final double height;
@@ -24,7 +23,8 @@ class GlobalSpinner extends StatelessWidget {
               Align(
                   alignment: Alignment.center,
                   child: AbsorbPointer(child: child)),
-              _spinner()
+              _spinner(),
+              GlobalTrademarkText()
             ],
           )
         : Stack(
