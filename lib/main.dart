@@ -7,7 +7,6 @@ import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:buddy/layout/auth/controller/questionaire_bloc.dart';
 import 'package:buddy/layout/auth/view/preferences_view.dart';
 import 'package:buddy/layout/auth/view/signup_view.dart';
-import 'package:buddy/layout/auth/widget/questionaire.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
@@ -18,9 +17,6 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:route_observer_mixin/route_observer_mixin.dart';
 
-import 'package:auto_size_text/auto_size_text.dart';
-
-import 'V2/other/navigation.dart';
 import 'layout/auth/view/welcome_view.dart';
 import 'layout/nav_page/home_spner_chld_nav.dart';
 

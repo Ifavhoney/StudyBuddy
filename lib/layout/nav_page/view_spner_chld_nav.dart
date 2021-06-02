@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:buddy/global/widgets/animation/spinner/global_spinner.dart';
+import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
@@ -16,8 +17,9 @@ class ViewSpnerChldNav extends StatefulWidget {
   ViewSpnerChldNav(
       {@required this.isReady,
       this.unRelatedView = false,
-      this.ms = 300,
+      this.ms = 400,
       @required this.child});
+
   @override
   _ViewSpnerChldNavState createState() => _ViewSpnerChldNavState();
 }

@@ -71,7 +71,9 @@ class _SearchingViewState extends State<SearchingView>
       body: Stack(children: <Widget>[
         GlobalFlashingCircle(),
         _mascot(),
-        GlobalTrademarkText(),
+        GlobalTrademarkText(
+          isStackWidget: true,
+        ),
         _backArrow(),
         /*
         GlobalFallingCircles(

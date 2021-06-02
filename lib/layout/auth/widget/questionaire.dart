@@ -5,6 +5,8 @@ import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_snack_bar.dart';
 import 'package:buddy/layout/auth/controller/questionaire_bloc.dart';
 import 'package:buddy/layout/auth/view/preferences_view.dart';
+import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
+import 'package:buddy/layout/nav_page/welc_wait_nav.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -135,10 +137,17 @@ class _QuestionaireState extends State<Questionaire>
                   return;
                 }
                 bloc.appendAns(widget.pageNum);
-                if (widget.pageNum > 3) {
-                  
+                if (widget.pageNum >= 3) {
+                  Get.offAll(
+                    ViewSpnerChldNav(
+                      isReady: true,
+                      unRelatedView: true,
+                      child: WelcWaitNav(),
+                    ),
+                  );
+                } else {
+                  Get.find<PrevNav>().nextPage();
                 }
-                Get.find<PrevNav>().nextPage();
               },
             ),
           ),

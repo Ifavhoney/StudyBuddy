@@ -30,20 +30,17 @@ class _WaitingViewState extends State<WaitingView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Stack(children: <Widget>[
-          _searchBackround(),
-          _search(),
-          /*
+    return Stack(children: <Widget>[
+      _searchBackround(),
+      _search(),
+      /*
           GlobalFallingCircles(
             durationInSeconds: 10,
             heightOfDevice: MediaQuery.of(context).size.height,
             widthOfDevice: MediaQuery.of(context).size.width,
           )
           */
-        ]),
-        backgroundColor: Colors.white,
-        bottomNavigationBar: GlobalBottomNavigationBar());
+    ]);
   }
 
   Widget _search() => GestureDetector(

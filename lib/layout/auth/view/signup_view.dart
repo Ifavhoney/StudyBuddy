@@ -8,7 +8,9 @@ import 'package:buddy/global/widgets/animation/spinner/global_spinner.dart';
 import 'package:buddy/global/widgets/static/global_app_bar.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_snack_bar.dart';
+import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
+import 'package:buddy/layout/auth/controller/questionaire_bloc.dart';
 import 'package:buddy/layout/auth/view/preferences_view.dart';
 import 'package:buddy/layout/auth/widget/copywriting_popup.dart';
 import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
@@ -34,7 +36,6 @@ class SignupView extends StatefulWidget {
 
 class _SignupViewState extends State<SignupView> {
   final _formKey = GlobalKey<FormState>();
-  final databaseReference = FirebaseFirestore.instance;
   final TextStyle headline6 = Global.appTheme.fonts.segoeUi.headline6;
   List<String> list = new List();
   TextEditingController fullName = TextEditingController();
@@ -46,20 +47,7 @@ class _SignupViewState extends State<SignupView> {
   String country = CountryPickerUtils.getCountryByIsoCode('US').name;
   bool isReady = false;
   void createUser() async {
-    /*
-    showModal(
-        context: (context),
-        configuration: FadeScaleTransitionConfiguration(
-            barrierDismissible: true,
-            reverseTransitionDuration: Duration(milliseconds: 10),
-            transitionDuration: Duration(microseconds: 100000)),
-        builder: (context) {
-          return CopyWritingPopup();
-        });
-        */
-
-    /*
-    databaseReference.collection("Users").doc(email.text).set({
+    FirebaseFirestore.instance.collection("Users").doc(email.text).set({
       'fullName': fullName.text,
       "country": country,
       "avatar": image,
@@ -68,7 +56,7 @@ class _SignupViewState extends State<SignupView> {
       "AuthType": Get.parameters["authType"],
       "completedProfile": false
     });
-    */
+    Get.find<QuestionaireBloc>().email = email.text;
 
     Get.to(ViewSpnerChldNav(
         isReady: true, unRelatedView: true, ms: 400, child: PreferencesView()));
@@ -86,7 +74,7 @@ class _SignupViewState extends State<SignupView> {
     if (user?.photoURL != null) image = user.photoURL;
     isReady = true;
 
-    GlobalSnackBar("I applied Auto-fill", seconds: 6);
+    GlobalSnackBar("Go ahead and Register", seconds: 3);
     setState(() {});
   }
 
@@ -106,10 +94,11 @@ class _SignupViewState extends State<SignupView> {
             key: _scaffoldKey,
             resizeToAvoidBottomInset: false,
             appBar: GlobalAppBar(implyLeading: false, toolbarHeight: 0.03.sh),
+            bottomNavigationBar: GlobalTrademarkText(),
             body: Container(
               height: SizeConfig.screenHeight,
               width: SizeConfig.screenWidth,
-              padding: EdgeInsets.fromLTRB(0, 0.0.sh, 0, 0.07.sh),
+              padding: EdgeInsets.fromLTRB(0, 0.0.sh, 0, 0.05.sh),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[

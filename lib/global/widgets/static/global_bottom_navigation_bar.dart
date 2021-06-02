@@ -123,7 +123,10 @@ class _GlobalBottomNavigationBarState extends State<GlobalBottomNavigationBar> {
             )),
       );
 
-  Widget _buddy() => Positioned(child: GlobalTrademarkText());
+  Widget _buddy() => Positioned(
+          child: GlobalTrademarkText(
+        isStackWidget: true,
+      ));
 
   Widget _dot(int index) => _currentIndex == index
       ? Transform(

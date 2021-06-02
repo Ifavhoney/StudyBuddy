@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:buddy/global/widgets/static/global_app_bar.dart';
+import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:buddy/layout/auth/widget/questionaire.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,71 +59,8 @@ class _PreferencesViewState extends State<PreferencesView>
             ],
           ),
         ),
+        bottomNavigationBar: GlobalTrademarkText(),
       );
     });
-  }
-}
-
-class _CoursePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        const Padding(padding: EdgeInsets.symmetric(vertical: 8.0)),
-        Text(
-          'Streamling your courses',
-          style: Theme.of(context).textTheme.headline5,
-          textAlign: TextAlign.center,
-        ),
-        const Padding(padding: EdgeInsets.symmetric(vertical: 5.0)),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
-          child: Text(
-            'Bundled categories appear as groups in your feed. '
-            'You can always change this later.',
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Colors.grey,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        const _CourseSwitch(course: 'Arts & Crafts'),
-        const _CourseSwitch(course: 'Business'),
-        const _CourseSwitch(course: 'Illustration'),
-        const _CourseSwitch(course: 'Design'),
-        const _CourseSwitch(course: 'Culinary'),
-      ],
-    );
-  }
-}
-
-class _CourseSwitch extends StatefulWidget {
-  const _CourseSwitch({
-    this.course,
-  });
-
-  final String course;
-
-  @override
-  _CourseSwitchState createState() => _CourseSwitchState();
-}
-
-class _CourseSwitchState extends State<_CourseSwitch> {
-  bool _value = true;
-
-  @override
-  Widget build(BuildContext context) {
-    final String subtitle = _value ? 'Bundled' : 'Shown Individually';
-    return SwitchListTile(
-      title: Text(widget.course),
-      subtitle: Text(subtitle),
-      value: _value,
-      onChanged: (bool newValue) {
-        setState(() {
-          _value = newValue;
-        });
-      },
-    );
   }
 }

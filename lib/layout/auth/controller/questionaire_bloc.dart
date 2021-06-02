@@ -1,10 +1,10 @@
-//Get contrroller to change the index?
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 class QuestionaireBloc extends GetxController {
-  Map<int, dynamic> ans = {};
+  Map<String, dynamic> ans = {};
   int selectedOption = (-1);
-
+  String email = "";
   Map<int, dynamic> questionaire = {
     0: {
       "title": "Intentions",
@@ -39,11 +39,19 @@ class QuestionaireBloc extends GetxController {
   }
 
   void appendAns(int questionNum) {
-    ans[questionNum] = {
+    print("email is " + email);
+    print("selectedOption is " + selectedOption.toString());
+    ans[questionNum.toString()] = {
       "title": questionaire[questionNum]["title"],
       "question": questionaire[questionNum]["question"],
-      "ans": questionaire[questionNum][selectedOption]
+      "ans": questionaire[questionNum]["options"][selectedOption]
     };
+    if (questionNum >= 3)
+      FirebaseFirestore.instance
+          .collection("Users")
+          .doc(email)
+          .update({"questionaire": ans, "completedProfile": true});
+
     selectedOption = -1;
 
     update();
