@@ -65,12 +65,11 @@ class _GlobalFallingCircleState extends State<GlobalFallingCircle>
             setState(() {});
             if (_animation.isCompleted) {
               _controller.reset();
-              Future.delayed(Duration(seconds: Random().nextInt(2)), () {
+              Future.delayed(Duration(seconds: Random().nextInt(1)), () {
                 _controller.forward();
               });
-              _controller.duration = Duration(
-                  seconds:
-                      Random().nextInt(widget.durationInSeconds) + seconds);
+              _controller.duration =
+                  Duration(seconds: widget.durationInSeconds + seconds);
 
               _rightPosition = Random().nextInt(widget.widthOfDevice.floor());
               _color = Color((Random().nextDouble() * 0xFFFFFF).toInt())

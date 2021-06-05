@@ -10,6 +10,7 @@ import 'package:buddy/layout/auth/view/signup_view.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
+import 'package:buddy/layout/nav_page/wait_searc_cht_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,10 +40,8 @@ class MyApp extends StatelessWidget {
     Get.put(DeviceConfig());
     Get.put(QuestionaireBloc());
     Get.put(PrevNav());
-
+    Get.put(WaitSearChtNavBloc());
     Global.userConfig.init();
-    AuthController().signOut();
-
     return ScreenUtilInit(
         builder: () => GetMaterialApp(
               theme: AppTheme().mainTheme,
@@ -58,8 +57,9 @@ class MyApp extends StatelessWidget {
                 builder: (bloc) {
                   return HomeSpnerChldNav(
                     isReady: bloc.isReady,
-                    child:
-                        bloc.user.email == null ? WelcomeView() : WaitingView(),
+                    child: bloc.user.email == null
+                        ? WelcomeView()
+                        : WaitSearChtNav(),
                     //Preferencesiews
                     //  bloc.user.email == null ? WelcomeView() : WaitingView(),
                   );

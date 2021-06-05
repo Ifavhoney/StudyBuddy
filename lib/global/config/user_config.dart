@@ -1,21 +1,21 @@
+import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:buddy/layout/orrin/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:buddy/layout/auth/controller/auth_controller.dart';
 
 class UserConfig extends GetxController {
-  User user;
-  bool completedProfile;
+  UserModel user;
   bool isReady;
 
+  //Cached login
   init() async {
     isReady = false;
 
-    user = User(email: fb.FirebaseAuth.instance.currentUser?.email);
+    user = UserModel(email: fb.FirebaseAuth.instance.currentUser?.email);
 
-    bool isRegistered = await AuthController().checkUserExists(user?.email);
-    if (!isRegistered) user = User();
+    if (user?.email != null)
+      user = await AuthController().getProfile(user?.email);
 
     await Future.delayed(Duration(seconds: kDebugMode == true ? 0 : 3));
     isReady = true;

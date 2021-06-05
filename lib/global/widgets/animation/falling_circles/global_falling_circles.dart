@@ -38,15 +38,6 @@ class _GlobalFallingCirclesState extends State<GlobalFallingCircles> {
         _circle(),
         _circle(),
         _circle(),
-        _circle(),
-        _circle(),
-        _circle(),
-        _circle(),
-        _circle(),
-        _circle(),
-        _circle(),
-        _circle(),
-        _circle(),
       ],
     );
   }

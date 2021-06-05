@@ -1,7 +1,9 @@
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/layout/auth/model/base_auth_model.dart';
 import 'package:buddy/layout/auth/view/signup_view.dart';
-import 'package:buddy/layout/home/view/waiting_view.dart';
+import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
+import 'package:buddy/layout/nav_page/wait_searc_cht_nav.dart';
+import 'package:buddy/layout/orrin/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -45,6 +47,7 @@ class AuthController implements BaseAuthModel {
     GoogleSignIn googleSignIn = GoogleSignIn();
 
     if ((await googleSignIn.isSignedIn()) == true) {
+      print("??");
       return googleSignIn.signOut();
     }
     return _firebaseAuth.signOut();
@@ -64,6 +67,7 @@ class AuthController implements BaseAuthModel {
 
     if (await googleSignIn.isSignedIn() == true) {
       print("already signed in" + (_firebaseAuth.currentUser).uid);
+      redirectUser(AuthType.Google);
     } else {
       await googleSignIn.signIn().then((account) async {
         //Get info from google
@@ -86,15 +90,25 @@ class AuthController implements BaseAuthModel {
     await AuthController()
         .checkUserExists(_firebaseAuth.currentUser.email)
         .then((exists) {
-      if (exists)
-        Get.offNamed(WaitingView.routeName);
-      else
+      if (exists) {
+        getProfile(_firebaseAuth.currentUser.email);
+        Get.off(ViewSpnerChldNav(
+            isReady: true, unRelatedView: true, child: WaitSearChtNav()));
+      } else
         Get.offNamed(SignupView.routeName,
             parameters: {"authType": authType.toString().split(".").last});
     });
   }
 
-  @override
+  Future<UserModel> getProfile(String email) async {
+    DocumentSnapshot snapshot =
+        await FirebaseFirestore.instance.collection("Users").doc(email).get();
+    Map<String, dynamic> snapData = snapshot.data();
+    if (snapData == null) return UserModel();
+
+    return UserModel.fromJson(email, snapshot.data());
+  }
+
   Future<String> signUp(String email, String password) async {
     UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);

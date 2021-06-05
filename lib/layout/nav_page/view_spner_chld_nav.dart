@@ -1,8 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:buddy/global/widgets/animation/spinner/global_spinner.dart';
-import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter/material.dart';
 
 ///Transition from Spinner To Child
@@ -41,7 +39,6 @@ class _ViewSpnerChldNavState extends State<ViewSpnerChldNav> {
   Widget build(BuildContext context) {
     if (widget.unRelatedView == true && isReady == false) {
       Future.delayed(Duration.zero, () {
-        print("comes here");
         setState(() {
           isReady = true;
         });

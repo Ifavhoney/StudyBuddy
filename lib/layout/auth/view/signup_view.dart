@@ -53,13 +53,13 @@ class _SignupViewState extends State<SignupView> {
       "avatar": image,
       "questionaire": {},
       "patform": Get.find<DeviceConfig>().isIos ? "IOS" : "Android",
-      "AuthType": Get.parameters["authType"],
+      "authType": Get.parameters["authType"],
       "completedProfile": false
     });
-    Get.find<QuestionaireBloc>().email = email.text;
 
+    Get.find<QuestionaireBloc>().email = email.text;
     Get.to(ViewSpnerChldNav(
-        isReady: true, unRelatedView: true, ms: 400, child: PreferencesView()));
+        isReady: true, unRelatedView: true, child: PreferencesView()));
   }
 
   @override

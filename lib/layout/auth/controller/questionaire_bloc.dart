@@ -1,3 +1,5 @@
+import 'package:buddy/global/config/user_config.dart';
+import 'package:buddy/global/global.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
@@ -46,11 +48,16 @@ class QuestionaireBloc extends GetxController {
       "question": questionaire[questionNum]["question"],
       "ans": questionaire[questionNum]["options"][selectedOption]
     };
-    if (questionNum >= 3)
+    if (questionNum >= 3) {
       FirebaseFirestore.instance
           .collection("Users")
           .doc(email)
           .update({"questionaire": ans, "completedProfile": true});
+
+      Get.find<UserConfig>().init();
+      print("inited");
+      print(Global.email.toString());
+    }
 
     selectedOption = -1;
 

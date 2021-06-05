@@ -2,22 +2,21 @@ import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:buddy/global/global.dart';
+import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:buddy/layout/auth/controller/auth_controller.dart';
-import 'package:buddy/layout/auth/view/signup_view.dart';
-import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:buddy/layout/orrin/sharedWidgets/mascotImage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 
 class WelcomeView extends StatelessWidget {
   static const routeName = '/welcomeView';
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _widget());
+    return Scaffold(
+        bottomNavigationBar: GlobalTrademarkText(), body: _widget());
   }
 
   Widget _widget() {

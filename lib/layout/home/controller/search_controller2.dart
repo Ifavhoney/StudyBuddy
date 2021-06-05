@@ -65,7 +65,7 @@ class SearchController {
   Future<void> checkIfInConfirmed(BuildContext context) async {
     await _searchConfirmedRef.once().then((DataSnapshot snapshot) async {
       String value = snapshot.value.toString();
-
+      print("global.email is " + Global.email.toString());
       if ((value.contains(Global.email))) {
         snapshot.value.forEach((key, value) async {
           ConfirmedModel confirmedModel = ConfirmedModel.fromJson(key, value);

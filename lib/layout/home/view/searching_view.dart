@@ -2,17 +2,19 @@ import 'package:buddy/V2/RTC/controller/cam_controller.dart';
 import 'package:buddy/V2/RTC/model/cam_model.dart';
 import 'package:buddy/global/global.dart';
 import 'package:buddy/global/theme/theme.dart';
+import 'package:buddy/global/widgets/animation/falling_circles/global_falling_circles.dart';
 import 'package:buddy/global/widgets/animation/falling_circles/global_flashing_circle.dart';
 import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:buddy/layout/home/controller/search_controller2.dart';
 //import 'package:buddy/layout/home/controller/search_controller.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
+import 'package:buddy/layout/nav_page/wait_searc_cht_nav.dart';
 import 'package:get/get.dart';
 import 'package:route_observer_mixin/route_observer_mixin.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-///@LastModifiedBy: Jason NGuessan
 class SearchingView extends StatefulWidget {
   static const routeName = '/searching_view';
 
@@ -67,29 +69,20 @@ class _SearchingViewState extends State<SearchingView>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(children: <Widget>[
-        GlobalFlashingCircle(),
-        _mascot(),
-        GlobalTrademarkText(
-          isStackWidget: true,
-        ),
-        _backArrow(),
-        /*
-        GlobalFallingCircles(
-          durationInSeconds: 10,
-          heightOfDevice: MediaQuery.of(context).size.height,
-          widthOfDevice: MediaQuery.of(context).size.width,
-        )
-        */
-      ]),
-      backgroundColor: Colors.white,
-    );
+    return Stack(children: <Widget>[
+      GlobalFlashingCircle(),
+      _mascot(),
+      GlobalTrademarkText(isStackWidget: true),
+      _backArrow(),
+    ]);
   }
 
   Widget _mascot() => GestureDetector(
         // onTap: () => CamController.toWebcam(
         //     CamModel(channelName: "1", endTime: "09:15"), context),
+        onTap: () {
+          Get.find<WaitSearChtNavBloc>().nextPage();
+        },
         child: Center(
           child: Image.asset(
             "assets/images/mascot.png",
@@ -100,19 +93,19 @@ class _SearchingViewState extends State<SearchingView>
       );
   Widget _backArrow() => Positioned.fill(
           child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 0.04.sw, vertical: 0.00.sh),
         child: Align(
             alignment: Alignment.bottomLeft,
             child: IconButton(
                 onPressed: _toWaitingView,
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Global.appTheme.iconColors.searchingView["arrowBack"],
-                ))),
+                icon: Icon(Icons.arrow_back_ios,
+                    size: 0.05.sh,
+                    color: Global
+                        .appTheme.iconColors.searchingView["arrowBack"]))),
       ));
   void _toWaitingView() {
     _searchController.removeFromAwaiting(Global.email).whenComplete(() {
-      Get.back();
+      Get.find<WaitSearChtNavBloc>().prevPage();
     });
   }
 }

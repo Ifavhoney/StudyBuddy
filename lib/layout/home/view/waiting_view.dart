@@ -1,9 +1,11 @@
 import 'package:buddy/global/global.dart';
 import 'package:buddy/global/theme/theme.dart';
+import 'package:buddy/global/widgets/animation/falling_circles/global_falling_circles.dart';
 import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_bottom_navigation_bar.dart';
 import 'package:buddy/layout/home/controller/search_controller2.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
+import 'package:buddy/layout/nav_page/wait_searc_cht_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,18 +35,18 @@ class _WaitingViewState extends State<WaitingView> {
     return Stack(children: <Widget>[
       _searchBackround(),
       _search(),
-      /*
-          GlobalFallingCircles(
-            durationInSeconds: 10,
-            heightOfDevice: MediaQuery.of(context).size.height,
-            widthOfDevice: MediaQuery.of(context).size.width,
-          )
-          */
+      GlobalFallingCircles(
+        durationInSeconds: 12,
+        heightOfDevice: MediaQuery.of(context).size.height,
+        widthOfDevice: MediaQuery.of(context).size.width,
+      )
     ]);
   }
 
   Widget _search() => GestureDetector(
-        onTap: () => Get.to(SearchingView()),
+        onTap: () {
+          Get.find<WaitSearChtNavBloc>().nextPage();
+        },
         child: Center(
           child: GlobalBoxContainer(
             boxShape: BoxShape.circle,
