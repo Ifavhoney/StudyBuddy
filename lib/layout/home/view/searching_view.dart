@@ -8,7 +8,7 @@ import 'package:buddy/global/widgets/static/global_trademark_text.dart';
 import 'package:buddy/layout/home/controller/search_controller2.dart';
 //import 'package:buddy/layout/home/controller/search_controller.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
-import 'package:buddy/layout/nav_page/wait_searc_cht_nav.dart';
+import 'package:buddy/layout/nav_page/wait_searc_nav.dart';
 import 'package:get/get.dart';
 import 'package:route_observer_mixin/route_observer_mixin.dart';
 
@@ -81,7 +81,7 @@ class _SearchingViewState extends State<SearchingView>
         // onTap: () => CamController.toWebcam(
         //     CamModel(channelName: "1", endTime: "09:15"), context),
         onTap: () {
-          Get.find<WaitSearChtNavBloc>().nextPage();
+          Get.find<WaitSearNavBloc>().nextPage();
         },
         child: Center(
           child: Image.asset(
@@ -105,7 +105,7 @@ class _SearchingViewState extends State<SearchingView>
       ));
   void _toWaitingView() {
     _searchController.removeFromAwaiting(Global.email).whenComplete(() {
-      Get.find<WaitSearChtNavBloc>().prevPage();
+      Get.find<WaitSearNavBloc>().prevPage();
     });
   }
 }

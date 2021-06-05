@@ -5,7 +5,7 @@ import 'package:buddy/global/widgets/static/global_box_container.dart';
 import 'package:buddy/global/widgets/static/global_bottom_navigation_bar.dart';
 import 'package:buddy/layout/home/controller/search_controller2.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
-import 'package:buddy/layout/nav_page/wait_searc_cht_nav.dart';
+import 'package:buddy/layout/nav_page/wait_searc_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,7 +45,7 @@ class _WaitingViewState extends State<WaitingView> {
 
   Widget _search() => GestureDetector(
         onTap: () {
-          Get.find<WaitSearChtNavBloc>().nextPage();
+          Get.find<WaitSearNavBloc>().nextPage();
         },
         child: Center(
           child: GlobalBoxContainer(

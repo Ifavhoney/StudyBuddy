@@ -6,7 +6,7 @@ import 'package:buddy/global/widgets/static/global_snack_bar.dart';
 import 'package:buddy/layout/auth/controller/questionaire_bloc.dart';
 import 'package:buddy/layout/auth/view/preferences_view.dart';
 import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
-import 'package:buddy/layout/nav_page/wait_searc_cht_nav.dart';
+import 'package:buddy/layout/nav_page/wait_searc_nav.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -142,7 +142,7 @@ class _QuestionaireState extends State<Questionaire>
                     ViewSpnerChldNav(
                       isReady: true,
                       unRelatedView: true,
-                      child: WaitSearChtNav(),
+                      child: WaitSearNav(),
                     ),
                   );
                 } else {

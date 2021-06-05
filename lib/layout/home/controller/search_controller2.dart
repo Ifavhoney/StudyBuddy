@@ -1,6 +1,8 @@
+import 'package:animations/animations.dart';
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/global.dart';
 import 'package:buddy/global/helper/time_helper.dart';
+import 'package:buddy/layout/auth/widget/copywriting_popup.dart';
 import 'package:buddy/layout/chat/args/chat_args.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
@@ -104,8 +106,15 @@ class SearchController {
         .child(confirmedKey)
         .onChildRemoved
         .listen((event) async {
-      print("hiiii");
-      Get.offNamed(WaitingView.routeName);
+      showModal(
+          context: (Get.context),
+          configuration: FadeScaleTransitionConfiguration(
+              barrierDismissible: true,
+              reverseTransitionDuration: Duration(milliseconds: 10),
+              transitionDuration: Duration(microseconds: 100000)),
+          builder: (context) {
+            return CopyWritingPopup();
+          });
     });
   }
 

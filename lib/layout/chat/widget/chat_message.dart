@@ -1,5 +1,4 @@
 import 'package:buddy/global/global.dart';
-import 'package:buddy/global/theme/theme.dart';
 import 'package:buddy/layout/chat/widget/custom_chat_bubble.dart';
 import 'package:buddy/layout/chat/widget/person.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,7 @@ class ChatMessage extends StatelessWidget {
     if (isOwn) {
       return Container(
         margin: EdgeInsets.only(left: ScreenUtil().screenWidth / 7),
-        padding: EdgeInsets.fromLTRB(10.h, 0.h, 40.w, 0.h),
+        padding: EdgeInsets.fromLTRB(0.01.sh, 0.h, 0.04.sw, 0.h),
         alignment: Alignment.bottomRight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -31,7 +30,8 @@ class ChatMessage extends StatelessWidget {
               child: CustomPaint(
                   painter: CustomChatBubble(isOwn: true),
                   child: Container(
-                      padding: EdgeInsets.fromLTRB(30.w, 40.h, 20.w, 40.h),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 0.020.sh, horizontal: 0.015.sw),
                       child: Text(text,
                           style: Global.appTheme.fonts.sfProText.bodyText1
                               .copyWith(
@@ -47,7 +47,6 @@ class ChatMessage extends StatelessWidget {
         margin: EdgeInsets.only(right: ScreenUtil().screenWidth / 7),
         alignment: Alignment.bottomLeft,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -56,7 +55,8 @@ class ChatMessage extends StatelessWidget {
               child: CustomPaint(
                 painter: CustomChatBubble(isOwn: isOwn),
                 child: Container(
-                    padding: EdgeInsets.fromLTRB(30.w, 40.h, 20.w, 40.h),
+                    padding: EdgeInsets.symmetric(
+                        vertical: 0.020.sh, horizontal: 0.015.sw),
                     child: Text(text,
                         style: Global.appTheme.fonts.sfProText.bodyText1
                             .copyWith(

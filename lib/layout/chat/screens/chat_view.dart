@@ -8,6 +8,7 @@ import 'package:buddy/layout/chat/widget/chat_message.dart';
 import 'package:buddy/layout/chat/widget/chat_textfield.dart';
 import 'package:buddy/layout/chat/widget/person.dart';
 import 'package:buddy/layout/chat/widget/generic_body.dart';
+import 'package:buddy/layout/orrin/sharedWidgets/mascotImage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -67,14 +68,23 @@ class _ChatViewState extends State<ChatView> {
           resizeToAvoidBottomInset: true,
           body: GenericBody(
               implyLeading: false,
+              backgroundColor: Color(0xFFB9D1FF),
               chatPeople: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    //    Padding(padding: EdgeInsets.only(bottom: 0.1.sh)),
+
+                    Transform(
+                      transform: Matrix4.translationValues(0, -0.01.sh, 0.0),
+                      child: MascotImage(size: 0.07.sh),
+                    ),
                     GlobalTimeHelper(
-                        margin: EdgeInsets.only(top: 100.h),
+                        margin: EdgeInsets.only(top: 0.01.sh),
                         color: Colors.white,
                         textStyle: Global.appTheme.fonts.sfProText.subtitle1),
+
+                    SizedBox(width: 0.02.sw),
                     //  _chatPeople(),
                   ]),
               isKeyboardShowing: _iskeyboardShowing,
@@ -83,7 +93,8 @@ class _ChatViewState extends State<ChatView> {
                   FocusScope.of(context).unfocus();
                 },
                 child: Container(
-                  padding: EdgeInsets.all(40.h),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 0.01.sw, vertical: 0.01.sh),
                   child: Column(
                     children: <Widget>[
                       Expanded(
@@ -105,7 +116,7 @@ class _ChatViewState extends State<ChatView> {
                                           people: Person(),
                                           text: _chatController.list[i].message,
                                         ),
-                                        SizedBox(height: 40.h),
+                                        SizedBox(height: 0.02.sh),
                                       ],
                                     );
                                   }))),

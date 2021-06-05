@@ -2,7 +2,7 @@ import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/layout/auth/model/base_auth_model.dart';
 import 'package:buddy/layout/auth/view/signup_view.dart';
 import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
-import 'package:buddy/layout/nav_page/wait_searc_cht_nav.dart';
+import 'package:buddy/layout/nav_page/wait_searc_nav.dart';
 import 'package:buddy/layout/orrin/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -93,7 +93,7 @@ class AuthController implements BaseAuthModel {
       if (exists) {
         getProfile(_firebaseAuth.currentUser.email);
         Get.off(ViewSpnerChldNav(
-            isReady: true, unRelatedView: true, child: WaitSearChtNav()));
+            isReady: true, unRelatedView: true, child: WaitSearNav()));
       } else
         Get.offNamed(SignupView.routeName,
             parameters: {"authType": authType.toString().split(".").last});

@@ -26,7 +26,7 @@ class _GenericBodyState extends State<GenericBody> {
       child: Stack(
         children: <Widget>[
           Container(
-            height: MediaQuery.of(context).size.height / 1.1,
+            height: MediaQuery.of(context).size.height / 1.2,
             width: MediaQuery.of(context).size.width,
             color: _backgroundColor(),
           ),
@@ -36,7 +36,7 @@ class _GenericBodyState extends State<GenericBody> {
               height: MediaQuery.of(context).size.height / _height(),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(50.h)),
+                borderRadius: BorderRadius.all(Radius.circular(0.05.sh)),
               ),
             ),
           ),
@@ -69,8 +69,8 @@ class _GenericBodyState extends State<GenericBody> {
                   ))
               : Container(),
           Positioned.fill(
-              top: 0,
-              right: 40.w,
+              top: 0.05.sh,
+              right: 0.04.sw,
               child:
                   widget.isKeyboardShowing ? Container() : widget.chatPeople),
 

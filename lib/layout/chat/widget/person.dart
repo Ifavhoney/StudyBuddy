@@ -10,14 +10,14 @@ class Person extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10.h, 40.h, 40.w, 40.h),
+      padding: EdgeInsets.fromLTRB(0.030.sw, 0.000.sh, 0.030.sw, 0.000.sh),
       child: GlobalBoxContainer(
         boxShape: BoxShape.circle,
-        containerColor: containerColor ?? Colors.grey,
-        containerHeight: 80.h,
-        containerWidth: 80.w,
+        containerColor: containerColor ?? Colors.grey.shade300,
+        containerHeight: 0.1.sh,
+        containerWidth: 0.1.sw,
         boxShadow: BoxShadow(
-            color: Color(0xFF0029F5), blurRadius: 8, spreadRadius: -2),
+            color: Color(0xFF0029F5), blurRadius: 8, spreadRadius: -4),
         child: child ?? Icon(Icons.person),
       ),
     );

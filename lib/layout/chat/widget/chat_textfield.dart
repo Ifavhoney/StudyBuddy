@@ -15,7 +15,7 @@ class ChatTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(30.w),
+      padding: EdgeInsets.all(0.030.sw),
       width: MediaQuery.of(context).size.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -33,7 +33,8 @@ class ChatTextField extends StatelessWidget {
               decoration: InputDecoration(
                   fillColor: Color(0xFFd3d3d3).withOpacity(0.2),
                   filled: true,
-                  contentPadding: EdgeInsets.fromLTRB(50.w, 25.h, 50.w, 25.h),
+                  contentPadding: EdgeInsets.fromLTRB(
+                      0.050.sw, 0.025.sh, 0.050.sw, 0.025.sh),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(
