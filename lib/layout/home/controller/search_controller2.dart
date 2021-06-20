@@ -115,7 +115,7 @@ class SearchController {
           configuration: FadeScaleTransitionConfiguration(
               barrierDismissible: true,
               reverseTransitionDuration: Duration(milliseconds: 10),
-              transitionDuration: Duration(milliseconds: 1000)),
+              transitionDuration: Duration(milliseconds: 500)),
           builder: (context) {
             return ChatAddFriendPopup(timeHelper.users
                 .where((user) => user.email != Global.email)

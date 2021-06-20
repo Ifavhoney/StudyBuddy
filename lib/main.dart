@@ -21,7 +21,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:route_observer_mixin/route_observer_mixin.dart';
 
 import 'layout/auth/view/welcome_view.dart';
-import 'layout/nav_page/home_spner_chld_nav.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

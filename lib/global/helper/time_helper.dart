@@ -24,6 +24,8 @@ class TimeHelper extends GetxController {
     print("from view is " + fromView.toString());
     if (milliSeconds <= 60000) {
       second = Duration(milliseconds: milliSeconds).inSeconds;
+      print("calld here");
+      await _searchController.initCount();
       update();
       _startSecondaryTimer(context);
       return;

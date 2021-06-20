@@ -67,6 +67,7 @@ class _ChatViewState extends State<ChatView> {
     // print("is Ready" + isReady.toString());
     return ViewSpnerChldNav(
       isReady: isReady,
+      ms: 300,
       child: WillPopScope(
         onWillPop: () async {
           return false;
