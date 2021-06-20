@@ -140,8 +140,6 @@ class _QuestionaireState extends State<Questionaire>
                 if (widget.pageNum >= 3) {
                   Get.offAll(
                     ViewSpnerChldNav(
-                      isReady: true,
-                      unRelatedView: true,
                       child: WaitSearNav(),
                     ),
                   );

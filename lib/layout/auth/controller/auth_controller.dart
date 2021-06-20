@@ -92,8 +92,7 @@ class AuthController implements BaseAuthModel {
         .then((exists) {
       if (exists) {
         getProfile(_firebaseAuth.currentUser.email);
-        Get.off(ViewSpnerChldNav(
-            isReady: true, unRelatedView: true, child: WaitSearNav()));
+        Get.off(ViewSpnerChldNav(child: WaitSearNav()));
       } else
         Get.offNamed(SignupView.routeName,
             parameters: {"authType": authType.toString().split(".").last});

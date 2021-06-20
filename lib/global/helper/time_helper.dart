@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'package:animations/animations.dart';
 import 'package:buddy/debug/debug_helper.dart';
+import 'package:buddy/global/config/user_config.dart';
+import 'package:buddy/layout/chat/widget/chat_add_friend_popup.dart';
 import 'package:buddy/layout/home/controller/search_controller2.dart';
+import 'package:buddy/layout/orrin/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,14 +12,16 @@ import 'package:get/get.dart';
 class TimeHelper extends GetxController {
   Timer primaryTimer = Timer(Duration.zero, () {});
   Timer secondaryTimer = Timer(Duration.zero, () {});
-
+  String fromView;
+  RxList<UserModel> users = List<UserModel>().obs;
   SearchController _searchController = new SearchController();
 
   int min = 0;
   int second = 0;
   RxInt asyncMilliseconds = 0.obs;
 
-  void initAsync(int milliSeconds, BuildContext context) async {
+  Future<void> initAsync(int milliSeconds, BuildContext context) async {
+    print("from view is " + fromView.toString());
     if (milliSeconds <= 60000) {
       second = Duration(milliseconds: milliSeconds).inSeconds;
       update();

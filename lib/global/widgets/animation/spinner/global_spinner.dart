@@ -24,14 +24,14 @@ class GlobalSpinner extends StatelessWidget {
                   alignment: Alignment.center,
                   child: AbsorbPointer(child: child)),
               _spinner(),
-              GlobalTrademarkText()
+              GlobalTrademarkText(isStackWidget: true)
             ],
           )
         : Stack(
             children: [
               Positioned(top: 0.03.sh, child: MascotImage(size: 0.2.sh)),
               _spinner(),
-              GlobalTrademarkText()
+              GlobalTrademarkText(isStackWidget: true)
             ],
           );
   }

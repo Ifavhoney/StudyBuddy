@@ -7,16 +7,10 @@ import 'package:flutter/material.dart';
 ///Fade Through
 
 class ViewSpnerChldNav extends StatefulWidget {
-  final bool isReady;
   final Widget child;
-  final bool unRelatedView;
   final int ms;
-
-  ViewSpnerChldNav(
-      {@required this.isReady,
-      this.unRelatedView = false,
-      this.ms = 400,
-      @required this.child});
+  final bool isReady;
+  ViewSpnerChldNav({this.isReady, this.ms = 400, @required this.child});
 
   @override
   _ViewSpnerChldNavState createState() => _ViewSpnerChldNavState();
@@ -32,18 +26,22 @@ class _ViewSpnerChldNavState extends State<ViewSpnerChldNav> {
   void initState() {
     super.initState();
     pageList = {false: GlobalSpinner(child: Container()), true: widget.child};
-    isReady = widget.unRelatedView ? false : widget.isReady;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.unRelatedView == true && isReady == false) {
-      Future.delayed(Duration.zero, () {
-        setState(() {
-          isReady = true;
-        });
-      });
-    }
+    widget.isReady == null
+        ? Future.delayed(Duration.zero, () {
+            setState(() {
+              isReady = true;
+            });
+          })
+        : Future.delayed(Duration.zero, () {
+            setState(() {
+              isReady = widget.isReady;
+            });
+          });
+
     return Scaffold(
       body: PageTransitionSwitcher(
           duration: Duration(milliseconds: widget.ms),

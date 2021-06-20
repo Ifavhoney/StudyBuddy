@@ -7,9 +7,11 @@ import 'package:buddy/layout/auth/controller/auth_controller.dart';
 import 'package:buddy/layout/auth/controller/questionaire_bloc.dart';
 import 'package:buddy/layout/auth/view/preferences_view.dart';
 import 'package:buddy/layout/auth/view/signup_view.dart';
+import 'package:buddy/layout/chat/controller/chat_controller.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
+import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
 import 'package:buddy/layout/nav_page/wait_searc_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,6 +38,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(TimeHelper());
+
+    Get.put(AuthController());
+    Get.put(ChatController());
+
     Get.put(UserConfig());
     Get.put(DeviceConfig());
     Get.put(QuestionaireBloc());
@@ -55,7 +61,7 @@ class MyApp extends StatelessWidget {
               },
               home: GetBuilder<UserConfig>(
                 builder: (bloc) {
-                  return HomeSpnerChldNav(
+                  return ViewSpnerChldNav(
                     isReady: bloc.isReady,
                     child:
                         bloc.user.email == null ? WelcomeView() : WaitSearNav(),
@@ -65,6 +71,7 @@ class MyApp extends StatelessWidget {
                 },
               ),
               title: Global.appConfig.appName,
+              transitionDuration: Duration.zero,
               getPages: [
                 // GetPage(name: LoginView.routeName, page: () => LoginView()),
                 GetPage(name: WaitingView.routeName, page: () => WaitingView()),

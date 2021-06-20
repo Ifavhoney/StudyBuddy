@@ -1,8 +1,10 @@
 import 'package:animations/animations.dart';
+import 'package:buddy/global/global.dart';
 import 'package:buddy/global/widgets/static/global_app_bar.dart';
 import 'package:buddy/global/widgets/static/global_bottom_navigation_bar.dart';
-import 'package:buddy/layout/auth/widget/copywriting_popup.dart';
+import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/chat/widget/chat_add_friend_popup.dart';
+import 'package:buddy/layout/friend/controller/friend_ctrl.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,23 +42,21 @@ class _WaitSearNavState extends State<WaitSearNav>
   ];
   @override
   Widget build(BuildContext context) {
+    FriendCtrl().initState(context, ChatView.routeName);
     return GetX<WaitSearNavBloc>(builder: (_) {
       return Scaffold(
           resizeToAvoidBottomInset: true,
-          appBar: GlobalAppBar(implyLeading: false, toolbarHeight: 0.00.sh),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showModal(
+              onPressed: () => showModal(
                   context: (Get.context),
                   configuration: FadeScaleTransitionConfiguration(
                       barrierDismissible: true,
                       reverseTransitionDuration: Duration(milliseconds: 10),
                       transitionDuration: Duration(microseconds: 100000)),
                   builder: (context) {
-                    return ChatAddFriendPopup();
-                  });
-            },
-          ),
+                    return (ChatAddFriendPopup(Global.userConfig.user));
+                  })),
+          appBar: GlobalAppBar(implyLeading: false, toolbarHeight: 0.00.sh),
           body: SafeArea(
             child: Column(
               children: <Widget>[

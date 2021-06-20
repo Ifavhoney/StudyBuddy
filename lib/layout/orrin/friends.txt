@@ -1,0 +1,45 @@
+
+  void addFriendRequest(String reciverUser) async {
+    DocumentReference ref = await db
+        .collection('friendRequests')
+        .add({'sender': currentUser, 'reciever': reciverUser});
+  }
+
+
+
+  Future getFriends() async {
+    QuerySnapshot qn = await db
+        .collection("Users").document(currentUser).collection('friends')
+        .getDocuments();
+    // QuerySnapshot qn = await db.collection("Users").where("Reason For Joining", isEqualTo: "Career").getDocuments();
+    return qn.documents;
+  }
+
+
+
+Future getRequests() async {
+    QuerySnapshot qn = await db
+        .collection("friendRequests")
+        .where("reciever", isEqualTo: currentUser)
+        .getDocuments();
+    // QuerySnapshot qn = await db.collection("Users").where("Reason For Joining", isEqualTo: "Career").getDocuments();
+    return qn.documents;2
+  }
+
+
+
+ void addFriend(String recieverUser, DocumentSnapshot doc) async {
+    DocumentReference ref = await db
+        .collection('Users')
+        .document(currentUser)
+        .collection('friends')
+        .add({'email': recieverUser});
+    DocumentReference ref2 = await db
+        .collection('Users')
+        .document(recieverUser)
+        .collection('friends')
+        .add({'email': currentUser});
+
+    await db.collection('friendRequests').document(doc.documentID).delete();
+  }
+

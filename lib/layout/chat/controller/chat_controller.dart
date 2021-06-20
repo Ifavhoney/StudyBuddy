@@ -1,12 +1,20 @@
 import 'dart:async';
 
 import 'package:buddy/global/global.dart';
+import 'package:buddy/global/helper/time_helper.dart';
+import 'package:buddy/layout/auth/controller/auth_controller.dart';
+import 'package:buddy/layout/chat/args/chat_args.dart';
 import 'package:buddy/layout/chat/models/chat_model.dart';
+import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
+import 'package:buddy/layout/orrin/model/user.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class ChatController {
+class ChatController extends GetxController {
+  TimeHelper timeHelper = Get.find<TimeHelper>();
+
   static final ChatController _instance = ChatController.internal();
   ChatController.internal();
 
@@ -21,8 +29,7 @@ class ChatController {
   List<ChatModel> list;
 
   //initialize Refs
-  Future<void> initChatRefs(
-      String fromView, int channelName, String fbKey) async {
+  void initChatRefs(String fromView, int channelName) {
     if (SearchingView.routeName == fromView) {
       _chatSearchRef = FirebaseDatabase.instance
           .reference()
@@ -35,13 +42,23 @@ class ChatController {
   }
 
   //Initialize Refs, and listeners
-  Future<void> initState(BuildContext context, String fromView, int channelName,
-      String fbKey) async {
+  Future<void> initState(
+      BuildContext context, String fromView, dynamic arguments) async {
     list = new List<ChatModel>();
-    await initChatRefs(fromView, channelName, fbKey);
+    initChatRefs(fromView, arguments.channel);
 
     //   _loadPrevMessages();
     if (SearchingView.routeName == fromView) {
+      ChatArgs chatArgs = arguments;
+
+      timeHelper.fromView = ChatView.routeName;
+      for (String item in chatArgs.users) {
+        UserModel userModel = await AuthController().getProfile(item);
+        timeHelper.users.add(userModel);
+      }
+      await timeHelper.initAsync(chatArgs.timerInMs, context);
+
+      await Future.delayed(Duration(seconds: 2));
       //Any changes that happens is refreshed is cleaned and re-added to
       _chatSearchRef
           .orderByChild("timestamp")

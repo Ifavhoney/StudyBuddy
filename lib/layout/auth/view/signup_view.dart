@@ -58,8 +58,7 @@ class _SignupViewState extends State<SignupView> {
     });
 
     Get.find<QuestionaireBloc>().email = email.text;
-    Get.to(ViewSpnerChldNav(
-        isReady: true, unRelatedView: true, child: PreferencesView()));
+    Get.to(ViewSpnerChldNav(child: PreferencesView()));
   }
 
   @override

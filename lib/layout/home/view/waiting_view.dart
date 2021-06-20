@@ -35,11 +35,11 @@ class _WaitingViewState extends State<WaitingView> {
     return Stack(children: <Widget>[
       _searchBackround(),
       _search(),
-      GlobalFallingCircles(
-        durationInSeconds: 12,
-        heightOfDevice: MediaQuery.of(context).size.height,
-        widthOfDevice: MediaQuery.of(context).size.width,
-      )
+      // GlobalFallingCircles(
+      //   durationInSeconds: 12,
+      //   heightOfDevice: MediaQuery.of(context).size.height,
+      //   widthOfDevice: MediaQuery.of(context).size.width,
+      // )
     ]);
   }
 

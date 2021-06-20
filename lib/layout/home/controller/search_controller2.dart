@@ -4,8 +4,11 @@ import 'package:buddy/global/global.dart';
 import 'package:buddy/global/helper/time_helper.dart';
 import 'package:buddy/layout/auth/widget/copywriting_popup.dart';
 import 'package:buddy/layout/chat/args/chat_args.dart';
+import 'package:buddy/layout/chat/controller/chat_controller.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
+import 'package:buddy/layout/chat/widget/chat_add_friend_popup.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
+import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -82,14 +85,15 @@ class SearchController {
 
   Future<void> toChatView(BuildContext context, ConfirmedModel confirmedModel) {
     confirmedKey = confirmedModel.key;
-    return Get.offNamed(ChatView.routeName, arguments: {
-      "chatArgs": ChatArgs(
-          channel: confirmedModel.channelName,
-          fromView: SearchingView.routeName,
-          timerInMs: confirmedModel.timer,
-          users: confirmedModel.users,
-          fbKey: confirmedModel.key)
-    });
+    ChatArgs args = ChatArgs(
+        channel: confirmedModel.channelName,
+        fromView: SearchingView.routeName,
+        timerInMs: confirmedModel.timer,
+        users: confirmedModel.users,
+        fbKey: confirmedModel.key);
+
+    return Get.off(ViewSpnerChldNav(child: ChatView()),
+        arguments: {"chatArgs": args});
   }
 
   Future<void> initCount() async {
@@ -111,9 +115,11 @@ class SearchController {
           configuration: FadeScaleTransitionConfiguration(
               barrierDismissible: true,
               reverseTransitionDuration: Duration(milliseconds: 10),
-              transitionDuration: Duration(microseconds: 100000)),
+              transitionDuration: Duration(milliseconds: 1000)),
           builder: (context) {
-            return CopyWritingPopup();
+            return ChatAddFriendPopup(timeHelper.users
+                .where((user) => user.email != Global.email)
+                .first);
           });
     });
   }

@@ -5,6 +5,7 @@ class UserModel {
   final AuthType authType;
   final String email;
   final String platform;
+  final String avatar;
   final String country;
   final bool completedProfile;
   final Map<String, dynamic> questionaire;
@@ -14,6 +15,7 @@ class UserModel {
       this.authType,
       this.email,
       this.platform,
+      this.avatar,
       this.country,
       this.completedProfile,
       this.questionaire});
@@ -21,6 +23,7 @@ class UserModel {
   UserModel.fromJson(String email, dynamic value)
       : this.fullName = value["fullName"],
         this.email = email,
+        this.avatar = value["avatar"],
         this.platform = value["platform"],
         this.country = value["country"],
         this.completedProfile = value["completedProfile"],
