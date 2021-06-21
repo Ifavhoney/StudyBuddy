@@ -24,7 +24,7 @@ class SearchingView extends StatefulWidget {
 
 class _SearchingViewState extends State<SearchingView>
     with WidgetsBindingObserver, RouteAware, RouteObserverMixin {
-  SearchController _searchController = new SearchController();
+  SearchController _searchController = Get.find<SearchController>();
 
   @override
   void initState() {

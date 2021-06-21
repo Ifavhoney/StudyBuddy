@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 ///@LastModifiedBy: Jason NGuessan
 class Fonts {
   ///<summary>
+  ///
   ///Headline1: 80sp, bold
   ///
   ///headline2: 40sp, bold
@@ -64,8 +65,9 @@ class Fonts {
   );
 
   ///<summary>
+  ///
   ///headline2: 40sp, bold
-
+  ///
   ///headline4: 24sp, bold
   ///
   ///headline5: 22sp, bold

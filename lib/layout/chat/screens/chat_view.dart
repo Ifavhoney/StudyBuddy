@@ -27,7 +27,7 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   TextEditingController _editingController = TextEditingController();
-  ChatController _chatController = new ChatController();
+  ChatController _chatController = Get.find<ChatController>();
 
   final ChatArgs chatArgs = Get.arguments["chatArgs"];
 
@@ -41,7 +41,7 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void initState() {
-    Get.find<ChatController>()
+    _chatController
         .initState(context, SearchingView.routeName, chatArgs)
         .whenComplete(() {
       setState(() {
@@ -61,7 +61,6 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    print("isRady chatview" + isReady.toString());
     _iskeyboardShowing =
         MediaQuery.of(context).viewInsets.bottom > 0 ? true : false;
     // print("is Ready" + isReady.toString());

@@ -9,6 +9,9 @@ import 'package:buddy/layout/auth/view/preferences_view.dart';
 import 'package:buddy/layout/auth/view/signup_view.dart';
 import 'package:buddy/layout/chat/controller/chat_controller.dart';
 import 'package:buddy/layout/chat/screens/chat_view.dart';
+import 'package:buddy/layout/friend/controller/friend_ctrl.dart';
+import 'package:buddy/layout/home/controller/search_controller.dart';
+import 'package:buddy/layout/home/controller/search_controller2.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
@@ -29,29 +32,36 @@ void main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   await Firebase.initializeApp();
+  Get.lazyPut(() => TimeHelper());
+  Get.lazyPut(() => ChatController());
+  Get.lazyPut(() => SearchController());
 
+  Get.lazyPut(() => UserConfig());
+  Get.lazyPut(() => DeviceConfig());
+  Get.lazyPut(() => QuestionaireBloc());
+  Get.lazyPut(() => FriendCtrl());
+
+  //Nav
+  Get.lazyPut(() => PrevNav());
+  Global.userConfig.init();
   runApp(RouteObserverProvider(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Get.put(TimeHelper());
-
-    Get.put(AuthController());
-    Get.put(ChatController());
-
-    Get.put(UserConfig());
-    Get.put(DeviceConfig());
-    Get.put(QuestionaireBloc());
-    Get.put(PrevNav());
     Get.put(WaitSearNavBloc());
-    Global.userConfig.init();
+
     return ScreenUtilInit(
         builder: () => GetMaterialApp(
               theme: AppTheme().mainTheme,
               color: AppTheme().mainTheme.backgroundColor,
-              onReady: () => Global.deviceConfig.init(),
+              initialBinding: BindingsBuilder(() {}),
+              onReady: () {
+                Global.userConfig.init();
+
+                Global.deviceConfig.init();
+              },
               builder: (context, widget) {
                 return MediaQuery(
                     //Setting font does not change with system font size
@@ -62,6 +72,7 @@ class MyApp extends StatelessWidget {
                 builder: (bloc) {
                   return ViewSpnerChldNav(
                     isReady: bloc.isReady,
+
                     child:
                         bloc.user.email == null ? WelcomeView() : WaitSearNav(),
                     //Preferencesiews

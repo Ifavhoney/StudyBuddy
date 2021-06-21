@@ -35,14 +35,16 @@ class WaitSearNav extends StatefulWidget {
 class _WaitSearNavState extends State<WaitSearNav>
     with TickerProviderStateMixin {
   SharedAxisTransitionType _transitionType = SharedAxisTransitionType.scaled;
-
   List<Widget> pageList = <Widget>[
     WaitingView(),
     SearchingView(),
   ];
   @override
   Widget build(BuildContext context) {
+    print(Get.find<WaitSearNavBloc>().page.toString());
+
     FriendCtrl().initState(context, ChatView.routeName);
+    //Listener popup if adde
     return GetX<WaitSearNavBloc>(builder: (_) {
       return Scaffold(
           resizeToAvoidBottomInset: true,

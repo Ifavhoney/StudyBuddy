@@ -2,6 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buddy/global/global.dart';
 
 import 'package:buddy/global/widgets/static/global_box_container.dart';
+import 'package:buddy/global/widgets/static/global_time_helper.dart';
+import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
 import 'package:buddy/layout/nav_page/wait_searc_nav.dart';
 import 'package:buddy/layout/orrin/model/user.dart';
 
@@ -23,44 +25,51 @@ class ChatAddFriendPopup extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _button(Colors.red, Icon(Icons.thumb_down_alt_sharp), () {
-              Get.to(WaitSearNav());
+              Get.off(ViewSpnerChldNav(child: WaitSearNav()));
             }),
             SizedBox(width: 0.07.sw),
-            _button(Color(0xFFB9D1FF), Icon(Icons.thumb_up_alt_sharp), () {
-              
-            }),
+            _button(Color(0xFFB9D1FF), Icon(Icons.thumb_up_alt_sharp), () {}),
           ],
         ),
         body: Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: EdgeInsets.only(top: 0.1.sh),
-            child: GlobalBoxContainer(
-                boxShape: BoxShape.rectangle,
-                containerColor: Colors.white,
-                containerHeight: 0.5.sh,
-                containerWidth: 0.8.sw,
-                borderRadius: BorderRadius.circular(10.sp),
-                boxShadow: BoxShadow(
-                    color: Colors.grey, blurRadius: 2, spreadRadius: -2),
-                child: Column(
-                  children: [
-                    SizedBox(height: 0.03.sh),
-                    _avatar(this.user.avatar ??
-                        "https://firebasestorage.googleapis.com/v0/b/studybuddy-a39ca.appspot.com/o/mascot.png?alt=media&token=a5f866a4-7a46-46b4-8044-a8e558fe08f5"),
-                    SizedBox(height: 0.02.sh),
-                    AutoSizeText(
-                      this.user.fullName ?? " ",
-                      style: Global.appTheme.fonts.sfProText.headline6.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF6d9fff)),
-                    ),
-                    SizedBox(height: 0.1.sh),
-                    _middlepart(this.user.fullName ?? " "),
-                  ],
-                )),
-          ),
-        ));
+            alignment: Alignment.topCenter,
+            child: Column(
+              children: [
+                GlobalTimeHelper(
+                    margin: EdgeInsets.only(top: 0.01.sh),
+                    color: Colors.black,
+                    textStyle: Global.appTheme.fonts.sfProText.headline4),
+                Padding(
+                  padding: EdgeInsets.only(top: 0.1.sh),
+                  child: GlobalBoxContainer(
+                      boxShape: BoxShape.rectangle,
+                      containerColor: Colors.white,
+                      containerHeight: 0.5.sh,
+                      containerWidth: 0.8.sw,
+                      borderRadius: BorderRadius.circular(10.sp),
+                      borderWidth: 0.2,
+                      boxShadow: BoxShadow(
+                          color: Colors.grey, blurRadius: 2, spreadRadius: -2),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 0.03.sh),
+                          _avatar(this.user.avatar ??
+                              "https://firebasestorage.googleapis.com/v0/b/studybuddy-a39ca.appspot.com/o/mascot.png?alt=media&token=a5f866a4-7a46-46b4-8044-a8e558fe08f5"),
+                          SizedBox(height: 0.02.sh),
+                          AutoSizeText(
+                            this.user.fullName ?? " ",
+                            style: Global.appTheme.fonts.sfProText.headline6
+                                .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF6d9fff)),
+                          ),
+                          SizedBox(height: 0.1.sh),
+                          _middlepart(this.user.fullName ?? " "),
+                        ],
+                      )),
+                ),
+              ],
+            )));
   }
 
   Widget _avatar(String avatar) {
@@ -84,10 +93,10 @@ class ChatAddFriendPopup extends StatelessWidget {
 
   Widget _button(Color color, Icon icon, VoidCallback onPressed) {
     return GlobalBoxContainer(
-      containerHeight: color == Colors.red ? 0.10.sh : 0.12.sh,
+      containerHeight: color == Colors.red ? 0.10.sh : 0.10.sh,
       boxShape: BoxShape.circle,
       boxShadow:
-          BoxShadow(color: Color(0xFF707070), blurRadius: 10, spreadRadius: -3),
+          BoxShadow(color: Color(0xFF707070), blurRadius: 2, spreadRadius: -2),
       child: FittedBox(
         child: FloatingActionButton(
             backgroundColor: color, onPressed: onPressed, child: icon),

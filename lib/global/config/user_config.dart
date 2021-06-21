@@ -6,9 +6,10 @@ import 'package:get/get.dart';
 
 class UserConfig extends GetxController {
   UserModel user;
-  bool isReady;
+  bool isReady = false;
 
   //Cached login
+
   init() async {
     isReady = false;
 

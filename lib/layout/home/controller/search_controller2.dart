@@ -9,6 +9,7 @@ import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/chat/widget/chat_add_friend_popup.dart';
 import 'package:buddy/layout/home/view/waiting_view.dart';
 import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
+import 'package:buddy/layout/nav_page/wait_searc_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -17,14 +18,10 @@ import 'package:buddy/layout/home/model/confirmed_model.dart';
 import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:get/get.dart';
 
-class SearchController {
+class SearchController extends GetxController {
+  //OK
+  ChatController chatCtrl = Get.find<ChatController>();
   //Singleton ensures one instance of a class to ever be created
-  static final SearchController _instance = SearchController.internal();
-  SearchController.internal();
-
-  factory SearchController() {
-    return _instance;
-  }
 
   //Childs in our database
   DatabaseReference _searchRef;
@@ -50,7 +47,7 @@ class SearchController {
 
   Future<void> initState(BuildContext context) async {
     initSearchRefs();
-
+    chatCtrl.showedFrienPopup = false.obs;
     _searchAwaitingCountRef.keepSynced(true);
     matchingListener(context);
     addUserToAwaiting();
@@ -103,24 +100,32 @@ class SearchController {
         .child(confirmedKey)
         .onChildChanged
         .listen((event) async {
-      timeHelper.asyncMilliseconds.value = event.snapshot.value - 8000;
+      timeHelper.asyncMilliseconds.value = event.snapshot.value - 10000;
     });
 
     _searchConfirmedRef
         .child(confirmedKey)
         .onChildRemoved
         .listen((event) async {
-      showModal(
-          context: (Get.context),
-          configuration: FadeScaleTransitionConfiguration(
-              barrierDismissible: true,
-              reverseTransitionDuration: Duration(milliseconds: 10),
-              transitionDuration: Duration(milliseconds: 500)),
-          builder: (context) {
-            return ChatAddFriendPopup(timeHelper.users
-                .where((user) => user.email != Global.email)
-                .first);
-          });
+      if (chatCtrl.showedFrienPopup.value == false) {
+        chatCtrl.showedFrienPopup.value = true;
+        timeHelper.reset();
+        timeHelper.setSeconds(15);
+        timeHelper.startSecondaryTimer(exit: true);
+        showModal(
+            context: (Get.context),
+            configuration: FadeScaleTransitionConfiguration(
+                barrierColor: Color(0xFFF8FAFF),
+                transitionDuration: Duration(milliseconds: 500)),
+            builder: (context) {
+              return ChatAddFriendPopup(timeHelper.users
+                  .where((user) => user.email != Global.email)
+                  .first);
+            }).whenComplete(() {
+          timeHelper.reset();
+          Get.off(ViewSpnerChldNav(child: WaitSearNav()));
+        });
+      }
     });
   }
 

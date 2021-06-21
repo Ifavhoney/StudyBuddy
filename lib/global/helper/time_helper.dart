@@ -2,8 +2,12 @@ import 'dart:async';
 import 'package:animations/animations.dart';
 import 'package:buddy/debug/debug_helper.dart';
 import 'package:buddy/global/config/user_config.dart';
+import 'package:buddy/layout/chat/screens/chat_view.dart';
 import 'package:buddy/layout/chat/widget/chat_add_friend_popup.dart';
 import 'package:buddy/layout/home/controller/search_controller2.dart';
+import 'package:buddy/layout/home/view/searching_view.dart';
+import 'package:buddy/layout/nav_page/view_spner_chld_nav.dart';
+import 'package:buddy/layout/nav_page/wait_searc_nav.dart';
 import 'package:buddy/layout/orrin/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +18,7 @@ class TimeHelper extends GetxController {
   Timer secondaryTimer = Timer(Duration.zero, () {});
   String fromView;
   RxList<UserModel> users = List<UserModel>().obs;
-  SearchController _searchController = new SearchController();
+  SearchController _searchController = Get.find<SearchController>();
 
   int min = 0;
   int second = 0;
@@ -23,11 +27,12 @@ class TimeHelper extends GetxController {
   Future<void> initAsync(int milliSeconds, BuildContext context) async {
     print("from view is " + fromView.toString());
     if (milliSeconds <= 60000) {
+      print("fix time here");
       second = Duration(milliseconds: milliSeconds).inSeconds;
       print("calld here");
       await _searchController.initCount();
       update();
-      _startSecondaryTimer(context);
+      startSecondaryTimer();
       return;
     }
 
@@ -42,7 +47,7 @@ class TimeHelper extends GetxController {
       if (min <= 1) {
         primaryTimer.cancel();
         second = Duration(milliseconds: asyncMilliseconds.value).inSeconds;
-        _startSecondaryTimer(context);
+        startSecondaryTimer();
       } else {
         min = Duration(milliseconds: asyncMilliseconds.value).inMinutes;
       }
@@ -50,32 +55,20 @@ class TimeHelper extends GetxController {
     });
   }
 
-  void init(int milliSeconds) {
-    if (milliSeconds < 1000) {
-      reset(Get.context, forceBack: true);
-    }
-
-    min = (milliSeconds / (1000 * 60)).ceil();
-    primaryTimer =
-        Timer.periodic(Duration(milliseconds: 1000 * 60), (Timer timer) {
-      DebugHelper.red("min is " + min.toString());
-
-      if (min <= 1) {
-        primaryTimer.cancel();
-        second = 60;
-        _startSecondaryTimer(Get.context);
-      } else {
-        min = min - 1;
-      }
-      update();
-    });
-  }
-
-  void _startSecondaryTimer(BuildContext context) {
+  void startSecondaryTimer({bool exit = false}) {
     secondaryTimer =
         Timer.periodic(Duration(milliseconds: 1 * 1000), (Timer timer) {
       if (second < 1) {
-        reset(context);
+        reset();
+        if (exit == true) {
+          print("EXIT");
+          if (fromView == ChatView.routeName) {
+            print("hi there~~~~");
+
+            Get.off(ViewSpnerChldNav(child: WaitSearNav()),
+                preventDuplicates: false);
+          }
+        }
       } else {
         second = second - 1;
       }
@@ -83,8 +76,13 @@ class TimeHelper extends GetxController {
     });
   }
 
-  void reset(BuildContext context, {bool forceBack = false}) async {
-    secondaryTimer.cancel();
+  void setSeconds(int value) {
+    second = value;
+    update();
+  }
+
+  void reset() async {
+    secondaryTimer?.cancel();
     update();
   }
 }

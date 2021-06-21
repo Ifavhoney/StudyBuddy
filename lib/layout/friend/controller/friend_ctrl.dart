@@ -7,15 +7,9 @@ import 'package:buddy/layout/home/view/searching_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
-class FriendCtrl {
-  static final FriendCtrl _instance = FriendCtrl.internal();
-  FriendCtrl.internal();
-
-  factory FriendCtrl() {
-    return _instance;
-  }
-
+class FriendCtrl extends GetxController {
   //Childs in our database
   DocumentReference _friendRef;
 
@@ -41,7 +35,7 @@ class FriendCtrl {
         if (snapshot.exists) {
           //Chceck if the friend at hand exists in friendList
           //if does, provide a different popup & don't call broadcaststream
-          //else do the rest 
+          //else do the rest
           print("exists!!!!");
         } else {
           _friendRef.set({"peer2group": [], "peer2peer": []});

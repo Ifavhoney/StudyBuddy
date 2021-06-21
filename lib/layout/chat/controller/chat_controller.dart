@@ -13,14 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChatController extends GetxController {
-  TimeHelper timeHelper = Get.find<TimeHelper>();
-
-  static final ChatController _instance = ChatController.internal();
-  ChatController.internal();
-
-  factory ChatController() {
-    return _instance;
-  }
+  TimeHelper timeHelper;
+  RxBool showedFrienPopup = false.obs;
 
   //Childs in our database
   DatabaseReference _chatSearchRef;
@@ -45,8 +39,9 @@ class ChatController extends GetxController {
   Future<void> initState(
       BuildContext context, String fromView, dynamic arguments) async {
     list = new List<ChatModel>();
+    timeHelper = Get.find<TimeHelper>();
     initChatRefs(fromView, arguments.channel);
-
+    print("initialized list??");
     //   _loadPrevMessages();
     if (SearchingView.routeName == fromView) {
       ChatArgs chatArgs = arguments;
@@ -67,6 +62,7 @@ class ChatController extends GetxController {
         list.add(ChatModel.fromJson(event.snapshot.value));
       });
     }
+    print("we are here");
   }
 
   DatabaseReference getReference(String fromView) {
