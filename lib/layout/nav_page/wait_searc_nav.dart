@@ -41,9 +41,6 @@ class _WaitSearNavState extends State<WaitSearNav>
   ];
   @override
   Widget build(BuildContext context) {
-    print(Get.find<WaitSearNavBloc>().page.toString());
-
-    FriendCtrl().initState(context, ChatView.routeName);
     //Listener popup if adde
     return GetX<WaitSearNavBloc>(builder: (_) {
       return Scaffold(

@@ -28,7 +28,9 @@ class ChatAddFriendPopup extends StatelessWidget {
               Get.off(ViewSpnerChldNav(child: WaitSearNav()));
             }),
             SizedBox(width: 0.07.sw),
-            _button(Color(0xFFB9D1FF), Icon(Icons.thumb_up_alt_sharp), () {}),
+            _button(Color(0xFFB9D1FF), Icon(Icons.thumb_up_alt_sharp), () {
+              
+            }),
           ],
         ),
         body: Align(

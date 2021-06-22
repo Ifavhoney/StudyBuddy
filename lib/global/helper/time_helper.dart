@@ -64,7 +64,7 @@ class TimeHelper extends GetxController {
           print("EXIT");
           if (fromView == ChatView.routeName) {
             print("hi there~~~~");
-
+            Get.find<WaitSearNavBloc>().setPage(0);
             Get.off(ViewSpnerChldNav(child: WaitSearNav()),
                 preventDuplicates: false);
           }

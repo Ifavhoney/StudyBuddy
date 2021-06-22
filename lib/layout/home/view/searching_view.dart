@@ -80,9 +80,7 @@ class _SearchingViewState extends State<SearchingView>
   Widget _mascot() => GestureDetector(
         // onTap: () => CamController.toWebcam(
         //     CamModel(channelName: "1", endTime: "09:15"), context),
-        onTap: () {
-          Get.find<WaitSearNavBloc>().nextPage();
-        },
+        onTap: () {},
         child: Center(
           child: Image.asset(
             "assets/images/mascot.png",
