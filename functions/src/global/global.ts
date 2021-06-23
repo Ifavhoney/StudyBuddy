@@ -10,13 +10,14 @@ class Global {
 
     get awaitingRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.awaitingRefStr); }
     get confirmdRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.confirmedRefStr) }
+    get friendReqRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.friendReqRefStr) }
     get chatRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.chatRefStr) }
     get channeCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.channelCountRefStr); }
     get awaitingCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.awaitingCountRefStr); }
     get matchCountRef(): firebase.database.Reference { return firebase.database().ref(searchRefs.matchCountRefStr); }
 
-    public async add(ref: firebase.database.Reference, value: any): Promise<string | null> {
-        let key: string | null = await ref.push().key ?? "";
+    public async add(ref: firebase.database.Reference, value: any, ownKey?: string): Promise<string | null> {
+        let key: string | null = ownKey ?? await ref.push().key ?? "";
 
         await ref.child(key).set(value);
         console.log(key);

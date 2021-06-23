@@ -5,7 +5,6 @@ import firebase from "firebase/app";
 export const onCreate = async function () {
 
     let num: number = await Global.updateRef(Global.awaitingCountRef);
-
     if (num % 2 == 0) {
 
         let r: Record<string, string> = await Global.findRandomUser(Global.awaitingRef);
@@ -63,10 +62,19 @@ const _match = async function (randUser: string, randKey: string, snapshotUser: 
             timer: timer,
             channel: channelNum,
         }
+
+        let friendReqRefObj: Record<any, any> = {
+            users: confirmedObject["users"],
+            answer: ["null", "null"]
+        }
+
         Global.add(Global.confirmdRef, confirmedObject).then(async (key) => {
+
             console.log(key?.toString());
             if (key == null)
                 return;
+
+
             let timer: number = confirmedObject["timer"]
             let intervalMs: number = 10000;
             let interval: any = setInterval(function () {
@@ -75,13 +83,12 @@ const _match = async function (randUser: string, randKey: string, snapshotUser: 
                 Global.confirmdRef.child(key).update(confirmedObject)
             }, intervalMs)
 
-
-
-
-
+            Global.add(Global.friendReqRef, friendReqRefObj, key)
+            console.log("comes here" + friendReqRefObj);
             Global.delay(function () {
                 clearInterval(interval);
                 Global.delete(Global.confirmdRef, key);
+                Global.delete(Global.friendReqRef, key);
 
                 Global.delete(Global.chatRef.child(channelNum.toString()), "Messages");
 

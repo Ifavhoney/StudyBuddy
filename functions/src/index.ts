@@ -1,6 +1,7 @@
 
 
 
+
 import * as functions from 'firebase-functions';
 import SearchRefs from './global/refs/search_refs'
 import Keys from "./global/keys";
@@ -15,6 +16,8 @@ import firebase from "firebase/app";
 //Deploy: firecast jason$ firebase deploy --only functions
 
 
+//PORT IN USE ERROR:   sudo lsof -i :3000 
+//THEN: kill -9 <PID>
 firebase.initializeApp({
     apiKey: Keys.APIKEY,
     authDomain: Keys.AUTHDOMAIN,
