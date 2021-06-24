@@ -93,9 +93,10 @@ const _match = async function (randUser: string, randKey: string, snapshotUser: 
 
                 Global.updateRef(Global.channeCountRef, false);
                 Global.updateRef(Global.matchCountRef, true);
-                Global.delete(Global.friendReqRef, key)
 
-            }, timer + friendTimer);
+            }, timer);
+
+            Global.delay(() => Global.delete(Global.friendReqRef, key), timer + friendTimer);
 
 
 
