@@ -75,7 +75,8 @@ const _match = async function (randUser: string, randKey: string, snapshotUser: 
                 return;
 
 
-            let timer: number = confirmedObject["timer"]
+            let timer: number = confirmedObject["timer"];
+            let friendTimer: number = 20000;
             let intervalMs: number = 10000;
             let interval: any = setInterval(function () {
                 timer -= intervalMs
@@ -88,14 +89,14 @@ const _match = async function (randUser: string, randKey: string, snapshotUser: 
             Global.delay(function () {
                 clearInterval(interval);
                 Global.delete(Global.confirmdRef, key);
-                Global.delete(Global.friendReqRef, key);
-
                 Global.delete(Global.chatRef.child(channelNum.toString()), "Messages");
 
                 Global.updateRef(Global.channeCountRef, false);
                 Global.updateRef(Global.matchCountRef, true);
+                Global.delete(Global.friendReqRef, key)
 
-            }, timer);
+            }, timer + friendTimer);
+
 
 
 
